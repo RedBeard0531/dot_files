@@ -61,6 +61,8 @@ PS1="\n$PROMPT_COLOR[\h]\w \d, \@\e[0m \n$ "
 
 #source /etc/profile.d/bash-completion
 
+export SCONSFLAGS="-j10"
+
 alias sudo="sudo -E"
 alias emerge="sudo emerge"
 alias pacman="sudo pacman"
