@@ -76,7 +76,7 @@ alias iwconfig="sudo iwconfig"
 alias batstat="cat /proc/acpi/battery/BAT0/state"
 alias hg="history |grep "
 alias ls="ls --color"
-alias gentags="ctags --extra=+q --fields=+iasnfSKm --c++-kinds=+p --sort=foldcase"
+alias gentags="ctags --extra=+qf --fields=+iasnfSKtm --c++-kinds=+p --sort=foldcase"
 alias grep="grep -n --color"
 
 . /etc/bash_completion
