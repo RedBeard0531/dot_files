@@ -80,7 +80,7 @@ set confirm "ask to save instead of failing with an error
 set clipboard+=unnamed "by default copy/paste with the X11 clipboard ("* register)
 set background=dark "make things look !ugly with a dark background
 set listchars=tab:\|\ ,trail:.,extends:>,precedes:<,eol:$ " what to show when I hit :set list
-set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v][%p%%]\ [LEN=%L]
+set statusline=%F%m%r%h%w\ [%{GitBranch()}]\ [%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [%04l,%04v][%p%%]\ [LEN=%L]
 set laststatus=2 "always show above status line
 set mouse=a "allow mouse usage in terms (scrolling, highlighting, pasting, etc.)
 set mousehide " Hide the mouse when typing text
