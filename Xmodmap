@@ -1,2 +1,3 @@
 remove lock = Caps_Lock
 keysym Caps_Lock = Escape
+keycode 162 = XF86AudioPlay

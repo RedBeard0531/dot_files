@@ -132,9 +132,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask .|. shiftMask, xK_p     ), spawn "gmrun")
  
     -- amarok
-    , ((0, 0x1008ff14    ), spawn "xeyes")
-    , ((shiftMask, 0x1008ff1d    ), spawn "xeyes")
-    , ((0, 0x1008ff1d    ), spawn "xeyes")
+    --, ((0, 0x1008ff14    ), spawn "xeyes")
+    --, ((shiftMask, 0x1008ff1d    ), spawn "xeyes")
+    --, ((0, 0x1008ff1d    ), spawn "xeyes")
 
     -- reset modifiers if i hit Web/Home
     , ((0, 0x1008ff18   ), spawn "xmodmap ~/.xmodmap")
