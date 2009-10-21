@@ -4,3 +4,5 @@
 [user]
 	name = Mathias Stearn
 	email = redbeard0531@gmail.com
+[sendemail]
+	smtpserver = /usr/bin/msmtp
