@@ -1,3 +1,5 @@
+:Ack	ack.txt	/*:Ack*
+:AckAdd	ack.txt	/*:AckAdd*
 :CVSEdit	vcscommand.txt	/*:CVSEdit*
 :CVSEditors	vcscommand.txt	/*:CVSEditors*
 :CVSUnedit	vcscommand.txt	/*:CVSUnedit*
@@ -17,6 +19,8 @@
 :HpasteIndex	haskellmode.txt	/*:HpasteIndex*
 :HpastePostNew	haskellmode.txt	/*:HpastePostNew*
 :IDoc	haskellmode.txt	/*:IDoc*
+:LAck	ack.txt	/*:LAck*
+:LAckAdd	ack.txt	/*:LAckAdd*
 :MDoc	haskellmode.txt	/*:MDoc*
 :NERDTree	NERD_tree.txt	/*:NERDTree*
 :NERDTreeToggle	NERD_tree.txt	/*:NERDTreeToggle*
@@ -461,6 +465,9 @@ _lang	haskellmode.txt	/*_lang*
 _opt	haskellmode.txt	/*_opt*
 _si	haskellmode.txt	/*_si*
 _t	haskellmode.txt	/*_t*
+ack	ack.txt	/*ack*
+ack-author	ack.txt	/*ack-author*
+ack.txt	ack.txt	/*ack.txt*
 adding-bib-options	latex-suite.txt	/*adding-bib-options*
 alph	latexhelp.txt	/*alph*
 altkey-mappings	latex-suite.txt	/*altkey-mappings*
