@@ -253,7 +253,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 
  
     -- mod-button2, Raise the window to the top of the stack
-    , ((modMask, button2), (\w -> focus w >> windows W.swapMaster))
+    , ((modMask, button2), (\w -> focus w >> windows W.shiftMaster))
  
     -- mod-button3, Set the window to floating mode and resize by dragging
     , ((modMask, button3), (\w -> focus w >> mouseResizeWindow w))
@@ -275,7 +275,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = ewmhDesktopsLayout $ avoidStruts $ onWorkspace "9" (IM (1%7) (Title "Buddy List")) $ toggleLayouts (noBorders Full) $ maximize (tiled ||| Mirror tiled ||| noBorders (tabbed shrinkText defaultTheme) )
+myLayout = avoidStruts $ onWorkspace "9" (IM (1%7) (Title "Buddy List")) $ toggleLayouts (noBorders Full) $ maximize (tiled ||| Mirror tiled ||| noBorders (tabbed shrinkText defaultTheme) )
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = ResizableTall nmaster delta ratio []
@@ -284,7 +284,7 @@ myLayout = ewmhDesktopsLayout $ avoidStruts $ onWorkspace "9" (IM (1%7) (Title "
      nmaster = 1
  
      -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
+     ratio   = 2/3
  
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
@@ -342,8 +342,7 @@ redbeardPP = defaultPP { ppHiddenNoWindows = dzenColor "#33FF00"  ""
                                         . ("^cs()\n"++)
                       } 
 
-myLogHook = do ewmhDesktopsLogHook
-               setWMName "LG3D"
+myLogHook = do setWMName "LG3D"
                --dynamicLogWithPP redbeardPP
                return ()
  
@@ -356,7 +355,7 @@ myUrgencyHook = withUrgencyHook dzenUrgencyHook
  
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = xmonad $ myUrgencyHook defaults
+main = xmonad $ ewmh $ myUrgencyHook defaults
  
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will 
