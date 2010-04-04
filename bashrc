@@ -62,7 +62,7 @@ PS1="\n$PROMPT_COLOR[\h]\w \d, \@\e[0m \n$ "
 #source /etc/profile.d/bash-completion
 
 _CORES=$(grep -c processor /proc/cpuinfo )
-_COMPILE_THREADS=$(echo $CORES '* 3 / 2' | bc)
+_COMPILE_THREADS=$(echo $_CORES '* 3 / 2' | bc)
 
 export SCONSFLAGS="-j$_COMPILE_THREADS"
 
