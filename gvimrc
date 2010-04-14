@@ -60,8 +60,8 @@ if version >= 500
 
   set updatetime=1000 " miliseconds - time before CursorHold fires
   highlight Curword guibg=#334
-  autocmd InsertEnter * syntax clear Curword
-  autocmd CursorHold * syntax clear Curword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword Curword " . expand("<cword>") |endif 
+  autocmd InsertEnter *.{cpp,c,h} syntax clear Curword
+  autocmd CursorHold *.{cpp,c,h} syntax clear Curword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword Curword " . expand("<cword>") |endif 
 
   set spelllang=en_us
   :map K :!xterm -bg black -fg gray -e "man <cword>"<cr><cr> 

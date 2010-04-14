@@ -137,8 +137,8 @@ nnoremap <silent><C-l> <C-w>l
 nnoremap <silent><C-h> <C-w>h
 
 "use shift-[hl] to move between buffers (tabs if you use MiniBufExplorer)
-nnoremap <silent><S-h> :bp<CR>
-nnoremap <silent><S-l> :bn<CR>
+nnoremap <silent><S-h> :MBEbp<CR>
+nnoremap <silent><S-l> :MBEbn<CR>
 
 "disable this when in the QuickFix window
 "autocmd FileType qf nunmap <S-h>
@@ -168,7 +168,7 @@ let g:miniBufExplForceSyntaxEnable = 0
 
 let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
-let g:SuperTabMappingForward = "<tab>"
+"let g:SuperTabMappingForward = "<tab>"
 
 
 "change inside of a (single-ling) string, see :help objects
@@ -198,7 +198,7 @@ au Bufenter *.hs compiler ghc
 au BufNewFile,BufRead SCons* set filetype=scons 
 
 " configure browser for haskell_doc.vim
-let g:haddock_browser = "opera"
+let g:haddock_browser = "chromium"
 
 "If using vim7 
 if version >= 700
@@ -210,7 +210,7 @@ if version >= 700
 endif
 
 " close the preview window after i'm done with it
-autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+"autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
 set exrc
