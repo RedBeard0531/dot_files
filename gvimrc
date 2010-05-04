@@ -56,12 +56,15 @@ if version >= 500
   highlight PMenu guibg=brown gui=bold
   highlight Folded guibg=#333333 
   highlight FoldColumn	 guibg=#333333 
+  highlight LineNr	 guibg=#1a1a1a
   set background=dark
 
   set updatetime=1000 " miliseconds - time before CursorHold fires
   highlight Curword guibg=#334
   autocmd InsertEnter *.{cpp,c,h} syntax clear Curword
   autocmd CursorHold *.{cpp,c,h} syntax clear Curword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword Curword " . expand("<cword>") |endif 
+
+  set guioptions-=T
 
   set spelllang=en_us
   :map K :!xterm -bg black -fg gray -e "man <cword>"<cr><cr> 
