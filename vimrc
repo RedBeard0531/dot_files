@@ -213,6 +213,10 @@ endif
 "autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
+if filereadable('./SConstruct')
+    compiler scons
+endif
+
 set exrc
 set secure
 
