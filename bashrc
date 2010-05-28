@@ -43,7 +43,7 @@ then
 else
   PROMPT_COLOR="\e[37;1;44m"
 fi
-PS1="\n$PROMPT_COLOR[\h]\w \d, \@\e[0m \n$ "
+PS1="\n$PROMPT_COLOR[\h]\w \@\e[0m \n$ "
 
 #
 #  where:
