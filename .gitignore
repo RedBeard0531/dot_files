@@ -1,2 +1,3 @@
 *.pyc
 vim/bundle
+vim/.netrwhist
