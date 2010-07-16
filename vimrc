@@ -1,3 +1,7 @@
+"This most go first
+call pathogen#runtime_append_all_bundles()
+call pathogen#helptags()
+
 " An example for a vimrc file.  
 " Stolen from: Bram Moolenaar <Bram@vim.org>
 

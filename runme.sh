@@ -9,3 +9,11 @@
 #ln -s ~/dot_files/gitconfig ~/.gitconfig
 #mkdir -p ~/.xmonad
 #ln -s ~/dot_files/xmonad.hs ~/.xmonad/xmonad.hs
+
+
+#mkdir -p ~/.vim/bundle
+#cd ~/.vim/bundle
+#git clone git://github.com/scrooloose/syntastic.git
+#git clone git://github.com/spiiph/vim-space.git
+#svn checkout http://conque.googlecode.com/svn/trunk/ conque
+
