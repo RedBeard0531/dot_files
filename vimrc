@@ -91,6 +91,7 @@ set mousehide " Hide the mouse when typing text
 set scrolloff=5 "try to keep at least 5 lines above and bellow the cursor when scrolling
 set autoindent "enable the following line
 set smartindent "do the Right Thing
+set nocindent "use indent scripts
 set expandtab "tab key -> spaces
 set shiftwidth=4 "indent by 4 spaces
 set tabstop=4 "tab characters are drawn as 4 spaces
@@ -101,6 +102,7 @@ set nobackup "dont make those filename~ files (they have bitten me many times)
 set noswapfile "more trouble than they're worth
 set wildmenu "show possible completions in command (:) mode (try hitting tab twice)
 set wildmode=list:longest,full "make the wildmenu behave more like bash
+set wildignore=*.o,*.git,*.svn "ignore these files
 set ignorecase "dont care about case in searches, etc.
 set smartcase "care about case if I enter any capital letters
 let mapleader = ',' "use , instead of \ as the 'leader' key (used in some plugins)
@@ -148,6 +150,8 @@ nnoremap <silent><S-l> :MBEbn<CR>
 "autocmd FileType qf nunmap <S-h>
 "autocmd FileType qf nunmap <S-l>
 autocmd FileType qf set nospell
+
+autocmd FileType conque_term set nospell
 
 "dont require a shift to enter command mode
 nnoremap ; :
@@ -203,6 +207,10 @@ au BufNewFile,BufRead SCons* set filetype=scons
 
 " configure browser for haskell_doc.vim
 let g:haddock_browser = "chromium"
+
+" allow use of tab and s-tab in command-t window
+let g:CommandTSelectNextMap=['<C-n>', '<C-j>', '<Down>', '<Tab>']
+let g:CommandTSelectPrevMap=['<C-p>', '<C-k>', '<Up>', '<S-Tab>']
 
 "If using vim7 
 if version >= 700

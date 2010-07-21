@@ -16,4 +16,11 @@
 #git clone git://github.com/scrooloose/syntastic.git
 #git clone git://github.com/spiiph/vim-space.git
 #svn checkout http://conque.googlecode.com/svn/trunk/ conque
+#git clone git://git.wincent.com/command-t.git
+
+#cd command-t/ruby/command-t
+#ruby extconf.rb
+#make
+#cd ../../..
+
 
