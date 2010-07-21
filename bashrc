@@ -43,7 +43,15 @@ then
 else
   PROMPT_COLOR="\e[37;1;44m"
 fi
-PS1="\n$PROMPT_COLOR[\h]\w \@\e[0m \n$ "
+
+if [ "$USER" == "root" ]
+then
+  ROOT_SYMBOL="\e[1;31mROOT\e[0m" # a bold red 'ROOT'
+else
+  ROOT_SYMBOL=""
+fi
+
+PS1="\n${PROMPT_COLOR}[\h]\w \@\e[0m ${ROOT_SYMBOL}\n$ "
 
 #
 #  where:
