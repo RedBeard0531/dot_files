@@ -110,6 +110,7 @@ set nostartofline "don't go to the start of line after certain commands
 set textwidth=80 "wrap at 80 chars
 set formatoptions-=o "don't insert comment chars when I hit o or O
 "set formatoptions+=a "automatically reflow comment blocks (:h fo-table)
+set autoread "automatically reread files that have been updated. useful with git
 
 let python_highlight_all=1 "highlight everything possible in python
 let python_highlight_space_errors=0 "except spacing issues
