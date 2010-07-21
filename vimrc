@@ -191,7 +191,7 @@ nnoremap dw daw
 autocmd FileType haskell set nospell
 
 "use shift-w to save the file as root (I forget to use "sudo vim" a lot)
-cabbr W w !sudo tee % > /dev/null
+command! -bar -nargs=0 W  :silent exe "write !sudo tee % >/dev/null"|silent edit!
 
 "autosave on make
 cabbr make wa\|make
