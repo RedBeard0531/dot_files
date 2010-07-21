@@ -15,6 +15,8 @@
 #cd ~/.vim/bundle
 #git clone git://github.com/scrooloose/syntastic.git
 #git clone git://github.com/spiiph/vim-space.git
+#git clone git://github.com/tpope/vim-repeat.git
+#git clone git://github.com/tpope/vim-surround.git
 #svn checkout http://conque.googlecode.com/svn/trunk/ conque
 #git clone git://git.wincent.com/command-t.git
 
