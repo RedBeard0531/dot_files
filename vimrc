@@ -233,4 +233,11 @@ endif
 set exrc
 set secure
 
+
+let g:syntastic_enable_signs=1
+let g:syntastic_auto_loc_list=1
+"SyntasticEnable cpp
+
+let g:space_no_character_movements = 1
+
 "see also: my ~/.gimrc and ~/.vim directory
