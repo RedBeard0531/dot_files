@@ -222,6 +222,11 @@ if version >= 700
   set completeopt=longest,menu,preview "make auto-complete less stupid
 endif
 
+if version >= 703
+    set undofile
+    set undodir=~/.vim-undo/
+endif
+
 " close the preview window after i'm done with it
 "autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
