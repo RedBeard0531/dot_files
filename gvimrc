@@ -57,6 +57,7 @@ if version >= 500
   highlight Folded guibg=#333333 
   highlight FoldColumn	 guibg=#333333 
   highlight LineNr	 guibg=#1a1a1a
+  highlight Visual	 gui=inverse guibg=black
   set background=dark
 
   set updatetime=1000 " miliseconds - time before CursorHold fires
