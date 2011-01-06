@@ -89,5 +89,6 @@ alias batstat="cat /proc/acpi/battery/BAT[01]/state"
 alias ls="ls --color"
 alias gentags="ctags --extra=+qf --fields=+iasnfSKtm --c++-kinds=+p --sort=foldcase"
 alias grep="grep -n --color"
+alias vimdiff="vimdiff --noplugin"
 
 . /etc/bash_completion

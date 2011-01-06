@@ -245,4 +245,12 @@ let g:syntastic_auto_loc_list=1
 
 let g:space_no_character_movements = 1
 
+"This is needed for alias vimdiff="vimdiff --noplugin"
+autocmd FuncUndefined GitBranch call s:DefGitBranch()
+function s:DefGitBranch()
+    function GitBranch()
+        return "NONE"
+    endfunc
+endfunc
+
 "see also: my ~/.gimrc and ~/.vim directory
