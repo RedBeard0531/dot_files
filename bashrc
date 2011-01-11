@@ -17,7 +17,7 @@ if [ -f /etc/profile ]; then
 fi
 
 # User specific aliases and functions go here (override system defaults)
-export PATH="/home/mstearn/bin:/usr/lib/colorgcc/bin/:$PATH"
+export PATH="/home/mstearn/bin:/usr/local/bin:/usr/lib/colorgcc/bin/:$PATH"
 
 # Test for an interactive shell.  There is no need to set anything
 # past this point for scp and rcp, and it's important to refrain from
@@ -106,6 +106,7 @@ alias ls="ls --color"
 alias gentags="ctags --extra=+qf --fields=+iasnfSKtm --c++-kinds=+p --sort=foldcase"
 alias grep="grep -n --color"
 alias vimdiff="vimdiff --noplugin"
+alias vamplayer="mplayer -vo vaapi -va vaapi "
 
 alias sr='ssh -l root'
 alias smoke="python2 buildscripts/smoke.py"
