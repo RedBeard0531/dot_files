@@ -12,8 +12,12 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
+if [ -f /etc/profile ]; then
+	. /etc/profile
+fi
+
 # User specific aliases and functions go here (override system defaults)
-export PATH="/home/mstearn/bin:$PATH"
+export PATH="/home/mstearn/bin:/usr/lib/colorgcc/bin/:$PATH"
 
 # Test for an interactive shell.  There is no need to set anything
 # past this point for scp and rcp, and it's important to refrain from

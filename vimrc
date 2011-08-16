@@ -94,7 +94,7 @@ set smartindent "do the Right Thing
 set nocindent "use indent scripts
 set expandtab "tab key -> spaces
 set shiftwidth=4 "indent by 4 spaces
-set tabstop=4 "tab characters are drawn as 4 spaces
+set tabstop=8 "tab characters are drawn as 8 spaces
 set softtabstop=4 "treat 4 spaces like a tab
 set showcmd "show partial commands in the right or the status area
 set hidden "allow hidden buffers. VERY GOOD. see help
@@ -238,6 +238,8 @@ endif
 set exrc
 set secure
 
+"let g:clang_use_library = 1
+let g:clang_debug = 1
 
 let g:syntastic_enable_signs=1
 let g:syntastic_auto_loc_list=1

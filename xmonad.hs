@@ -1,4 +1,4 @@
-{-# OPTIONS_GHC -fglasgow-exts #-}
+-- {-# OPTIONS_GHC -fglasgow-exts #-}
 --
 -- xmonad example config file.
 --
@@ -42,7 +42,7 @@ import Data.Ratio ((%))
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal      = "Terminal"
+myTerminal      = "konsole"
  
 -- Width of the window border in pixels.
 --

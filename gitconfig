@@ -1,8 +1,11 @@
 [color]
-  ui=auto
+	ui = auto
 
 [user]
 	name = Mathias Stearn
 	email = redbeard0531@gmail.com
 [sendemail]
 	smtpserver = /usr/bin/msmtp
+
+[web]
+    browser = opera
