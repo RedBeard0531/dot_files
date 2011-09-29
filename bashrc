@@ -41,6 +41,16 @@ alias grep="grep --color"
 
 # Adds a blank line between commands, puts command entry on its own line, and adds color
 
+function _showStatus {
+    local _last=$?
+    if `return $_last`;  then
+        echo -e '\e[1;32m:)\e[0m' # green smile
+    else
+        echo -e '\e[1;31m:(\e[0m' # red frown
+    fi
+    return $_last
+}
+
 if [ -n "$SSH_CONNECTION" ]
 then
   PROMPT_COLOR="\e[37;1;41m"
@@ -55,7 +65,7 @@ else
   ROOT_SYMBOL=""
 fi
 
-PS1="\n${PROMPT_COLOR}[\h]\w \@\e[0m ${ROOT_SYMBOL}\n$ "
+PS1="\n${PROMPT_COLOR}[\h]\w \@\e[0m ${ROOT_SYMBOL} \`_showStatus\`\n$ "
 
 #
 #  where:
@@ -77,6 +87,8 @@ _CORES=$(grep -c processor /proc/cpuinfo )
 _COMPILE_THREADS=$(echo $_CORES '* 3 / 2' | bc)
 
 export SCONSFLAGS="-j$_COMPILE_THREADS"
+
+export HISTCONTROL=ignoreboth
 
 alias sudo="sudo -E"
 alias emerge="sudo emerge"
