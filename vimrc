@@ -17,19 +17,10 @@ set nocompatible
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-if has("vms")
-  set nobackup		" do not keep a backup file, use versions instead
-else
-  set backup		" keep a backup file
-endif
-set nobackup
-set history=50		" keep 50 lines of command line history
+set history=1000	" keep 1000 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
-
-" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
-" let &guioptions = substitute(&guioptions, "t", "", "g")
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -71,10 +62,6 @@ if has("autocmd")
 
   augroup END
 
-else
-
-  set autoindent		" always set autoindenting on
-
 endif " has("autocmd")
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -107,10 +94,11 @@ set ignorecase "dont care about case in searches, etc.
 set smartcase "care about case if I enter any capital letters
 let mapleader = ',' "use , instead of \ as the 'leader' key (used in some plugins)
 set nostartofline "don't go to the start of line after certain commands
-set textwidth=80 "wrap at 80 chars
+"set textwidth=80 "wrap at 80 chars
 set formatoptions-=o "don't insert comment chars when I hit o or O
 "set formatoptions+=a "automatically reflow comment blocks (:h fo-table)
 set autoread "automatically reread files that have been updated. useful with git
+"set gdefault " the /g flag on :s substitutions by default
 
 let python_highlight_all=1 "highlight everything possible in python
 let python_highlight_space_errors=0 "except spacing issues

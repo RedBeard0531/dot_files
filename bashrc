@@ -107,4 +107,8 @@ alias gentags="ctags --extra=+qf --fields=+iasnfSKtm --c++-kinds=+p --sort=foldc
 alias grep="grep -n --color"
 alias vimdiff="vimdiff --noplugin"
 
+alias sr='ssh -l root'
+alias smoke="python2 buildscripts/smoke.py"
+
+
 . /etc/bash_completion
