@@ -49,21 +49,29 @@ if version >= 500
   " Cursor is green, Cyan when ":lmap" mappings are active
   " Constants are not underlined but have a slightly lighter background
 
-  highlight Normal guibg=black guifg=grey
-  highlight NonText guibg=black guifg=magenta
-  highlight Cursor guibg=Green guifg=NONE
-  highlight lCursor guibg=Cyan guifg=NONE
-  highlight PMenu guibg=brown gui=bold
-  highlight Folded guibg=#333333 
-  highlight FoldColumn	 guibg=#333333 
-  highlight LineNr	 guibg=#1a1a1a
-  highlight Visual	 gui=inverse guibg=black
+
+   try
+      "colorscheme solarized
+      colorscheme wombat
+   catch
+      highlight Normal guibg=black guifg=grey
+      highlight NonText guibg=black guifg=magenta
+      highlight Cursor guibg=Green guifg=NONE
+      highlight lCursor guibg=Cyan guifg=NONE
+      highlight PMenu guibg=brown gui=bold
+      highlight Folded guibg=#333333 
+      highlight FoldColumn	 guibg=#333333 
+      highlight LineNr	 guibg=#1a1a1a
+      highlight  Visual	 gui=inverse guibg=black
+  endtry
+
   set background=dark
 
   set updatetime=1000 " miliseconds - time before CursorHold fires
-  highlight Curword guibg=#334
-  autocmd InsertEnter *.{cpp,c,h} syntax clear Curword
-  autocmd CursorHold *.{cpp,c,h} syntax clear Curword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword Curword " . expand("<cword>") |endif 
+  "highlight MyCurword guibg=#134
+  highlight MyCurword guibg=#444
+  autocmd InsertEnter *.{cpp,c,h} syntax clear MyCurword
+  autocmd CursorHold *.{cpp,c,h} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
 
   set guioptions-=T
 

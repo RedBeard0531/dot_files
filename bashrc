@@ -109,6 +109,10 @@ alias vimdiff="vimdiff --noplugin"
 
 alias sr='ssh -l root'
 alias smoke="python2 buildscripts/smoke.py"
+alias rebuildPCH="clang++ -x c++-header ~/pch.h -o ~/pch.h.pch -DMONGO_EXPOSE_MACROS"
+alias scons="nice scons"
+alias cr='python ~/10gen/scratch/tools/upload.py -y -s codereview.10gen.com -m'
+
 
 
 . /etc/bash_completion

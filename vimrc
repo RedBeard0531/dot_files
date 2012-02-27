@@ -176,6 +176,9 @@ nnoremap d' da'
 nnoremap d" da"
 nnoremap dw daw
 
+" like * but with ctrl find current word in whole project
+nnoremap <F7> *N:execute "Ack -w " . expand('<cword>')  <CR><CR>
+
 autocmd FileType haskell set nospell
 
 "use shift-w to save the file as root (I forget to use "sudo vim" a lot)
@@ -226,8 +229,8 @@ endif
 set exrc
 set secure
 
-"let g:clang_use_library = 1
-let g:clang_debug = 1
+let g:clang_use_library = 1
+"let g:clang_debug = 1
 
 let g:syntastic_enable_signs=1
 let g:syntastic_auto_loc_list=1
