@@ -204,6 +204,8 @@ let g:haddock_browser = "chromium"
 let g:CommandTSelectNextMap=['<C-n>', '<C-j>', '<Down>', '<Tab>']
 let g:CommandTSelectPrevMap=['<C-p>', '<C-k>', '<Up>', '<S-Tab>']
 
+autocmd FileType go setlocal sts=4 ts=4 noexpandtab
+
 "If using vim7 
 if version >= 700
   autocmd FileType tex setlocal grepprg=grep\ -nH\ $*

@@ -8,13 +8,9 @@
 
 
 # Source global definitions
-if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
-fi
-
-if [ -f /etc/profile ]; then
-	. /etc/profile
-fi
+[ -r /etc/bashrc ] && . /etc/bashrc
+[ -r /etc/bash.bashrc ] && . /etc/bash.bashrc
+[ -r /etc/profile ] && . /etc/profile
 
 # User specific aliases and functions go here (override system defaults)
 export PATH="/home/mstearn/bin:/usr/local/bin:/usr/lib/colorgcc/bin/:$PATH"
@@ -90,6 +86,9 @@ export SCONSFLAGS="-j$_COMPILE_THREADS"
 
 export HISTCONTROL=ignoreboth
 
+export GOBIN=~/bin
+export GOPATH=~/go_path
+
 alias sudo="sudo -E"
 alias emerge="sudo emerge"
 alias pacman="sudo pacman"
@@ -112,8 +111,23 @@ alias sr='ssh -l root'
 alias smoke="python2 buildscripts/smoke.py"
 alias rebuildPCH="clang++ -x c++-header ~/pch.h -o ~/pch.h.pch -DMONGO_EXPOSE_MACROS"
 alias scons="nice scons"
-alias cr='python ~/10gen/scratch/tools/upload.py -y -s codereview.10gen.com -m'
+alias cr='upload.py -y -s codereview.10gen.com -m'
+alias cru='upload.py -e mathias@10gen.com -s codereview.10gen.com --jira_user redbeard0531'
 
+cruc () {
+    local REV="$1"
+    shift
 
+    if [ -z "$REV" ]; then
+        REV="HEAD"
+    fi
 
-. /etc/bash_completion
+    local REV_SELECTOR="${REV}~..${REV}"
+    local SUBJ=$(git log "$REV_SELECTOR" --pretty=format:"%s")
+    local BODY=$(git log "$REV_SELECTOR" --pretty=format:"%b")
+
+    cru --rev "${REV}~:$REV" \
+        -m "$SUBJ" \
+        --description "$BODY" \
+        "$@"
+}
