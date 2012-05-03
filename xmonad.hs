@@ -368,7 +368,7 @@ defaults = defaultConfig {
         terminal           = myTerminal,
         borderWidth        = myBorderWidth,
         modMask            = myModMask,
-        numlockMask        = myNumlockMask,
+        --numlockMask        = myNumlockMask,
         workspaces         = myWorkspaces,
         normalBorderColor  = myNormalBorderColor,
         focusedBorderColor = myFocusedBorderColor,
@@ -381,7 +381,8 @@ defaults = defaultConfig {
       -- hooks, layouts
         layoutHook         = myLayout,
         manageHook         = myManageHook,
-        logHook            = myLogHook
+        logHook            = myLogHook,
+        handleEventHook    = fullscreenEventHook
     }
 
 

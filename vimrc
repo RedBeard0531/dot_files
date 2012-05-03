@@ -151,6 +151,9 @@ nnoremap Y y$
 nnoremap _if ofprintf(0<C-d>stderr, "{%s}:{%d} - \n", __FILE__, __LINE__);<Esc>F\i 
 autocmd FileType cpp nnoremap _if ocout << __FILE__ << " " << __LINE__  << " " << __FUNCTION__ << " - " << endl;<Esc>F"i 
 
+"auto close {
+inoremap {<Enter> {<Enter>}<Esc>O
+
 "Ruby stuffs
 autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading=1
 "autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
