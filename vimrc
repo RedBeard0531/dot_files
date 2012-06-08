@@ -2,25 +2,9 @@
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
-" An example for a vimrc file.  
-" Stolen from: Bram Moolenaar <Bram@vim.org>
-
-" When started as "evim", evim.vim will already have done these settings.
-if v:progname =~? "evim"
-  finish
-endif
-
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
-
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
-set history=1000	" keep 1000 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
-set incsearch		" do incremental searching
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -29,44 +13,36 @@ map Q gq
 " text is lost and it only works for putting the current register.
 vnoremap p "_dp
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
-endif
+" Switch syntax highlighting on
+syntax on
 
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
+" Enable file type detection.
+" Use the default filetype settings, so that mail gets 'tw' set to 72,
+" 'cindent' is on in C files, etc.
+" Also load indent files, to automatically do language-dependent indenting.
+filetype plugin indent on
 
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
+" For all text files set 'textwidth' to 78 characters.
+autocmd! FileType text setlocal textwidth=78
 
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
+" When editing a file, always jump to the last known cursor position.
+" Don't do it when the position is invalid or when inside an event handler
+" (happens when dropping a file on gvim).
+autocmd! BufReadPost *
+  \ if line("'\"") > 0 && line("'\"") <= line("$") |
+  \   exe "normal g`\"" |
+  \ endif
 
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
-
-  augroup END
-
-endif " has("autocmd")
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 
 "see :h 'option' for more info on any of these
+set backspace=indent,eol,start " allow backspacing over everything in insert mode
+set history=1000 " keep 1000 lines of command line history
+set ruler " show the cursor position all the time
+set showcmd " display incomplete commands
+set hlsearch " highlight bits that match current search (do /asdf<ENTER> to remove)
+set incsearch " do incremental searching
 set confirm "ask to save instead of failing with an error
 set clipboard+=unnamed "by default copy/paste with the X11 clipboard ("* register)
 set background=dark "make things look !ugly with a dark background
@@ -81,6 +57,7 @@ set smartindent "do the Right Thing
 set nocindent "use indent scripts
 set expandtab "tab key -> spaces
 set shiftwidth=4 "indent by 4 spaces
+set shiftround "round indent to multiples of shiftwidth
 set tabstop=8 "tab characters are drawn as 8 spaces
 set softtabstop=4 "treat 4 spaces like a tab
 set showcmd "show partial commands in the right or the status area
@@ -89,7 +66,8 @@ set nobackup "dont make those filename~ files (they have bitten me many times)
 set noswapfile "more trouble than they're worth
 set wildmenu "show possible completions in command (:) mode (try hitting tab twice)
 set wildmode=list:longest,full "make the wildmenu behave more like bash
-set wildignore=*.o,*.git,*.svn "ignore these files
+set wildignore+=*.o,*.git,*.svn "ignore these files
+set wildignore+=*/build/*,*/third_party/* "ignore these dirs
 set ignorecase "dont care about case in searches, etc.
 set smartcase "care about case if I enter any capital letters
 let mapleader = ',' "use , instead of \ as the 'leader' key (used in some plugins)
@@ -120,6 +98,7 @@ nnoremap <silent><F8> :Tlist<CR>
 
 nnoremap <silent><F9> :w<CR>:!pylint -e %<CR>
 
+"make <C-]> use :tagjump
 nnoremap <C-]> g<C-]>
 
 nnoremap <C-s> :wa<CR>
@@ -135,12 +114,16 @@ nnoremap <silent><C-h> <C-w>h
 nnoremap <silent><S-h> :MBEbp<CR>
 nnoremap <silent><S-l> :MBEbn<CR>
 
+"use readline maps in command mode
+cnoremap <C-a> <HOME>
+cnoremap <C-e> <END>
+
 "disable this when in the QuickFix window
 "autocmd FileType qf nunmap <S-h>
 "autocmd FileType qf nunmap <S-l>
-autocmd FileType qf set nospell
-
-autocmd FileType conque_term set nospell
+autocmd! FileType qf set nospell
+autocmd! FileType conque_term set nospell
+autocmd! FileType haskell set nospell
 
 "dont require a shift to enter command mode
 nnoremap ; :
@@ -149,13 +132,13 @@ nnoremap Y y$
 
 "a cool debugging line (hit _if in 'normal' (not insert) mode to try it)
 nnoremap _if ofprintf(0<C-d>stderr, "{%s}:{%d} - \n", __FILE__, __LINE__);<Esc>F\i 
-autocmd FileType cpp nnoremap _if ocout << __FILE__ << " " << __LINE__  << " " << __FUNCTION__ << " - " << endl;<Esc>F"i 
+autocmd! FileType cpp nnoremap _if ocout << __FILE__ << " " << __LINE__  << " " << __FUNCTION__ << " - " << endl;<Esc>F"i 
 
 "auto close {
 inoremap {<Enter> {<Enter>}<Esc>O
 
 "Ruby stuffs
-autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading=1
+autocmd! FileType ruby,eruby let g:rubycomplete_buffer_loading=1
 "autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
 
 "clicking on the 'tabs' in the MiniBufExplorer will switch to that buffer
@@ -182,8 +165,6 @@ nnoremap dw daw
 " like * but with ctrl find current word in whole project
 nnoremap <F7> *N:execute "Ack -w " . expand('<cword>')  <CR><CR>
 
-autocmd FileType haskell set nospell
-
 "use shift-w to save the file as root (I forget to use "sudo vim" a lot)
 command! -bar -nargs=0 W  :silent exe "write !sudo tee % >/dev/null"|silent edit!
 
@@ -193,6 +174,10 @@ cabbr make wa\|make
 "better navigation of quickfix list
 nnoremap <C-n> :cn<cr>
 nnoremap <C-p> :cp<cr>
+
+"better indentation (keeps selection)
+vnoremap > >gv
+vnoremap < <gv
 
 " use ghc functionality for haskell files
 au Bufenter *.hs compiler ghc
@@ -207,14 +192,14 @@ let g:haddock_browser = "chromium"
 let g:CommandTSelectNextMap=['<C-n>', '<C-j>', '<Down>', '<Tab>']
 let g:CommandTSelectPrevMap=['<C-p>', '<C-k>', '<Up>', '<S-Tab>']
 
-autocmd FileType go setlocal sts=4 ts=4 noexpandtab
+autocmd! FileType go setlocal sts=4 ts=4 noexpandtab
 
 "If using vim7 
 if version >= 700
-  autocmd FileType tex setlocal grepprg=grep\ -nH\ $*
+  autocmd! FileType tex setlocal grepprg=grep\ -nH\ $*
   set spell "enable spell checking use ":set nospell" to turn it off for a single buffer
   set spelllang=en_us "use US dictionary for spelling
-  autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete "use ruby auto-completion
+  autocmd! FileType ruby,eruby set omnifunc=rubycomplete#Complete "use ruby auto-completion
   set completeopt=longest,menu,preview "make auto-complete less stupid
 endif
 
@@ -225,7 +210,9 @@ endif
 
 " close the preview window after i'm done with it
 "autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+autocmd! InsertLeave * if pumvisible() == 0|pclose|endif
+
+autocmd! BufWritePost .vimrc source %
 
 if filereadable('./SConstruct')
     compiler scons
@@ -244,8 +231,8 @@ let g:syntastic_auto_loc_list=1
 let g:space_no_character_movements = 1
 
 "This is needed for alias vimdiff="vimdiff --noplugin"
-autocmd FuncUndefined GitBranch call s:DefGitBranch()
-function s:DefGitBranch()
+autocmd! FuncUndefined GitBranch call s:DefGitBranch()
+function! s:DefGitBranch()
     function GitBranch()
         return "NONE"
     endfunc
