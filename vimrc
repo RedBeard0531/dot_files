@@ -78,6 +78,9 @@ set formatoptions-=o "don't insert comment chars when I hit o or O
 set autoread "automatically reread files that have been updated. useful with git
 "set gdefault " the /g flag on :s substitutions by default
 
+set path+=src/
+set path+=src/mongo/
+
 let python_highlight_all=1 "highlight everything possible in python
 let python_highlight_space_errors=0 "except spacing issues
 let perl_extended_vars=1 " highlight advanced perl vars inside strings
@@ -229,6 +232,10 @@ let g:syntastic_auto_loc_list=1
 "SyntasticEnable cpp
 
 let g:space_no_character_movements = 1
+
+if filereadable(expand('~/.fonts/DejaVuSansMono-Powerline.ttf'))
+    let g:Powerline_symbols = 'fancy'
+endif
 
 "This is needed for alias vimdiff="vimdiff --noplugin"
 autocmd! FuncUndefined GitBranch call s:DefGitBranch()
