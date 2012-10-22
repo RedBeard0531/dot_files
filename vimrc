@@ -7,8 +7,7 @@ call pathogen#helptags()
 set nocompatible
 
 " Don't use Ex mode, use Q for formatting
-map Q gq
-
+map Q gq 
 " This is an alternative that also works in block mode, but the deleted
 " text is lost and it only works for putting the current register.
 vnoremap p "_dp
@@ -227,10 +226,26 @@ set exrc
 set secure
 
 let g:clang_use_library = 1
+let g:clang_ibrary_path = "/usr/lib/llvm/libclang.so"
+let g:clang_complete_macros=1
+let g:clang_periodic_quickfix=0
+let g:clang_complete_copen = 1
+let g:clang_jumpto_declaration_key = "<A-]>"
+let g:clang_jumpto_back_key = "<A-T>"
+"let g:clang_snippets = 1
+"let g:clang_snippets_engine = 'ultisnips'
 "let g:clang_debug = 1
+
+"let g:UltiSnipsExpandTrigger="<s-tab>"
+"let g:UltiSnipsJumpForwardTrigger="<s-tab>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-tab>"
 
 let g:syntastic_enable_signs=1
 let g:syntastic_auto_loc_list=1
+let g:syntastic_c_checker = "clang"
+let g:syntastic_c_no_include_search = 1
+let g:syntastic_cpp_compiler = 'clang++'
+let g:syntastic_cpp_no_include_search = 1
 "SyntasticEnable cpp
 
 let g:space_no_character_movements = 1

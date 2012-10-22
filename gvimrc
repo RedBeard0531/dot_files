@@ -52,7 +52,9 @@ if version >= 500
 
    try
       "colorscheme solarized
-      colorscheme wombat
+      "colorscheme wombat
+      colorscheme wombat256
+      highlight clear SignColumn
    catch
       highlight Normal guibg=black guifg=grey
       highlight NonText guibg=black guifg=magenta
@@ -62,7 +64,7 @@ if version >= 500
       highlight Folded guibg=#333333 
       highlight FoldColumn	 guibg=#333333 
       highlight LineNr	 guibg=#1a1a1a
-      highlight  Visual	 gui=inverse guibg=black
+      highlight Visual	 gui=inverse guibg=black
   endtry
 
   set background=dark

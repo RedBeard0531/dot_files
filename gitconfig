@@ -10,4 +10,7 @@
 [web]
     browser = opera
 [core]
-	pager = less -FX
+        #pager = less -FX
+	pager = lesswrapper
+[push]
+	default = simple
