@@ -24,13 +24,15 @@ if [[ $- != *i* ]] ; then
 fi
 
 export EDITOR=vim
+
+eval `dircolors -b`
 alias ls="ls -F --color"
 alias ll="ls -lh"
 alias d="cd -"
 alias svn="colorsvn"
 alias grep="grep --color"
 
-#export LESS='-iRM -P%t?f%f :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
+export LESS='-iRM -P%t?f%f :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
 
 #export PAGER="most -s"
 #export BROWSER="most -s"

@@ -9,3 +9,5 @@
 
 [web]
     browser = opera
+[core]
+	pager = less -FX
