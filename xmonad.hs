@@ -151,7 +151,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
  
     -- Resize viewed windows to the correct size
-    , ((modMask,               xK_n     ), refresh)
+    , ((modMask,               xK_r     ), refresh)
  
     -- Move focus to the next window
     , ((modMask,               xK_j     ), windows W.focusDown)

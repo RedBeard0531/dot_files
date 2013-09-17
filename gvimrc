@@ -76,6 +76,7 @@ if version >= 500
   autocmd CursorHold *.{cpp,c,h} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
 
   set guioptions-=T
+  set guifont=Monospace\ 9
 
   set spelllang=en_us
   :map K :!xterm -bg black -fg gray -e "man <cword>"<cr><cr> 

@@ -56,7 +56,7 @@ set smartindent "do the Right Thing
 set nocindent "use indent scripts
 set expandtab "tab key -> spaces
 set shiftwidth=4 "indent by 4 spaces
-set shiftround "round indent to multiples of shiftwidth
+set noshiftround "don't round indent to multiples of shiftwidth
 set tabstop=8 "tab characters are drawn as 8 spaces
 set softtabstop=4 "treat 4 spaces like a tab
 set showcmd "show partial commands in the right or the status area
@@ -73,9 +73,11 @@ let mapleader = ',' "use , instead of \ as the 'leader' key (used in some plugin
 set nostartofline "don't go to the start of line after certain commands
 "set textwidth=80 "wrap at 80 chars
 set formatoptions-=o "don't insert comment chars when I hit o or O
+set formatoptions+=j " remove comment mark when joining lines
 "set formatoptions+=a "automatically reflow comment blocks (:h fo-table)
 set autoread "automatically reread files that have been updated. useful with git
 "set gdefault " the /g flag on :s substitutions by default
+set virtualedit=block " allow block selections to go past the end of lines
 
 "using let rather than set to prepend rather than append
 let &path = 'src/third_party/boost/,' . &path
@@ -167,7 +169,8 @@ nnoremap d" da"
 nnoremap dw daw
 
 " like * but with ctrl find current word in whole project
-nnoremap <F7> *N:execute "Ack -w " . expand('<cword>')  <CR><CR>
+nnoremap <F7> *N:execute "Ggrep -w " . expand('<cword>')  <CR><CR>
+autocmd QuickFixCmdPost *grep* cwindow
 
 "use shift-w to save the file as root (I forget to use "sudo vim" a lot)
 command! -bar -nargs=0 W  :silent exe "write !sudo tee % >/dev/null"|silent edit!
@@ -178,6 +181,9 @@ cabbr make wa\|make
 "better navigation of quickfix list
 nnoremap <C-n> :cn<cr>
 nnoremap <C-p> :cp<cr>
+
+"better navigation of location list
+nnoremap <A-N> :lnext<cr>
 
 "better indentation (keeps selection)
 vnoremap > >gv
@@ -237,7 +243,7 @@ let g:clang_jumpto_back_key = "<A-T>"
 "let g:clang_debug = 1
 
 "let g:UltiSnipsExpandTrigger="<s-tab>"
-"let g:UltiSnipsJumpForwardTrigger="<s-tab>"
+let g:UltiSnipsJumpForwardTrigger="<s-tab>"
 "let g:UltiSnipsJumpBackwardTrigger="<c-tab>"
 
 let g:syntastic_enable_signs=1
@@ -246,7 +252,20 @@ let g:syntastic_c_checker = "clang"
 let g:syntastic_c_no_include_search = 1
 let g:syntastic_cpp_compiler = 'clang++'
 let g:syntastic_cpp_no_include_search = 1
+let g:syntastic_cpp_errorformat = 
+            \ '%-G%f:%s:,'.
+            \ '%f:%l:%c: %trror: %m,'.
+            \ '%f:%l:%c: %tarning: %m,'.
+            \ '%I%f:%l:%c: note: %m,'.
+            \ '%f:%l:%c: %m,'.
+            \ '%f:%l: %trror: %m,'.
+            \ '%f:%l: %tarning: %m,'.
+            \ '%I%f:%l: note: %m,'.
+            \ '%f:%l: %m,'.
+            \ '%I%m'
 "SyntasticEnable cpp
+
+let g:gitgutter_eager = 0
 
 let g:space_no_character_movements = 1
 
