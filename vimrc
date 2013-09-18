@@ -1,5 +1,5 @@
 "This most go first
-call pathogen#runtime_append_all_bundles()
+call pathogen#infect()
 call pathogen#helptags()
 
 " Use Vim settings, rather then Vi settings (much better!).
@@ -225,7 +225,7 @@ autocmd! InsertLeave * if pumvisible() == 0|pclose|endif
 autocmd! BufWritePost .vimrc source %
 
 if filereadable('./SConstruct')
-    compiler scons
+    set makeprg=scons
 endif
 
 set exrc
