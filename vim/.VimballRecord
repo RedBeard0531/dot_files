@@ -1,3 +1,0 @@
-haskellmode-20071105.vba: call delete('/home/mstearn/.vim/compiler/ghc.vim')|call delete('/home/mstearn/.vim/ftplugin/haskell.vim')|call delete('/home/mstearn/.vim/ftplugin/haskell_doc.vim')|call delete('/home/mstearn/.vim/ftplugin/haskell_hpaste.vim')|call delete('/home/mstearn/.vim/doc/haskellmode.txt')
-haskellmode-20081031.vba: call delete('/home/mstearn/.vim/compiler/ghc.vim')|call delete('/home/mstearn/.vim/ftplugin/haskell.vim')|call delete('/home/mstearn/.vim/ftplugin/haskell_doc.vim')|call delete('/home/mstearn/.vim/ftplugin/haskell_hpaste.vim')|call delete('/home/mstearn/.vim/doc/haskellmode.txt')
-supertab.vba: call delete('/home/mstearn/.vim/doc/supertab.txt')|call delete('/home/mstearn/.vim/plugin/supertab.vim')
