@@ -51,9 +51,10 @@ set laststatus=2 "always show above status line
 set mouse=a "allow mouse usage in terms (scrolling, highlighting, pasting, etc.)
 set mousehide " Hide the mouse when typing text
 set scrolloff=5 "try to keep at least 5 lines above and bellow the cursor when scrolling
-set autoindent "enable the following line
-set smartindent "do the Right Thing
-set nocindent "use indent scripts
+"set autoindent "enable the following line
+"set smartindent "do the Right Thing
+"set nocindent "use indent scripts
+set cinoptions=:0,l1,g0,(0,Ws,k2s,J1,)1000,*1000 " setup cindent correctly. see :help cinoptions-values
 set expandtab "tab key -> spaces
 set shiftwidth=4 "indent by 4 spaces
 set noshiftround "don't round indent to multiples of shiftwidth
