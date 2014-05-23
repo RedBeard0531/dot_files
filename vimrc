@@ -43,7 +43,8 @@ set showcmd " display incomplete commands
 set hlsearch " highlight bits that match current search (do /asdf<ENTER> to remove)
 set incsearch " do incremental searching
 set confirm "ask to save instead of failing with an error
-set clipboard+=unnamed "by default copy/paste with the X11 clipboard ("* register)
+"set clipboard+=unnamed "by default copy/paste with the X11 clipboard ("* register)
+set clipboard+=unnamedplus "by default copy/paste with the X11 clipboard ("+ register)
 set background=dark "make things look !ugly with a dark background
 set listchars=tab:\|\ ,trail:.,extends:>,precedes:<,eol:$ " what to show when I hit :set list
 set statusline=%F%m%r%h%w\ [%{GitBranch()}]\ [%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [%04l,%04v][%p%%]\ [LEN=%L]
@@ -54,7 +55,7 @@ set scrolloff=5 "try to keep at least 5 lines above and bellow the cursor when s
 "set autoindent "enable the following line
 "set smartindent "do the Right Thing
 "set nocindent "use indent scripts
-set cinoptions=:0,l1,g0,(0,Ws,k2s,J1,)1000,*1000 " setup cindent correctly. see :help cinoptions-values
+set cinoptions=:0,l1,g0,(0,Ws,k2s,j1,J1,)1000,*1000 " setup cindent correctly. see :help cinoptions-values
 set expandtab "tab key -> spaces
 set shiftwidth=4 "indent by 4 spaces
 set noshiftround "don't round indent to multiples of shiftwidth
@@ -67,7 +68,6 @@ set noswapfile "more trouble than they're worth
 set wildmenu "show possible completions in command (:) mode (try hitting tab twice)
 set wildmode=list:longest,full "make the wildmenu behave more like bash
 set wildignore+=*.o,*.git,*.svn "ignore these files
-set wildignore+=*/build/*,*/third_party/* "ignore these dirs
 set ignorecase "dont care about case in searches, etc.
 set smartcase "care about case if I enter any capital letters
 let mapleader = ',' "use , instead of \ as the 'leader' key (used in some plugins)
@@ -79,11 +79,6 @@ set formatoptions+=j " remove comment mark when joining lines
 set autoread "automatically reread files that have been updated. useful with git
 "set gdefault " the /g flag on :s substitutions by default
 set virtualedit=block " allow block selections to go past the end of lines
-
-"using let rather than set to prepend rather than append
-let &path = 'src/third_party/boost/,' . &path
-let &path = 'src/mongo/,' . &path
-let &path = 'src/,' . &path
 
 let python_highlight_all=1 "highlight everything possible in python
 let python_highlight_space_errors=0 "except spacing issues
@@ -160,6 +155,7 @@ let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
 "let g:SuperTabMappingForward = "<tab>"
 
+autocmd! FileType gitcommit setlocal textwidth=78 colorcolumn=79
 
 "change inside of a (single-ling) string, see :help objects
 nnoremap c' ci'
@@ -170,8 +166,11 @@ nnoremap d" da"
 nnoremap dw daw
 
 " like * but with ctrl find current word in whole project
-nnoremap <F7> *N:execute "Ggrep -w " . expand('<cword>')  <CR><CR>
-autocmd QuickFixCmdPost *grep* cwindow
+nnoremap <silent><F7> *N:execute "Ggrep -w " . expand('<cword>')  <CR><CR>
+autocmd QuickFixCmdPost *grep* botright cwindow
+
+nnoremap <silent><F11> :colder<CR>
+nnoremap <silent><F12> :cnewer<CR>
 
 "use shift-w to save the file as root (I forget to use "sudo vim" a lot)
 command! -bar -nargs=0 W  :silent exe "write !sudo tee % >/dev/null"|silent edit!
@@ -223,7 +222,7 @@ endif
 "autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd! InsertLeave * if pumvisible() == 0|pclose|endif
 
-autocmd! BufWritePost .vimrc source %
+"autocmd! BufWritePost .vimrc source %
 
 if filereadable('./SConstruct')
     set makeprg=scons
@@ -247,7 +246,7 @@ let g:clang_jumpto_back_key = "<A-T>"
 let g:UltiSnipsJumpForwardTrigger="<s-tab>"
 "let g:UltiSnipsJumpBackwardTrigger="<c-tab>"
 
-let g:syntastic_enable_signs=1
+"let g:syntastic_enable_signs=1
 let g:syntastic_auto_loc_list=1
 let g:syntastic_c_checker = "clang"
 let g:syntastic_c_no_include_search = 1
@@ -266,13 +265,44 @@ let g:syntastic_cpp_errorformat =
             \ '%I%m'
 "SyntasticEnable cpp
 
-let g:gitgutter_eager = 0
+let g:ycm_enable_diagnostic_signs = 0 " interferes with git-gutter which is more valuable
+let g:ycm_extra_conf_globlist = ['~/10gen/*']
+let g:ycm_always_populate_location_list = 1
+let g:ycm_filepath_completion_use_working_dir = 1
+let g:ycm_open_loclist_on_ycm_diags = 1
+let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_fonf.py'
+"let g:ycm_key_invoke_completion = '<tab>' " doesn't work :(
+
+autocmd! FileType cpp nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
+autocmd! FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
+
+let g:UltiSnipsExpandTrigger="<c-tab>"
+"let g:UltiSnipsListSnippets="<leader>s"
+let g:UltiSnipsJumpForwardTrigger="<c-tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
+let g:delimitMate_expand_cr = 1
+let g:delimitMate_expand_space = 1
+let g:delimitMate_jump_expansion = 1
+let g:delimitMate_balance_matchpairs = 1
+
+let g:gitgutter_eager = 1
 
 let g:space_no_character_movements = 1
 
 if filereadable(expand('~/.fonts/DejaVuSansMono-Powerline.ttf'))
     let g:Powerline_symbols = 'fancy'
+    let g:airline_powerline_fonts = 1
 endif
+
+if filereadable(expand('~/.fonts/PowerlineSymbols.otf'))
+    let g:airline_powerline_fonts = 1
+endif
+
+" enable :Man and <leader>K mappings
+runtime! ftplugin/man.vim
+
+runtime! macros/matchit.vim
 
 "This is needed for alias vimdiff="vimdiff --noplugin"
 autocmd! FuncUndefined GitBranch call s:DefGitBranch()

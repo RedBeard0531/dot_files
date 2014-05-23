@@ -49,13 +49,18 @@ if version >= 500
   " Cursor is green, Cyan when ":lmap" mappings are active
   " Constants are not underlined but have a slightly lighter background
 
+  let s:usingWombat = 1
+  if s:usingWombat
+      try
+          "colorscheme solarized
+          "colorscheme wombat
+          colorscheme wombat256
+      catch
+          let s:usingWombat = 0
+      endtry
+  endif
 
-   try
-      "colorscheme solarized
-      "colorscheme wombat
-      colorscheme wombat256
-      highlight clear SignColumn
-   catch
+  if !s:usingWombat
       highlight Normal guibg=black guifg=grey
       highlight NonText guibg=black guifg=magenta
       highlight Cursor guibg=Green guifg=NONE
@@ -65,13 +70,13 @@ if version >= 500
       highlight FoldColumn	 guibg=#333333 
       highlight LineNr	 guibg=#1a1a1a
       highlight Visual	 gui=inverse guibg=black
-  endtry
+  endif
 
   set background=dark
 
-  set updatetime=1000 " miliseconds - time before CursorHold fires
+  set updatetime=250 " miliseconds - time before CursorHold fires
   "highlight MyCurword guibg=#134
-  highlight MyCurword guibg=#444
+  highlight MyCurword guibg=#223 gui=bold
   autocmd InsertEnter *.{cpp,c,h} syntax clear MyCurword
   autocmd CursorHold *.{cpp,c,h} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
 
@@ -80,5 +85,7 @@ if version >= 500
 
   set spelllang=en_us
   :map K :!xterm -bg black -fg gray -e "man <cword>"<cr><cr> 
+
+  highlight clear SignColumn
 endif
 
