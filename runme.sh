@@ -7,6 +7,7 @@
 #ln -s ~/dot_files/vim ~/.vim
 #ln -s ~/dot_files/Xmodmap ~/.Xmodmap
 #ln -s ~/dot_files/gitconfig ~/.gitconfig
+#ln -s ~/dot_files/gdbinit ~/.gdbinit
 #mkdir -p ~/.xmonad
 #ln -s ~/dot_files/xmonad.hs ~/.xmonad/xmonad.hs
 
