@@ -10,11 +10,15 @@ try:
 except Exception:
     print "STL helpers unavailable. Check out svn co svn://gcc.gnu.org/svn/gcc/trunk/libstdc++-v3/python"
     pass
-end
 
-python
-import sys
-import os
+try:
+    sys.path.insert(0, os.path.expanduser('~/opensource/Boost-Pretty-Printer/'))
+    from boost.printers import register_printer_gen
+    register_printer_gen(None)
+except Exception:
+    print "Boost helpers unavailable. Check out https://github.com/ruediger/Boost-Pretty-Printer"
+    pass
+
 try:
     sys.path.insert(0, os.path.expanduser('~/10gen/mongo_gdb/'))
     import mongo_printer
