@@ -55,7 +55,7 @@ set scrolloff=5 "try to keep at least 5 lines above and bellow the cursor when s
 "set autoindent "enable the following line
 "set smartindent "do the Right Thing
 "set nocindent "use indent scripts
-set cinoptions=:0,l1,g0,(0,Ws,k2s,j1,J1,)1000,*1000 " setup cindent correctly. see :help cinoptions-values
+set cinoptions=l1,g0,N-s,(0,u0,Ws,k2s,j1,J1,)1000,*1000 " setup cindent correctly. see :help cinoptions-values
 set expandtab "tab key -> spaces
 set shiftwidth=4 "indent by 4 spaces
 set noshiftround "don't round indent to multiples of shiftwidth
@@ -139,6 +139,10 @@ autocmd! FileType cpp nnoremap _if ocout << __FILE__ << " " << __LINE__  << " " 
 "auto close {
 inoremap {<Enter> {<Enter>}<Esc>O
 
+"add c++ stdlib headers to path
+let &path = '/usr/include/c++/*,' . &path
+let &path = '/usr/include/c++/*/x86_64*,' . &path
+
 "Ruby stuffs
 autocmd! FileType ruby,eruby let g:rubycomplete_buffer_loading=1
 "autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
@@ -176,7 +180,7 @@ nnoremap <silent><F12> :cnewer<CR>
 command! -bar -nargs=0 W  :silent exe "write !sudo tee % >/dev/null"|silent edit!
 
 "autosave on make
-cabbr make wa\|make
+"cabbr make wa\|make
 
 "better navigation of quickfix list
 nnoremap <C-n> :cn<cr>
@@ -201,6 +205,7 @@ let g:haddock_browser = "chromium"
 " allow use of tab and s-tab in command-t window
 let g:CommandTSelectNextMap=['<C-n>', '<C-j>', '<Down>', '<Tab>']
 let g:CommandTSelectPrevMap=['<C-p>', '<C-k>', '<Up>', '<S-Tab>']
+let g:CommandTTraverseSCM='pwd'
 
 autocmd! FileType go setlocal sts=4 ts=4 noexpandtab
 
@@ -209,8 +214,9 @@ if version >= 700
   autocmd! FileType tex setlocal grepprg=grep\ -nH\ $*
   set spell "enable spell checking use ":set nospell" to turn it off for a single buffer
   set spelllang=en_us "use US dictionary for spelling
+  highlight SpellBad  cterm=undercurl  ctermbg=52 gui=undercurl guisp=Red
   autocmd! FileType ruby,eruby set omnifunc=rubycomplete#Complete "use ruby auto-completion
-  set completeopt=longest,menu,preview "make auto-complete less stupid
+  set completeopt=longest,menuone,preview "make auto-complete less stupid
 endif
 
 if version >= 703
@@ -265,16 +271,23 @@ let g:syntastic_cpp_errorformat =
             \ '%I%m'
 "SyntasticEnable cpp
 
-let g:ycm_enable_diagnostic_signs = 0 " interferes with git-gutter which is more valuable
+"let g:ycm_enable_diagnostic_signs = 0 " interferes with git-gutter which is more valuable
 let g:ycm_extra_conf_globlist = ['~/10gen/*']
 let g:ycm_always_populate_location_list = 1
 let g:ycm_filepath_completion_use_working_dir = 1
 let g:ycm_open_loclist_on_ycm_diags = 1
 let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_fonf.py'
+let g:ycm_collect_identifiers_from_tags_files = 0
+let g:ycm_complete_in_comments = 0
 "let g:ycm_key_invoke_completion = '<tab>' " doesn't work :(
 
-autocmd! FileType cpp nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
-autocmd! FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
+
+autocmd FileType c,cpp nnoremap <buffer>T :YcmCompleter GetType<CR>
+autocmd FileType c,cpp nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
+autocmd FileType c,cpp nnoremap <silent><buffer><D-]> :YcmComplete GoToDeclaration<CR>
+autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
+
+autocmd FileType yaml set sts=2 sw=2
 
 let g:UltiSnipsExpandTrigger="<c-tab>"
 "let g:UltiSnipsListSnippets="<leader>s"

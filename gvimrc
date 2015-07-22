@@ -84,8 +84,7 @@ if version >= 500
   set guifont=Monospace\ 9
 
   set spelllang=en_us
-  :map K :!xterm -bg black -fg gray -e "man <cword>"<cr><cr> 
-
-  highlight clear SignColumn
+  ":map K :!xterm -bg black -fg gray -e "man <cword>"<cr><cr> 
+  map K :Man <cword><cr> 
 endif
 

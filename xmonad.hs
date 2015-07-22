@@ -42,7 +42,7 @@ import Data.Ratio ((%))
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal      = "konsole"
+myTerminal      = "gnome-terminal --hide-menubar"
  
 -- Width of the window border in pixels.
 --

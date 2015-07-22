@@ -8,9 +8,13 @@
 	smtpserver = /usr/bin/msmtp
 
 [web]
-    browser = opera
+    browser = firefox
 [core]
         #pager = less -FX
 	pager = lesswrapper
 [push]
 	default = simple
+
+[alias]
+    br = for-each-ref --sort=-committerdate refs/heads/ --format='%(color:yellow)%(committerdate:short) %(color:cyan)%(refname:short):%(color:reset) %(subject)'
+    rb = !git rebase -i $(git merge-base HEAD origin)
