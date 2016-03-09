@@ -7,7 +7,7 @@ call pathogen#helptags()
 set nocompatible
 
 " Don't use Ex mode, use Q for formatting
-map Q gq 
+map Q gq
 " This is an alternative that also works in block mode, but the deleted
 " text is lost and it only works for putting the current register.
 vnoremap p "_dp
@@ -86,7 +86,7 @@ let perl_extended_vars=1 " highlight advanced perl vars inside strings
 
 set number "show line numbers
 "hit F11 to toggle line numbers
-nnoremap <silent><F11> :set number!<CR> 
+nnoremap <silent><F11> :set number!<CR>
 
 "TagList plugin settings
 let Tlist_Exit_OnlyWindow = 1 " if you are the last, kill yourself
@@ -133,8 +133,8 @@ nnoremap ; :
 nnoremap Y y$
 
 "a cool debugging line (hit _if in 'normal' (not insert) mode to try it)
-nnoremap _if ofprintf(0<C-d>stderr, "{%s}:{%d} - \n", __FILE__, __LINE__);<Esc>F\i 
-autocmd! FileType cpp nnoremap _if ocout << __FILE__ << " " << __LINE__  << " " << __FUNCTION__ << " - " << endl;<Esc>F"i 
+nnoremap _if ofprintf(0<C-d>stderr, "{%s}:{%d} - \n", __FILE__, __LINE__);<Esc>F\i
+autocmd! FileType cpp nnoremap _if ocout << __FILE__ << " " << __LINE__  << " " << __FUNCTION__ << " - " << endl;<Esc>F"i
 
 "auto close {
 inoremap {<Enter> {<Enter>}<Esc>O
@@ -197,7 +197,7 @@ vnoremap < <gv
 au Bufenter *.hs compiler ghc
 
 " autodetect scons files
-au BufNewFile,BufRead SCons* set filetype=scons 
+au BufNewFile,BufRead SCons* set filetype=scons
 
 " configure browser for haskell_doc.vim
 let g:haddock_browser = "chromium"
@@ -209,7 +209,7 @@ let g:CommandTTraverseSCM='pwd'
 
 autocmd! FileType go setlocal sts=4 ts=4 noexpandtab
 
-"If using vim7 
+"If using vim7
 if version >= 700
   autocmd! FileType tex setlocal grepprg=grep\ -nH\ $*
   set spell "enable spell checking use ":set nospell" to turn it off for a single buffer
@@ -258,7 +258,7 @@ let g:syntastic_c_checker = "clang"
 let g:syntastic_c_no_include_search = 1
 let g:syntastic_cpp_compiler = 'clang++'
 let g:syntastic_cpp_no_include_search = 1
-let g:syntastic_cpp_errorformat = 
+let g:syntastic_cpp_errorformat =
             \ '%-G%f:%s:,'.
             \ '%f:%l:%c: %trror: %m,'.
             \ '%f:%l:%c: %tarning: %m,'.
@@ -306,6 +306,17 @@ let g:space_no_character_movements = 1
 if filereadable(expand('~/.fonts/DejaVuSansMono-Powerline.ttf'))
     let g:Powerline_symbols = 'fancy'
     let g:airline_powerline_fonts = 1
+    if !exists('g:airline_symbols')
+        let g:airline_symbols = {}
+        "let g:airline_symbols.space = "\ua0"
+    endif
+    let g:airline_left_sep = '⮀'
+    let g:airline_left_alt_sep = '⮁'
+    let g:airline_right_sep = '⮂'
+    let g:airline_right_alt_sep = '⮃'
+    let g:airline_symbols.branch = '⭠'
+    let g:airline_symbols.readonly = '⭤'
+    let g:airline_symbols.linenr = '⭡'
 endif
 
 if filereadable(expand('~/.fonts/PowerlineSymbols.otf'))

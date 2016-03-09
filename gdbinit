@@ -7,16 +7,18 @@ try:
     sys.path.insert(0, os.path.expanduser('~/opensource/gdb-stl/'))
     from libstdcxx.v6.printers import register_libstdcxx_printers
     register_libstdcxx_printers (None)
-except Exception:
-    print "STL helpers unavailable. Check out svn co svn://gcc.gnu.org/svn/gcc/trunk/libstdc++-v3/python"
+except Exception as e:
+    print( "STL helpers unavailable. Check out svn co svn://gcc.gnu.org/svn/gcc/trunk/libstdc++-v3/python" )
+    print(e)
     pass
 
 try:
-    sys.path.insert(0, os.path.expanduser('~/opensource/Boost-Pretty-Printer/'))
-    from boost.printers import register_printer_gen
-    register_printer_gen(None)
+    #sys.path.insert(0, os.path.expanduser('~/opensource/Boost-Pretty-Printer/'))
+    #from boost.printers import register_printer_gen
+    #register_printer_gen(None)
+    pass
 except Exception:
-    print "Boost helpers unavailable. Check out https://github.com/ruediger/Boost-Pretty-Printer"
+    print( "Boost helpers unavailable. Check out https://github.com/ruediger/Boost-Pretty-Printer" )
     pass
 
 try:
@@ -24,7 +26,7 @@ try:
     import mongo_printer
     mongo_printer.register_mongo_printers()
 except Exception:
-    print "Error loading mongo_printer"
+    print( "Error loading mongo_printer" )
     pass
 end
 

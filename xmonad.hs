@@ -24,6 +24,7 @@ import XMonad.Layout.Magnifier
 import XMonad.Layout.Maximize
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.Reflect
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.IM
@@ -275,7 +276,14 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = avoidStruts $ onWorkspace "9" (IM (1%7) (Title "Buddy List")) $ toggleLayouts (noBorders Full) $ maximize (tiled ||| Mirror tiled ||| noBorders (tabbed shrinkText defaultTheme) )
+myLayout = avoidStruts
+         $ onWorkspace "9" (IM (1%7) (Title "Buddy List"))
+         $ toggleLayouts (noBorders Full)
+         $ maximize (tiled
+                 ||| reflectHoriz tiled
+                 -- ||| Mirror tiled
+                 -- ||| noBorders (tabbed shrinkText defaultTheme)
+                 )
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = ResizableTall nmaster delta ratio []
