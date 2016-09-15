@@ -76,7 +76,9 @@ if version >= 500
 
   set updatetime=250 " miliseconds - time before CursorHold fires
   "highlight MyCurword guibg=#134
-  highlight MyCurword guibg=#223 gui=bold
+  highlight MyCurword guibg=#111122 gui=bold guifg=white
+  " cterm=bold ctermfg=white
+  highlight SpellBad ctermbg=52 cterm=undercurl
   autocmd InsertEnter *.{cpp,c,h} syntax clear MyCurword
   autocmd CursorHold *.{cpp,c,h} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
 

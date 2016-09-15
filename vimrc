@@ -79,6 +79,7 @@ set formatoptions+=j " remove comment mark when joining lines
 set autoread "automatically reread files that have been updated. useful with git
 "set gdefault " the /g flag on :s substitutions by default
 set virtualedit=block " allow block selections to go past the end of lines
+let $LC_ALL='C' " disable locale-aware sort
 
 let python_highlight_all=1 "highlight everything possible in python
 let python_highlight_space_errors=0 "except spacing issues
@@ -113,8 +114,8 @@ nnoremap <silent><C-l> <C-w>l
 nnoremap <silent><C-h> <C-w>h
 
 "use shift-[hl] to move between buffers (tabs if you use MiniBufExplorer)
-nnoremap <silent><S-h> :MBEbp<CR>
-nnoremap <silent><S-l> :MBEbn<CR>
+nnoremap <silent><S-h> :bp<CR>
+nnoremap <silent><S-l> :bn<CR>
 
 "use readline maps in command mode
 cnoremap <C-a> <HOME>
@@ -123,9 +124,10 @@ cnoremap <C-e> <END>
 "disable this when in the QuickFix window
 "autocmd FileType qf nunmap <S-h>
 "autocmd FileType qf nunmap <S-l>
-autocmd! FileType qf set nospell
-autocmd! FileType conque_term set nospell
-autocmd! FileType haskell set nospell
+autocmd! FileType qf setlocal nospell
+autocmd! FileType conque_term setlocal nospell
+autocmd! FileType haskell setlocal nospell
+autocmd! FileType strace setlocal nospell
 
 "dont require a shift to enter command mode
 nnoremap ; :
@@ -215,7 +217,7 @@ if version >= 700
   set spell "enable spell checking use ":set nospell" to turn it off for a single buffer
   set spelllang=en_us "use US dictionary for spelling
   highlight SpellBad  cterm=undercurl  ctermbg=52 gui=undercurl guisp=Red
-  autocmd! FileType ruby,eruby set omnifunc=rubycomplete#Complete "use ruby auto-completion
+  autocmd! FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete "use ruby auto-completion
   set completeopt=longest,menuone,preview "make auto-complete less stupid
 endif
 
@@ -253,6 +255,7 @@ let g:UltiSnipsJumpForwardTrigger="<s-tab>"
 "let g:UltiSnipsJumpBackwardTrigger="<c-tab>"
 
 "let g:syntastic_enable_signs=1
+let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list=1
 let g:syntastic_c_checker = "clang"
 let g:syntastic_c_no_include_search = 1
@@ -276,18 +279,19 @@ let g:ycm_extra_conf_globlist = ['~/10gen/*']
 let g:ycm_always_populate_location_list = 1
 let g:ycm_filepath_completion_use_working_dir = 1
 let g:ycm_open_loclist_on_ycm_diags = 1
-let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_fonf.py'
+let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_conf.py'
 let g:ycm_collect_identifiers_from_tags_files = 0
 let g:ycm_complete_in_comments = 0
 "let g:ycm_key_invoke_completion = '<tab>' " doesn't work :(
 
 
 autocmd FileType c,cpp nnoremap <buffer>T :YcmCompleter GetType<CR>
+autocmd FileType c,cpp nnoremap <buffer><C-t> :YcmCompleter FixIt<CR>
 autocmd FileType c,cpp nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
 autocmd FileType c,cpp nnoremap <silent><buffer><D-]> :YcmComplete GoToDeclaration<CR>
 autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
 
-autocmd FileType yaml set sts=2 sw=2
+autocmd FileType yaml setlocal sts=2 sw=2
 
 let g:UltiSnipsExpandTrigger="<c-tab>"
 "let g:UltiSnipsListSnippets="<leader>s"
