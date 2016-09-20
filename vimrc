@@ -81,6 +81,8 @@ set autoread "automatically reread files that have been updated. useful with git
 set virtualedit=block " allow block selections to go past the end of lines
 let $LC_ALL='C' " disable locale-aware sort
 
+autocmd FileType cpp setlocal matchpairs+=<:>
+
 let python_highlight_all=1 "highlight everything possible in python
 let python_highlight_space_errors=0 "except spacing issues
 let perl_extended_vars=1 " highlight advanced perl vars inside strings
@@ -290,6 +292,7 @@ autocmd FileType c,cpp nnoremap <buffer><C-t> :YcmCompleter FixIt<CR>
 autocmd FileType c,cpp nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
 autocmd FileType c,cpp nnoremap <silent><buffer><D-]> :YcmComplete GoToDeclaration<CR>
 autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
+autocmd FileType javascript nnoremap <buffer>T :TernType<CR>
 
 autocmd FileType yaml setlocal sts=2 sw=2
 

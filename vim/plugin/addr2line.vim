@@ -12,5 +12,7 @@ function! GetLineAndFunc(output)
 endfunction
  
 " Example - :Addr2Line vmlinux <address>
-command! -nargs=+ -complete=file Addr2Line
-        \ cexpr GetLineAndFunc(system('addr2line -C -i -f -e <args>'))
+if !exists(':Addr2Line')
+    command! -nargs=+ -complete=file Addr2Line
+            \ cexpr GetLineAndFunc(system('addr2line -C -i -f -e <args>'))
+end
