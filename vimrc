@@ -21,30 +21,33 @@ syntax on
 " Also load indent files, to automatically do language-dependent indenting.
 filetype plugin indent on
 
-" For all text files set 'textwidth' to 78 characters.
-autocmd! FileType text setlocal textwidth=78
+"clear all vimrc autocmds
+augroup vimrc
+    autocmd!
+augroup END
 
 " When editing a file, always jump to the last known cursor position.
 " Don't do it when the position is invalid or when inside an event handler
 " (happens when dropping a file on gvim).
-autocmd! BufReadPost *
-  \ if line("'\"") > 0 && line("'\"") <= line("$") |
-  \   exe "normal g`\"" |
-  \ endif
+augroup vimrc
+    autocmd BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      \   exe "normal g`\"" |
+      \ endif
+augroup END
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 
 "see :h 'option' for more info on any of these
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
-set history=1000 " keep 1000 lines of command line history
+set history=10000 " keep a lot of command line history
 set ruler " show the cursor position all the time
 set showcmd " display incomplete commands
 set hlsearch " highlight bits that match current search (do /asdf<ENTER> to remove)
 set incsearch " do incremental searching
 set confirm "ask to save instead of failing with an error
-"set clipboard+=unnamed "by default copy/paste with the X11 clipboard ("* register)
-set clipboard+=unnamedplus "by default copy/paste with the X11 clipboard ("+ register)
+set clipboard^=unnamedplus "by default copy/paste with the X11 clipboard ("+ register)
 set background=dark "make things look !ugly with a dark background
 set listchars=tab:\|\ ,trail:.,extends:>,precedes:<,eol:$ " what to show when I hit :set list
 set statusline=%F%m%r%h%w\ [%{GitBranch()}]\ [%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [%04l,%04v][%p%%]\ [LEN=%L]
@@ -52,6 +55,7 @@ set laststatus=2 "always show above status line
 set mouse=a "allow mouse usage in terms (scrolling, highlighting, pasting, etc.)
 set mousehide " Hide the mouse when typing text
 set scrolloff=5 "try to keep at least 5 lines above and bellow the cursor when scrolling
+set sidescrolloff=10 "ditto for side-scolling
 "set autoindent "enable the following line
 "set smartindent "do the Right Thing
 "set nocindent "use indent scripts
@@ -79,17 +83,32 @@ set formatoptions+=j " remove comment mark when joining lines
 set autoread "automatically reread files that have been updated. useful with git
 "set gdefault " the /g flag on :s substitutions by default
 set virtualedit=block " allow block selections to go past the end of lines
+set termguicolors " use gui colors in terminal
+set ttimeoutlen=100 " don't wait more then X ms for terminal escape codes
+set title " update titlebar
+set updatetime=250 " miliseconds - time before CursorHold fires
+set lazyredraw " don't waste time updating screen while executing macros
+set number "show line numbers
+set exrc "run .vimrc files in pwd
+set secure "don't let .vimrc files owned by other users do stupid things
+set spell "enable spell checking use ":set nospell" to turn it off for a single buffer
+set spelllang=en_us "use US dictionary for spelling
+set completeopt=longest,menuone,preview "make auto-complete less stupid
+set undofile "keep persistent undo across vim runs
+set undodir=~/.vim-undo/ "where to store undo files
+
+if !isdirectory(&undodir)
+    if confirm("Undo dir '".&undodir."' doesn't exist. Create?", "&Yes\n&No") == 1
+        call mkdir(&undodir, "p")
+    endif
+endif
+
 let $LC_ALL='C' " disable locale-aware sort
 
-autocmd FileType cpp setlocal matchpairs+=<:>
-
+let c_comment_strings=1 " I like highlighting strings inside C comments
 let python_highlight_all=1 "highlight everything possible in python
 let python_highlight_space_errors=0 "except spacing issues
 let perl_extended_vars=1 " highlight advanced perl vars inside strings
-
-set number "show line numbers
-"hit F11 to toggle line numbers
-nnoremap <silent><F11> :set number!<CR>
 
 "TagList plugin settings
 let Tlist_Exit_OnlyWindow = 1 " if you are the last, kill yourself
@@ -123,33 +142,47 @@ nnoremap <silent><S-l> :bn<CR>
 cnoremap <C-a> <HOME>
 cnoremap <C-e> <END>
 
-"disable this when in the QuickFix window
-"autocmd FileType qf nunmap <S-h>
-"autocmd FileType qf nunmap <S-l>
-autocmd! FileType qf setlocal nospell
-autocmd! FileType conque_term setlocal nospell
-autocmd! FileType haskell setlocal nospell
-autocmd! FileType strace setlocal nospell
-
 "dont require a shift to enter command mode
 nnoremap ; :
 "make shift Y behave like shift-[cd] (copy to end of line)
 nnoremap Y y$
 
-"a cool debugging line (hit _if in 'normal' (not insert) mode to try it)
-nnoremap _if ofprintf(0<C-d>stderr, "{%s}:{%d} - \n", __FILE__, __LINE__);<Esc>F\i
-autocmd! FileType cpp nnoremap _if ocout << __FILE__ << " " << __LINE__  << " " << __FUNCTION__ << " - " << endl;<Esc>F"i
-
 "auto close {
 inoremap {<Enter> {<Enter>}<Esc>O
 
 "add c++ stdlib headers to path
-let &path = '/usr/include/c++/*,' . &path
-let &path = '/usr/include/c++/*/x86_64*,' . &path
+set path^=/usr/include/c++/*
+set path^=/usr/include/c++/*/x86_64*
 
-"Ruby stuffs
-autocmd! FileType ruby,eruby let g:rubycomplete_buffer_loading=1
-"autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
+"I hate that hot pink default
+highlight PMenu guibg=brown guifg=lightgrey
+highlight PMenuSel guibg=lightgrey guifg=brown
+
+" Subtle but noticeable highlighting for misspelled words
+highlight SpellBad ctermbg=52 guibg=#330000 cterm=undercurl guisp=Red
+
+" FileType specific configs
+augroup vimrc
+    autocmd FileType cpp setlocal matchpairs+=<:> " make % bounce between < and >
+    autocmd FileType c,cpp nnoremap <buffer>T :YcmCompleter GetType<CR>
+    autocmd FileType c,cpp nnoremap <buffer><C-t> :YcmCompleter FixIt<CR>
+    autocmd FileType c,cpp nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
+    autocmd FileType c,cpp nnoremap <silent><buffer><D-]> :YcmComplete GoToDeclaration<CR>
+    autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
+    autocmd FileType javascript nnoremap <buffer>T :TernType<CR>
+    autocmd FileType gitcommit setlocal textwidth=78 colorcolumn=+1
+    autocmd FileType go setlocal sts=4 ts=4 noexpandtab
+    autocmd FileType tex setlocal grepprg=grep\ -nH\ $*
+    autocmd FileType yaml setlocal sts=2 sw=2
+    autocmd FileType text setlocal textwidth=78
+    autocmd FileType qf setlocal nospell
+    autocmd FileType conque_term setlocal nospell
+    autocmd FileType haskell setlocal nospell
+    autocmd FileType strace setlocal nospell
+    autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
+    autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading=1
+    "autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
+augroup END
 
 "clicking on the 'tabs' in the MiniBufExplorer will switch to that buffer
 "(even in console)
@@ -163,7 +196,10 @@ let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
 "let g:SuperTabMappingForward = "<tab>"
 
-autocmd! FileType gitcommit setlocal textwidth=78 colorcolumn=79
+let g:undotree_DiffCommand = "diff -u"
+let g:undotree_SplitWidth = 30
+let g:undotree_DiffpanelHeight = 20
+let g:undotree_WindowLayout = 2 " wide diff view
 
 "change inside of a (single-ling) string, see :help objects
 nnoremap c' ci'
@@ -173,10 +209,21 @@ nnoremap d' da'
 nnoremap d" da"
 nnoremap dw daw
 
-" like * but with ctrl find current word in whole project
-nnoremap <silent><F7> *N:execute "Ggrep -w " . expand('<cword>')  <CR><CR>
-autocmd QuickFixCmdPost *grep* botright cwindow
+function! GrepForWord(word)
+    let @/ = a:word
+    cexpr system('ag -w --vimgrep ' . a:word)
+endfunction
 
+" like * but with ctrl find current word in whole project
+"nnoremap <silent><F7> *N:execute "silent Ggrep -w " . expand('<cword>')  <CR><CR>
+nnoremap <silent><F7> :silent call GrepForWord(expand('<cword>'))<CR>
+
+" open the quickfix windown whenever something adds to it
+augroup vimrc
+    autocmd QuickFixCmdPost * botright cwindow
+augroup END
+
+"use F11/F12 to move to older/newer quickfix lists
 nnoremap <silent><F11> :colder<CR>
 nnoremap <silent><F12> :cnewer<CR>
 
@@ -197,11 +244,13 @@ nnoremap <A-N> :lnext<cr>
 vnoremap > >gv
 vnoremap < <gv
 
-" use ghc functionality for haskell files
-au Bufenter *.hs compiler ghc
+augroup vimrc
+    " use ghc functionality for haskell files
+    autocmd Bufenter *.hs compiler ghc
 
-" autodetect scons files
-au BufNewFile,BufRead SCons* set filetype=scons
+    " autodetect scons files
+    autocmd BufNewFile,BufRead SCons* setlocal filetype=scons
+augroup END
 
 " configure browser for haskell_doc.vim
 let g:haddock_browser = "chromium"
@@ -211,35 +260,14 @@ let g:CommandTSelectNextMap=['<C-n>', '<C-j>', '<Down>', '<Tab>']
 let g:CommandTSelectPrevMap=['<C-p>', '<C-k>', '<Up>', '<S-Tab>']
 let g:CommandTTraverseSCM='pwd'
 
-autocmd! FileType go setlocal sts=4 ts=4 noexpandtab
+augroup vimrc
+    " close the preview window after i'm done with it
+    "autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+    autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
-"If using vim7
-if version >= 700
-  autocmd! FileType tex setlocal grepprg=grep\ -nH\ $*
-  set spell "enable spell checking use ":set nospell" to turn it off for a single buffer
-  set spelllang=en_us "use US dictionary for spelling
-  highlight SpellBad  cterm=undercurl  ctermbg=52 gui=undercurl guisp=Red
-  autocmd! FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete "use ruby auto-completion
-  set completeopt=longest,menuone,preview "make auto-complete less stupid
-endif
-
-if version >= 703
-    set undofile
-    set undodir=~/.vim-undo/
-endif
-
-" close the preview window after i'm done with it
-"autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-autocmd! InsertLeave * if pumvisible() == 0|pclose|endif
-
-"autocmd! BufWritePost .vimrc source %
-
-if filereadable('./SConstruct')
-    set makeprg=scons
-endif
-
-set exrc
-set secure
+    " Reload vimrc on save
+    autocmd BufWritePost .vimrc source %
+augroup END
 
 let g:clang_use_library = 1
 let g:clang_ibrary_path = "/usr/lib/llvm/libclang.so"
@@ -278,23 +306,13 @@ let g:syntastic_cpp_errorformat =
 
 "let g:ycm_enable_diagnostic_signs = 0 " interferes with git-gutter which is more valuable
 let g:ycm_extra_conf_globlist = ['~/10gen/*']
-let g:ycm_always_populate_location_list = 1
+let g:ycm_always_populate_location_list = 0
 let g:ycm_filepath_completion_use_working_dir = 1
 let g:ycm_open_loclist_on_ycm_diags = 1
 let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_conf.py'
 let g:ycm_collect_identifiers_from_tags_files = 0
 let g:ycm_complete_in_comments = 0
 "let g:ycm_key_invoke_completion = '<tab>' " doesn't work :(
-
-
-autocmd FileType c,cpp nnoremap <buffer>T :YcmCompleter GetType<CR>
-autocmd FileType c,cpp nnoremap <buffer><C-t> :YcmCompleter FixIt<CR>
-autocmd FileType c,cpp nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
-autocmd FileType c,cpp nnoremap <silent><buffer><D-]> :YcmComplete GoToDeclaration<CR>
-autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
-autocmd FileType javascript nnoremap <buffer>T :TernType<CR>
-
-autocmd FileType yaml setlocal sts=2 sw=2
 
 let g:UltiSnipsExpandTrigger="<c-tab>"
 "let g:UltiSnipsListSnippets="<leader>s"
@@ -306,13 +324,12 @@ let g:delimitMate_expand_space = 1
 let g:delimitMate_jump_expansion = 1
 let g:delimitMate_balance_matchpairs = 1
 
-let g:gitgutter_eager = 1
+let g:SignatureMarkTextHLDynamic=1 " make signature colors match gitgutter's
 
 let g:space_no_character_movements = 1
 
 if filereadable(expand('~/.fonts/DejaVuSansMono-Powerline.ttf'))
     let g:Powerline_symbols = 'fancy'
-    let g:airline_powerline_fonts = 1
     if !exists('g:airline_symbols')
         let g:airline_symbols = {}
         "let g:airline_symbols.space = "\ua0"
@@ -326,21 +343,65 @@ if filereadable(expand('~/.fonts/DejaVuSansMono-Powerline.ttf'))
     let g:airline_symbols.linenr = '⭡'
 endif
 
-if filereadable(expand('~/.fonts/PowerlineSymbols.otf'))
-    let g:airline_powerline_fonts = 1
-endif
+
+let g:airline_detect_spell=0
+let g:airline_skip_empty_sections = 1
+let g:airline#extensions#default#layout = [
+      \ ['a', 'b', 'c'],
+      \ ['error', 'warning', 'x', 'y', 'z']]
+
+let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#left_sep = '|'
+"let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline#extensions#tabline#buffer_min_count = 2
+
+let g:airline#extensions#ycm#enabled = 1
+let g:airline#extensions#ycm#error_symbol = '𝐄'
+let g:airline#extensions#ycm#warning_symbol = 'W'
 
 " enable :Man and <leader>K mappings
 runtime! ftplugin/man.vim
+nmap K ,K
 
 runtime! macros/matchit.vim
 
+if !has("gui_running")
+    "make <A-]> work in terminal vim
+    execute "set <A-]>=\e]"
+
+    "change cursor icon based on mode
+    let &t_SI = "\<Esc>[6 q" "insert - pipe
+    let &t_SR = "\<Esc>[4 q" "replace - underbar
+    let &t_EI = "\<Esc>[2 q" "normal - block
+endif
+
 "This is needed for alias vimdiff="vimdiff --noplugin"
-autocmd! FuncUndefined GitBranch call s:DefGitBranch()
 function! s:DefGitBranch()
     function GitBranch()
         return "NONE"
     endfunc
 endfunc
+augroup vimrc
+    autocmd FuncUndefined GitBranch call s:DefGitBranch()
+augroup END
+
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_verbose = 0
+let g:EasyMotion_startofline = 0
+
+map <space> <Plug>(easymotion-prefix)
+map <plug>(easymotion-prefix)<space> <Plug>(easymotion-jumptoanywhere)
+map <plug>(easymotion-prefix)w <Plug>(easymotion-bd-w)
+map <plug>(easymotion-prefix)e <Plug>(easymotion-bd-e)
+map <plug>(easymotion-prefix)/ <Plug>(easymotion-sn)
+map <plug>(easymotion-prefix)l <Plug>(easymotion-bd-jk)
+map <plug>(easymotion-prefix)L <Plug>(easymotion-overwin-line)
+nmap <plug>(easymotion-prefix)s <Plug>(easymotion-overwin-f2)
+nmap S <plug>(easymotion-s)
+
+map z/ <Plug>(incsearch-fuzzy-/)
 
 "see also: my ~/.gimrc and ~/.vim directory

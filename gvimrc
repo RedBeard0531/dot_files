@@ -26,23 +26,6 @@ map! <S-Insert> <MiddleMouse>
 " Only do this for Vim version 5.0 and later.
 if version >= 500
 
-  " I like highlighting strings inside C comments
-  let c_comment_strings=1
-
-  " Switch on syntax highlighting if it wasn't on yet.
-  if !exists("syntax_on")
-    syntax on
-  endif
-
-  " Switch on search pattern highlighting.
-  set hlsearch
-
-  " For Win32 version, have "K" lookup the keyword in a help file
-  "if has("win32")
-  "  let winhelpfile='windows.hlp'
-  "  map K :execute "!start winhlp32 -k <cword> " . winhelpfile <CR>
-  "endif
-
   " Set nice colors
   " background for normal text is light grey
   " Text below the last line is darker grey
@@ -74,19 +57,18 @@ if version >= 500
 
   set background=dark
 
-  set updatetime=250 " miliseconds - time before CursorHold fires
   "highlight MyCurword guibg=#134
   highlight MyCurword guibg=#111122 gui=bold guifg=white
   " cterm=bold ctermfg=white
-  highlight SpellBad ctermbg=52 cterm=undercurl
   autocmd InsertEnter *.{cpp,c,h} syntax clear MyCurword
   autocmd CursorHold *.{cpp,c,h} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
 
   set guioptions-=T
   set guifont=Monospace\ 9
 
-  set spelllang=en_us
-  ":map K :!xterm -bg black -fg gray -e "man <cword>"<cr><cr> 
-  map K :Man <cword><cr> 
+  " Use images for ycm errors
+  let g:ycm_error_symbol='EE icon=/usr/share/icons/gnome/16x16/status/dialog-error.png'
+  let g:ycm_warning_symbol='WW icon=/usr/share/icons/gnome/16x16/status/dialog-warning.png'
+
 endif
 
