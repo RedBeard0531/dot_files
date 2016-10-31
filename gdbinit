@@ -1,4 +1,4 @@
-handle SIGSTOP noprint
+#handle SIGSTOP noprint
 
 python
 import sys

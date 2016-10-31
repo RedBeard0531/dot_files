@@ -16,7 +16,7 @@
 " set the X11 font to use
 " set guifont=-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1
 
-set ch=2                " Make command line two lines high
+set cmdheight=2                " Make command line two lines high
 
 
 " Make shift-insert work like in Xterm
@@ -24,7 +24,7 @@ map <S-Insert> <MiddleMouse>
 map! <S-Insert> <MiddleMouse>
 
 " Only do this for Vim version 5.0 and later.
-if version >= 500
+if v:version >= 500
 
   " Set nice colors
   " background for normal text is light grey
@@ -38,6 +38,7 @@ if version >= 500
           "colorscheme solarized
           "colorscheme wombat
           colorscheme wombat256
+          highlight SpellBad ctermbg=52 guibg=#330000 cterm=undercurl guisp=Red
       catch
           let s:usingWombat = 0
       endtry
@@ -60,8 +61,11 @@ if version >= 500
   "highlight MyCurword guibg=#134
   highlight MyCurword guibg=#111122 gui=bold guifg=white
   " cterm=bold ctermfg=white
-  autocmd InsertEnter *.{cpp,c,h} syntax clear MyCurword
-  autocmd CursorHold *.{cpp,c,h} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
+  augroup MyCurwordStuff
+      au!
+      autocmd InsertEnter *.{cpp,c,h} syntax clear MyCurword
+      autocmd CursorHold *.{cpp,c,h} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
+  augroup END
 
   set guioptions-=T
   set guifont=Monospace\ 9
@@ -69,6 +73,9 @@ if version >= 500
   " Use images for ycm errors
   let g:ycm_error_symbol='EE icon=/usr/share/icons/gnome/16x16/status/dialog-error.png'
   let g:ycm_warning_symbol='WW icon=/usr/share/icons/gnome/16x16/status/dialog-warning.png'
+
+  let g:ale_sign_error='EE icon=/usr/share/icons/gnome/16x16/status/dialog-error.png'
+  let g:ale_sign_warning='WW icon=/usr/share/icons/gnome/16x16/status/dialog-warning.png'
 
 endif
 
