@@ -20,11 +20,14 @@ set cmdheight=2                " Make command line two lines high
 
 
 " Make shift-insert work like in Xterm
-map <S-Insert> <MiddleMouse>
-map! <S-Insert> <MiddleMouse>
+imap <S-Insert> <c-r>*
+nmap <S-Insert> "*p
 
 " Only do this for Vim version 5.0 and later.
 if v:version >= 500
+  augroup gvimrc
+      au!
+  augroup END
 
   " Set nice colors
   " background for normal text is light grey
@@ -61,14 +64,30 @@ if v:version >= 500
   "highlight MyCurword guibg=#134
   highlight MyCurword guibg=#111122 gui=bold guifg=white
   " cterm=bold ctermfg=white
-  augroup MyCurwordStuff
-      au!
+  augroup gvimrc
       autocmd InsertEnter *.{cpp,c,h} syntax clear MyCurword
       autocmd CursorHold *.{cpp,c,h} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
   augroup END
 
   set guioptions-=T
   set guifont=Monospace\ 9
+
+  if !has('nvim')
+      "make the balloon feature work
+      set ballooneval
+
+      function! MyRtagsBalloon()
+          let loc = printf('%s:%s:%s', bufname(v:beval_bufnr), v:beval_lnum, v:beval_col)
+          let output = system('rc -U ' . loc )
+          return matchstr(output, 'Type: \zs[^\n]*')
+                      \ . matchstr(output, '\nsizeof: [^\n]*')
+                      \ . matchstr(output, '\nalignment[^\n]*')
+      endfunction
+
+      augroup gvimc
+          autocmd FileType c,cpp setlocal balloonexpr=MyRtagsBalloon()
+      augroup END
+  endif
 
   " Use images for ycm errors
   let g:ycm_error_symbol='EE icon=/usr/share/icons/gnome/16x16/status/dialog-error.png'

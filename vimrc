@@ -176,13 +176,6 @@ highlight PMenuSel guibg=lightgrey guifg=brown
 " Subtle but noticeable highlighting for misspelled words
 highlight SpellBad ctermbg=52 guibg=#330000 cterm=undercurl guisp=Red
 
-function! MyRtagsBalloon()
-    if v:beval_bufnr != bufnr('%')
-        return ''
-    endif
-    return rtags#getSymbolType(rtags#getBalloonLocation())
-endfunction
-
 " FileType specific configs
 augroup vimrc
     autocmd FileType cpp setlocal matchpairs+=<:> " make % bounce between < and >
@@ -190,9 +183,10 @@ augroup vimrc
     autocmd FileType c,cpp nnoremap <buffer><C-t> :YcmCompleter FixIt<CR>
     autocmd FileType c,cpp nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
     autocmd FileType c,cpp nnoremap <silent><buffer><D-]> :YcmComplete GoToDeclaration<CR>
-    "autocmd FileType c,cpp setlocal ballooneval balloonexpr=MyRtagsBalloon()
-    autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
-    autocmd FileType javascript nnoremap <buffer>T :TernType<CR>
+    autocmd FileType javascript nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
+    autocmd FileType javascript nnoremap <buffer>T :YcmCompleter GetType<CR>
+    "autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
+    "autocmd FileType javascript nnoremap <buffer>T :TernType<CR>
     autocmd FileType gitcommit setlocal textwidth=78 colorcolumn=+1
     autocmd FileType go setlocal sts=4 ts=4 noexpandtab
     autocmd FileType tex setlocal grepprg=grep\ -nH\ $*
@@ -244,7 +238,7 @@ nnoremap <silent><F7> :silent call GrepForWord(expand('<cword>'))<CR>
 
 " open the quickfix windown whenever something adds to it
 augroup vimrc
-    autocmd QuickFixCmdPost * botright cwindow 10
+    autocmd QuickFixCmdPost * nested botright cwindow 10
 augroup END
 
 "use F11/F12 to move to older/newer quickfix lists
@@ -270,10 +264,10 @@ vnoremap < <gv
 
 augroup vimrc
     " use ghc functionality for haskell files
-    autocmd Bufenter *.hs compiler ghc
+    autocmd Bufenter *.hs nested compiler ghc
 
     " autodetect scons files
-    autocmd BufNewFile,BufRead SCons* setlocal filetype=scons
+    autocmd BufNewFile,BufRead SCons* nested setlocal filetype=scons
 augroup END
 
 " configure browser for haskell_doc.vim
@@ -401,9 +395,12 @@ augroup END
 runtime! macros/matchit.vim
 
 if !has('gui_running')
-    "make <A-]> work in terminal vim
     if !has('nvim')
+        "make <A-]> work in terminal vim
         execute "set <A-]>=\e]"
+
+        "make the mouse work correctly in cygwin
+        set ttymouse=sgr
     endif
 
     "change cursor icon based on mode
@@ -447,7 +444,9 @@ let g:ConqueTerm_InsertOnEnter = 1
 " make plugins that use :Make use AsyncRun
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 
-let g:ale_linters = { 'cpp': [] }
+let g:ale_linters = {}
+let g:ale_linters.cpp = []
+let g:ale_linters.c = []
 let g:ale_vim_vint_show_style_issues = 0
 
 "see also: my ~/.gimrc and ~/.vim directory

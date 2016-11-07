@@ -13,12 +13,11 @@ import os
     #pass
 
 try:
-    #sys.path.insert(0, os.path.expanduser('~/opensource/Boost-Pretty-Printer/'))
-    #from boost.printers import register_printer_gen
-    #register_printer_gen(None)
-    pass
+    sys.path.insert(0, os.path.expanduser('~/opensource/Boost-Pretty-Printer/'))
+    import boost.latest
+    boost.register_printers()
 except Exception:
-    print( "Boost helpers unavailable. Check out https://github.com/ruediger/Boost-Pretty-Printer" )
+    print( "Boost helpers unavailable. Check out https://github.com/mateidavid/Boost-Pretty-Printer" )
     pass
 
 try:
@@ -26,7 +25,7 @@ try:
     import mongo_printer
     mongo_printer.register_mongo_printers()
 except Exception:
-    print( "Error loading mongo_printer" )
+    print( "Error loading mongo_printer. Check out https://github.com/RedBeard0531/mongo_gdb" )
     pass
 end
 
