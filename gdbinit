@@ -20,14 +20,16 @@ except Exception:
     print( "Boost helpers unavailable. Check out https://github.com/mateidavid/Boost-Pretty-Printer" )
     pass
 
-try:
-    sys.path.insert(0, os.path.expanduser('~/10gen/mongo_gdb/'))
-    import mongo_printer
-    mongo_printer.register_mongo_printers()
-except Exception:
-    print( "Error loading mongo_printer. Check out https://github.com/RedBeard0531/mongo_gdb" )
-    pass
+#try:
+    #sys.path.insert(0, os.path.expanduser('~/10gen/mongo_gdb/'))
+    #import mongo_printer
+    #mongo_printer.register_mongo_printers()
+#except Exception:
+    #print( "Error loading mongo_printer. Check out https://github.com/RedBeard0531/mongo_gdb" )
+    #pass
 end
+
+add-auto-load-safe-path /home/mstearn/10gen/mongo/.gdbinit
 
 set print pretty on
 set print object on

@@ -192,8 +192,10 @@ augroup vimrc
     autocmd FileType tex setlocal grepprg=grep\ -nH\ $*
     autocmd FileType yaml setlocal sts=2 sw=2
     autocmd FileType text setlocal textwidth=78
+    autocmd FileType git,fugitiveblame setlocal nospell colorcolumn=0
     autocmd FileType qf,man setlocal nospell colorcolumn=0
     autocmd FileType qf nnoremap <buffer><C-CR> <CR>:cclose<CR>
+    "autocmd FileType qf setlocal scrolloff=0 " grrr global
     autocmd FileType conque_term setlocal nospell timeout
     autocmd FileType haskell setlocal nospell
     autocmd FileType strace setlocal nospell
@@ -277,7 +279,7 @@ let g:haddock_browser = 'chromium'
 let g:CommandTSelectNextMap=['<C-n>', '<C-j>', '<Down>', '<Tab>']
 let g:CommandTSelectPrevMap=['<C-p>', '<C-k>', '<Up>', '<S-Tab>']
 let g:CommandTTraverseSCM='pwd'
-let g:CommandTFileScanner='find'
+let g:CommandTFileScanner='ruby'
 let g:CommandTMaxHeight=0
 "let g:CommandTMatchWindowReverse=0
 
