@@ -1,0 +1,71 @@
+" Use ':runtime mongo.vim' to activate this file. You can put that in a .vimrc in your mongo
+" directory and it will happen automatically if you set exrc in your main .vimrc.
+" TODO move some of this into the mongo repo.
+
+if filereadable(expand('buildscripts/errorcodes.py'))
+    python sys.path.append('.')
+    python from buildscripts import errorcodes
+    function! s:getNextErrorCode()
+        python errorcodes.codes = []
+        python errorcodes.readErrorCodes()
+        return pyeval('errorcodes.getNextCode()')
+    endf
+    inoremap <C-E> <C-R>=<SID>getNextErrorCode()<CR>
+endif
+
+"using ^= rather than += to prepend rather than append
+set path^=src/
+set path^=src/mongo/
+set path^=src/third_party/**
+
+"This is the error format used in js stack traces.
+"Copy the trace and run :cexpr(@+) to populate the quickfix list with the paste buffer.
+set errorformat^=%m@%f:%l:%c
+
+"ignore these dirs in command-t
+let g:CommandTWildIgnore=&wildignore . ',*/build/*,src/third_party/[^w]*,src/mongo/gotools/*'
+
+"make vim automatically get very close to our coding format.
+"TODO should this be restricted to specific paths or file types?
+set expandtab "tab key -> spaces
+set shiftwidth=4 "indent by 4 spaces
+set softtabstop=4 "treat 4 spaces like a tab
+set textwidth=100 "code should stop at 100 chars 
+set colorcolumn=+1 "draw a wall where code should end
+set cinoptions=l1,g0,N-s,(0,u0,Ws,k2s,j1,J1,)1000,*1000 " setup cindent correctly
+
+let g:filetype_i = 'c'
+
+augroup MongoVimRC
+    autocmd!
+    autocmd BufRead */src/third_party/wiredtiger/*.[chi] setlocal sts=8 ts=8 sw=8 noet tw=80
+    autocmd BufWritePre */{jstests,src/mongo}/*.{cpp,h,js} %pyf /usr/share/clang/clang-format.py
+
+    autocmd FileType cpp syn keyword MongoMinor uassertStatusOK
+    autocmd FileType cpp hi MongoMinor guifg=#555555
+augroup END
+
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_checkers = []
+let g:syntastic_javascript_eslint_exec = './build/eslint'
+
+let g:ale_linters.javascript = ['eslint']
+let g:ale_javascript_eslint_executable = './build/eslint'
+
+let g:clang_format_path='./build/clang-format'
+
+let g:javascript_plugin_jsdoc = 1
+
+nnoremap <silent><S-F7> *N:execute "silent Ggrep -w " . expand('<cword>') . " src/mongo"  <CR><CR>
+
+if executable('buildscripts/mongosymb.py')
+    command! -nargs=+ -complete=file Addr2Line
+                \ cgetexpr system('buildscripts/mongosymb.py <args> \| sed -e "s/^ ??:0:0://"', @*)
+endif
+
+command! -nargs=+ Rtags cexpr system('rc <args> ' . expand('%') . ':' . line('.') . ':' . col('.'))
+
+command! -nargs=* -bang -complete=file Scons AsyncRun<bang>  @ buildscripts/scons.py 
+    \ --modules=  MONGO_VERSION=0.0.0 MONGO_GIT_HASH=unknown 
+    \ CCFLAGS=-Wa,--compress-debug-sections CC=clang CXX=clang++ VERBOSE=0
+    \ --cache=nolinked --implicit-cache <args>

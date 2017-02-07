@@ -52,7 +52,7 @@ set backspace=indent,eol,start " allow backspacing over everything in insert mod
 set history=10000 " keep a lot of command line history
 set ruler " show the cursor position all the time
 set showcmd " display incomplete commands
-set hlsearch " highlight bits that match current search (do /asdf<ENTER> to remove)
+set hlsearch " highlight bits that match current search (do /asdf<ENTER> or ,/ to remove)
 set incsearch " do incremental searching
 set confirm "ask to save instead of failing with an error
 set clipboard^=unnamedplus "by default copy/paste with the X11 clipboard ("+ register)
@@ -111,6 +111,12 @@ if !isdirectory(&undodir)
     endif
 endif
 
+" When sshing I don't use gvim but I still want my pretty colors. On local machine, I want vim to
+" look like a normal terminal app. I know, I'm weird.
+if $SSH_CONNECTION !=# '' && $TERM ==# 'xterm-256color'
+    colorscheme wombat256
+endif
+
 let $LC_ALL='C' " disable locale-aware sort
 
 let g:c_comment_strings=1 " I like highlighting strings inside C comments
@@ -162,7 +168,11 @@ augroup end
 "make shift Y behave like shift-[cd] (copy to end of line)
 nnoremap Y y$
 
+"kill the search highlight. (Note: this is different from :set nohlsearch)
+nnoremap <silent> <leader>/ :nohlsearch<CR>
+
 "auto close {
+" TODO detect class/struct and add ;
 inoremap {<Enter> {<Enter>}<Esc>O
 
 "add c++ stdlib headers to path
