@@ -100,7 +100,7 @@ myFocusedBorderColor = "#ff0000"
 -- Fields are: top, bottom, left, right.
 --
 --myDefaultGaps   = [(18,0,0,0)]
-myDefaultGaps   = [(0,0,0,0),(0,0,0,0)]
+myDefaultGaps   = [(30,0,0,0),(0,0,0,0)]
  
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -363,7 +363,7 @@ myUrgencyHook = withUrgencyHook dzenUrgencyHook
  
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = xmonad $ ewmh $ myUrgencyHook defaults
+main = xmonad $ ewmh $ docks $ myUrgencyHook defaults
  
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will 

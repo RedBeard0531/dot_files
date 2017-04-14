@@ -96,5 +96,15 @@ if v:version >= 500
   let g:ale_sign_error='EE icon=/usr/share/icons/gnome/16x16/status/dialog-error.png'
   let g:ale_sign_warning='WW icon=/usr/share/icons/gnome/16x16/status/dialog-warning.png'
 
+  " Make back and forward buttons work.
+  nnoremap <X1Mouse> <C-o>
+  nnoremap <X2Mouse> <C-i>
+
+  " Make double click be goto
+  augroup gvimc
+          autocmd FileType c,cpp nmap <buffer> <2-leftmouse> ,rj
+          autocmd FileType javascript nmap <buffer> <2-leftmouse> <a-]>
+  augroup END
+
 endif
 

@@ -52,7 +52,7 @@ set backspace=indent,eol,start " allow backspacing over everything in insert mod
 set history=10000 " keep a lot of command line history
 set ruler " show the cursor position all the time
 set showcmd " display incomplete commands
-set hlsearch " highlight bits that match current search (do /asdf<ENTER> or ,/ to remove)
+set hlsearch " highlight bits that match current search (do /asdf<ENTER> or :nohl to remove)
 set incsearch " do incremental searching
 set confirm "ask to save instead of failing with an error
 set clipboard^=unnamedplus "by default copy/paste with the X11 clipboard ("+ register)
@@ -90,7 +90,6 @@ set formatoptions+=j " remove comment mark when joining lines
 set autoread "automatically reread files that have been updated. useful with git
 "set gdefault " the /g flag on :s substitutions by default
 set virtualedit=block " allow block selections to go past the end of lines
-set termguicolors " use gui colors in terminal
 set notimeout ttimeout " wait for me to finish mapping, but don't wait for terminal escape codes.
 set ttimeoutlen=100 " don't wait more then X ms for terminal escape codes
 set title " update titlebar
@@ -102,6 +101,7 @@ set secure "don't let .vimrc files owned by other users do stupid things
 set spell "enable spell checking use ":set nospell" to turn it off for a single buffer
 set spelllang=en_us "use US dictionary for spelling
 set completeopt=longest,menuone,preview "make auto-complete less stupid
+set belloff=all "I hate that bell...
 set undofile "keep persistent undo across vim runs
 set undodir=~/.vim-undo/ "where to store undo files
 
@@ -111,10 +111,18 @@ if !isdirectory(&undodir)
     endif
 endif
 
+"Make :make and friends work with python exceptions.
+if !exists('s:python_errorformat') " don't append it multiple times.
+    let s:python_errorformat='\  File "%f"\, line %l,\  File "%f"\, line %l\, in %m'
+    let &errorformat .= ','.s:python_errorformat
+endif
+
 " When sshing I don't use gvim but I still want my pretty colors. On local machine, I want vim to
 " look like a normal terminal app. I know, I'm weird.
 if $SSH_CONNECTION !=# '' && $TERM ==# 'xterm-256color'
+    set termguicolors " use gui colors in terminal
     colorscheme wombat256
+    set t_ut= "unbreak bg colors when scolling
 endif
 
 let $LC_ALL='C' " disable locale-aware sort
@@ -169,11 +177,21 @@ augroup end
 nnoremap Y y$
 
 "kill the search highlight. (Note: this is different from :set nohlsearch)
-nnoremap <silent> <leader>/ :nohlsearch<CR>
+nnoremap <silent> <leader><leader> :nohlsearch<CR>
 
 "auto close {
-" TODO detect class/struct and add ;
-inoremap {<Enter> {<Enter>}<Esc>O
+function! s:CloseBracket()
+    let line = getline('.')
+    if line =~ '^\s*\(struct\|class\|enum\) '
+        return "{\<Enter>};\<Esc>O"
+    elseif searchpair('(', '', ')', 'bmn', '', line('.'))
+        " Probably inside a function call. Close it off.
+        return "{\<Enter>});\<Esc>O"
+    else
+        return "{\<Enter>}\<Esc>O"
+    endif
+endfunction
+inoremap <expr> {<Enter> <SID>CloseBracket()
 
 "add c++ stdlib headers to path
 set path^=/usr/include/c++/*
@@ -191,12 +209,12 @@ augroup vimrc
     autocmd FileType cpp setlocal matchpairs+=<:> " make % bounce between < and >
     autocmd FileType c,cpp nnoremap <buffer>T :YcmCompleter GetType<CR>
     autocmd FileType c,cpp nnoremap <buffer><C-t> :YcmCompleter FixIt<CR>
-    autocmd FileType c,cpp nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
+    autocmd FileType c,cpp,python nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
     autocmd FileType c,cpp nnoremap <silent><buffer><D-]> :YcmComplete GoToDeclaration<CR>
-    autocmd FileType javascript nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
-    autocmd FileType javascript nnoremap <buffer>T :YcmCompleter GetType<CR>
-    "autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
-    "autocmd FileType javascript nnoremap <buffer>T :TernType<CR>
+    "autocmd FileType javascript nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
+    "autocmd FileType javascript nnoremap <buffer>T :YcmCompleter GetType<CR>
+    autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
+    autocmd FileType javascript nnoremap <buffer>T :TernType<CR>
     autocmd FileType gitcommit setlocal textwidth=78 colorcolumn=+1
     autocmd FileType go setlocal sts=4 ts=4 noexpandtab
     autocmd FileType tex setlocal grepprg=grep\ -nH\ $*
@@ -212,6 +230,8 @@ augroup vimrc
     autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
     autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading=1
     "autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
+    autocmd BufEnter *.log setlocal nospell nowrap tw=0
+    "autocmd FileType python BracelessEnable +indent +highlight
 augroup END
 
 "clicking on the 'tabs' in the MiniBufExplorer will switch to that buffer
@@ -231,6 +251,8 @@ let g:undotree_SplitWidth = 30
 let g:undotree_DiffpanelHeight = 20
 let g:undotree_WindowLayout = 2 " wide diff view
 
+let g:ackprg='ag --vimgrep'
+
 "change inside of a (single-ling) string, see :help objects
 nnoremap c' ci'
 nnoremap c" ci"
@@ -241,7 +263,7 @@ nnoremap dw daw
 
 function! GrepForWord(word)
     let @/ = a:word
-    cexpr system('ag -w --vimgrep ' . a:word)
+    AckFromSearch! -w
 endfunction
 
 " like * but with ctrl find current word in whole project
@@ -437,16 +459,16 @@ let g:EasyMotion_verbose = 0
 let g:EasyMotion_startofline = 0
 
 map <space> <Plug>(easymotion-prefix)
-map <plug>(easymotion-prefix)<space> <Plug>(easymotion-jumptoanywhere)
+"map <plug>(easymotion-prefix)<space> <Plug>(easymotion-jumptoanywhere)
+map <plug>(easymotion-prefix)<space> <Plug>(easymotion-bd-w)
 map <plug>(easymotion-prefix)w <Plug>(easymotion-bd-w)
 map <plug>(easymotion-prefix)e <Plug>(easymotion-bd-e)
 map <plug>(easymotion-prefix)/ <Plug>(easymotion-sn)
 map <plug>(easymotion-prefix)l <Plug>(easymotion-bd-jk)
 map <plug>(easymotion-prefix)L <Plug>(easymotion-overwin-line)
-nmap <plug>(easymotion-prefix)s <Plug>(easymotion-overwin-f2)
+"nmap <plug>(easymotion-prefix)s <Plug>(easymotion-overwin-f2)
+nmap <plug>(easymotion-prefix)s <Plug>(easymotion-s)
 nmap S <plug>(easymotion-s)
-
-map z/ <Plug>(incsearch-fuzzy-/)
 
 let g:ConqueTerm_CloseOnEnd = 1
 let g:ConqueTerm_StartMessages = 0

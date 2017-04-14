@@ -16,5 +16,7 @@
 	default = simple
 
 [alias]
-    br = for-each-ref --sort=-committerdate refs/heads/ --format='%(color:yellow)%(committerdate:short) %(color:cyan)%(refname:short):%(color:reset) %(subject)'
+    br = for-each-ref --sort=committerdate refs/heads/ --format='%(color:yellow)%(committerdate:short) %(color:cyan)%(refname:short):%(color:reset) %(subject)'
     rb = !git rebase -i $(git merge-base HEAD origin)
+[merge]
+	conflictstyle = diff3

@@ -20,7 +20,7 @@ set path^=src/third_party/**
 
 "This is the error format used in js stack traces.
 "Copy the trace and run :cexpr(@+) to populate the quickfix list with the paste buffer.
-set errorformat^=%m@%f:%l:%c
+set errorformat^=%m@%f:%l:%c,@%f:%l:%c
 
 "ignore these dirs in command-t
 let g:CommandTWildIgnore=&wildignore . ',*/build/*,src/third_party/[^w]*,src/mongo/gotools/*'
@@ -69,3 +69,11 @@ command! -nargs=* -bang -complete=file Scons AsyncRun<bang>  @ buildscripts/scon
     \ --modules=  MONGO_VERSION=0.0.0 MONGO_GIT_HASH=unknown 
     \ CCFLAGS=-Wa,--compress-debug-sections CC=clang CXX=clang++ VERBOSE=0
     \ --cache=nolinked --implicit-cache <args>
+
+function! s:NinjaComplete(arg_lead, cmd, pos)
+    return system('ninja -t targets all | cut -d: -f1')
+endf
+command! -nargs=* -bang -complete=custom,s:NinjaComplete Ninja AsyncRun<bang> -save=1 ninja <args>
+
+command! -nargs=0 -bang WCC w | cexpr system('ninja '.pyeval('os.path.relpath("'.expand('%:r').'.cpp^")'))
+nmap <F5> :WCC<CR>

@@ -80,11 +80,12 @@ _CORES=$(grep -c processor /proc/cpuinfo )
 _COMPILE_THREADS=$(($_CORES * 3 / 2))
 
 export SCONSFLAGS="-j$_COMPILE_THREADS"
+export NINJA_STATUS='[%f/%t (%p) %es] '
 
 export HISTCONTROL=ignoreboth
 
-export GOBIN=~/bin
-export GOPATH=~/go_path
+#export GOBIN=~/bin
+#export GOPATH=~/go_path
 
 eval `dircolors -b`
 
@@ -95,6 +96,7 @@ alias svn="colorsvn"
 alias grep="grep --color"
 alias sudo="sudo -E"
 alias pacman="sudo pacman"
+alias yaourt='PATH=${PATH#/home/*/bin:} yaourt'
 alias modprobe="sudo modprobe"
 alias ifconfig="sudo ifconfig"
 alias iwconfig="sudo iwconfig"
@@ -109,75 +111,15 @@ alias sr='ssh -l root'
 alias smoke="python2 buildscripts/smoke.py"
 alias resmoke="python2 buildscripts/resmoke.py"
 #alias scons="nice scons"
+alias ninja="nice ninja"
 
 
 alias cr='python2 ~/10gen/kernel-tools/codereview/upload.py -y '
 alias cru='cr -e mathias@10gen.com --jira_user redbeard0531 '
 
-alias cleanup='sudo rm -r /data/* /tmp/unittest/'
+if [ -d /usr/share/fzf ]; then
+    for file in /usr/share/fzf/*.zsh; do
+        source $file
+    done
+fi
 
-rebuildPCH () {
-    #clang++ -x c++-header ~/pch.h -o ~/pch.h.pch -DMONGO_EXPOSE_MACROS
-
-    cd ~/10gen/mongo/
-    clang++ -x c++-header mongo-fake-pch.h -o mongo-fake-pch.h.pch \
-        -DBOOST_ALL_NO_LIB \
-        -D_SCONS \
-        -D_DEBUG \
-        -DMONGO_EXPOSE_MACROS \
-        -DSUPPORT_UTF8 \
-        -D_FILE_OFFSET_BITS=64 \
-        -DMONGO_HAVE_HEADER_UNISTD_H \
-        -DMONGO_HAVE_EXECINFO_BACKTRACE \
-        -DXP_UNIX \
-        -I. \
-        -Isrc \
-        -Isrc/mongo \
-        -Isrc/third_party/s2 \
-        -Isrc/third_party/js-1.7 \
-        -Isrc/third_party/boost \
-        -Isrc/third_party/pcre-7.4 \
-        -Ibuild/cached/ \
-        -Ibuild/cached/mongo \
-        -Wall \
-        -Wno-unknown-pragmas \
-        -Wsign-compare  \
-        -Wno-unused-private-field \
-        -Winvalid-pch \
-        -Wnon-virtual-dtor \
-        -Woverloaded-virtual \
-        -pipe
-}
-
-rebuildPCH11 () {
-    cd ~/10gen/mongo/
-    clang++ -x c++-header mongo-fake-pch.h -o mongo-fake-pch.h.pch \
-        --std=c++11 \
-        -DBOOST_ALL_NO_LIB \
-        -D_SCONS \
-        -D_DEBUG \
-        -DMONGO_EXPOSE_MACROS \
-        -DSUPPORT_UTF8 \
-        -D_FILE_OFFSET_BITS=64 \
-        -DMONGO_HAVE_HEADER_UNISTD_H \
-        -DMONGO_HAVE_EXECINFO_BACKTRACE \
-        -DXP_UNIX \
-        -I. \
-        -Isrc \
-        -Isrc/mongo \
-        -Isrc/third_party/s2 \
-        -Isrc/third_party/js-1.7 \
-        -Isrc/third_party/boost \
-        -Isrc/third_party/pcre-7.4 \
-        -Ibuild/cached/ \
-        -Ibuild/cached/mongo \
-        -Wall \
-        -Wno-unknown-pragmas \
-        -Wsign-compare  \
-        -Wno-unused-private-field \
-        -Wno-mismatched-tags \
-        -Winvalid-pch \
-        -Wnon-virtual-dtor \
-        -Woverloaded-virtual \
-        -pipe
-}
