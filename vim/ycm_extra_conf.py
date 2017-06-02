@@ -56,7 +56,7 @@ flags = [
 ]
 
 cppflags = flags + [
-    '-std=c++14',
+    '-std=c++1z',
     '-x', 'c++',
     ]
 

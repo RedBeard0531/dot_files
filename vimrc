@@ -262,8 +262,8 @@ nnoremap d" da"
 nnoremap dw daw
 
 function! GrepForWord(word)
-    let @/ = a:word
-    AckFromSearch! -w
+    let @/ = '\<'.a:word.'\>'
+    AckFromSearch!
 endfunction
 
 " like * but with ctrl find current word in whole project
