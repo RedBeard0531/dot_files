@@ -1,8 +1,73 @@
 scriptencoding utf-8
 
-"This most go first
-call pathogen#infect()
-call pathogen#helptags()
+" Using vim-plug. See https://github.com/junegunn/vim-plug#installation.
+" I use the full github urls to make it easier to see more details about each plugin. Within each
+" section, plugins are roughly sorted by "value" so the plugins I use most often are at the top.
+call plug#begin('~/.vim/plugged')
+
+" Vimscript enhancements
+Plug 'https://github.com/tpope/vim-repeat.git' " makes . and u work better with plugins
+Plug 'https://github.com/tpope/vim-scriptease' " helpers when writing vimscript
+
+" Vim editing enhancements
+Plug 'https://github.com/easymotion/vim-easymotion' " Jump anywhere you can see super fast
+Plug 'https://github.com/tpope/vim-surround' " commands for adding or changing surroundings
+Plug 'https://github.com/wellle/targets.vim' " More text objects (daa to delete an argument)
+Plug 'https://github.com/sfiera/vim-emacsmodeline' " Teach vim to understand emacs modelines
+Plug 'https://github.com/tweekmonster/braceless.vim' " text objects for indentation-based languages
+Plug 'https://github.com/junegunn/vim-peekaboo' " show contents of registers before use
+Plug 'https://github.com/tpope/vim-commentary' " comment things out
+Plug 'https://github.com/mbbill/undotree' " visualize the undo tree (:h undo-tree)
+Plug 'https://github.com/mjbrownie/swapit' " <c-a>/<c-x> to toggle more things (like true/false)
+Plug 'https://github.com/kshenoy/vim-signature' " put marks in the sign column ... meh
+
+" Misc stuff
+Plug 'https://github.com/wincent/command-t', {'do': 'cd ruby/command-t && ruby extconf.rb && make'}
+    " <leader>t to jump to files with fuzzy search
+Plug 'https://github.com/mileszs/ack.vim' " :Ack command (better grep using ag)
+Plug 'https://github.com/w0rp/ale' " Async lint engine (background check of eslint and such)
+Plug 'git@github.com:RedBeard0531/bufkill.vim' " :BW is like :bw without closing the window
+Plug 'https://github.com/Valloric/ListToggle' " <leader>q and l to toggle quickfix and location lists
+Plug 'https://github.com/skywind3000/asyncrun.vim' " Run builds in the background into quickfix
+Plug 'https://github.com/oplatek/Conque-Shell' " terminal in vim
+Plug 'https://github.com/metakirby5/codi.vim' " Live programing output
+
+" C++ stuff
+Plug 'https://github.com/oblitum/YouCompleteMe', {'do': 'python3 ./install.py --clang-completer'}
+    " Awesome autocompletion with fuzzy search (oblitum's fork adds argument hits)
+Plug '~/.vim/bundle/vim-rtags' " Integration with the rtags indexer
+                               " my fork of 'https://github.com/lyuts/vim-rtags'
+Plug 'https://github.com/vim-scripts/a.vim' " :A to switch between .cpp and .h
+Plug 'https://github.com/majutsushi/tagbar' " shows tags on side (and can tell you current function)
+
+" JS stuff
+Plug 'https://github.com/marijnh/tern_for_vim', {'do': 'npm install'} " JS autocomplete
+Plug 'https://github.com/pangloss/vim-javascript.git' " Better js indent and syntax
+
+" Other filetype-specific stuff
+Plug 'https://github.com/suan/vim-instant-markdown' " show rendered output as you edit
+Plug 'https://github.com/elzr/vim-json' " Better json syntax + concealing noise
+Plug 'https://github.com/sukima/xmledit' " XML and HTML helpers
+
+" Git stuff
+Plug 'https://github.com/airblade/vim-gitgutter.git' " show changed lines in gutter
+Plug 'https://github.com/tpope/vim-fugitive.git' " Git integration
+Plug 'https://github.com/tpope/vim-rhubarb' " Github support for fugitive
+Plug 'https://github.com/tommcdo/vim-fugitive-blame-ext' " Show commit summary for line in :Gblame
+Plug 'https://github.com/jreybert/vimagit' " :Magit to see overview of current changes
+Plug 'https://github.com/rhysd/conflict-marker.vim' " Add [x and ]x to hop between conflicts
+Plug 'https://github.com/gregsexton/gitv.git' " like git log in vim
+
+" Eye candy
+"Plug 'https://github.com/Lokaltog/vim-powerline.git', {'branch': 'develop'}
+Plug 'https://github.com/vim-airline/vim-airline' " Make the statusline look better
+Plug '~/.vim/bundle/vim-wombat' " my fork of https://github.com/cschlueter/vim-wombat
+
+" Unite -- meh
+"Plug 'https//github.com/osyo-manga/unite-quickfix'
+"Plug 'https//github.com/Shougo/unite.vim'
+
+call plug#end()
 
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
@@ -14,13 +79,14 @@ map Q gq
 " text is lost and it only works for putting the current register.
 vnoremap p "_dp
 
-" This block does causes problems when re-sourcing vimrc.
+" This block contains stuff that causes problems when re-sourcing vimrc.
 if !exists('g:syntax_on')
     " runtime defaults.vim
 
     " Switch syntax highlighting on
     syntax on
     set background=dark "make things look !ugly with a dark background
+    set completeopt=longest,menuone,preview "make auto-complete less stupid
 endif
 
 " Enable file type detection.
@@ -100,10 +166,10 @@ set exrc "run .vimrc files in pwd
 set secure "don't let .vimrc files owned by other users do stupid things
 set spell "enable spell checking use ":set nospell" to turn it off for a single buffer
 set spelllang=en_us "use US dictionary for spelling
-set completeopt=longest,menuone,preview "make auto-complete less stupid
 set belloff=all "I hate that bell...
 set undofile "keep persistent undo across vim runs
 set undodir=~/.vim-undo/ "where to store undo files
+set splitright " Make :vsplit put new window to the right, where it belongs
 
 if !isdirectory(&undodir)
     if confirm("Undo dir '".&undodir."' doesn't exist. Create?", "&Yes\n&No") == 1
@@ -119,7 +185,8 @@ endif
 
 " When sshing I don't use gvim but I still want my pretty colors. On local machine, I want vim to
 " look like a normal terminal app. I know, I'm weird.
-if $SSH_CONNECTION !=# '' && $TERM ==# 'xterm-256color'
+" if $SSH_CONNECTION !=# '' && $TERM ==# 'xterm-256color'
+if $TERM ==# 'xterm-256color'
     set termguicolors " use gui colors in terminal
     colorscheme wombat256
     set t_ut= "unbreak bg colors when scolling
@@ -168,7 +235,7 @@ cnoremap <C-e> <END>
 nnoremap ; :
 
 "make cmdwin mode easier to use
-nnoremap q; q:
+"nnoremap q; q:
 augroup vimrc
     autocmd CmdWinEnter * nnoremap <silent><buffer><esc> :q<cr>
 augroup end
@@ -182,7 +249,7 @@ nnoremap <silent> <leader><leader> :nohlsearch<CR>
 "auto close {
 function! s:CloseBracket()
     let line = getline('.')
-    if line =~ '^\s*\(struct\|class\|enum\) '
+    if line =~# '^\s*\(struct\|class\|enum\) '
         return "{\<Enter>};\<Esc>O"
     elseif searchpair('(', '', ')', 'bmn', '', line('.'))
         " Probably inside a function call. Close it off.
@@ -221,6 +288,7 @@ augroup vimrc
     autocmd FileType yaml setlocal sts=2 sw=2
     autocmd FileType text setlocal textwidth=78
     autocmd FileType git,fugitiveblame setlocal nospell colorcolumn=0
+    autocmd FileType gitrebase setlocal cursorline
     autocmd FileType qf,man setlocal nospell colorcolumn=0
     autocmd FileType qf nnoremap <buffer><C-CR> <CR>:cclose<CR>
     "autocmd FileType qf setlocal scrolloff=0 " grrr global
@@ -263,7 +331,7 @@ nnoremap dw daw
 
 function! GrepForWord(word)
     let @/ = '\<'.a:word.'\>'
-    AckFromSearch!
+    exec 'AckFromSearch!'
 endfunction
 
 " like * but with ctrl find current word in whole project
@@ -320,8 +388,8 @@ augroup vimrc
     "autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
     autocmd InsertLeave * if getcmdwintype() == '' && pumvisible() == 0|pclose|endif
 
-    " Reload vimrc on save (does weird things, need to debug...)
-    autocmd BufWritePost .vimrc silent noautocmd source %
+    " Reload vimrc on save
+    autocmd BufWritePost .vimrc nested silent source %
 augroup END
 
 let g:clang_use_library = 1
@@ -396,16 +464,18 @@ if filereadable(expand('~/.fonts/DejaVuSansMono-Powerline.ttf'))
     let g:airline_symbols.branch = '⭠'
     let g:airline_symbols.readonly = '⭤'
     let g:airline_symbols.linenr = '⭡'
+    let g:airline_symbols.maxlinenr = ''
 endif
 
-
 let g:airline_detect_spell=0
-let g:airline_skip_empty_sections = 1
-let g:airline#extensions#default#layout = [
-      \ ['a', 'b', 'c'],
+let g:airline_skip_empty_sections = 0
+"let g:airline#extensions#default#layout = [
+      \ ['a', 'b', 'c', 'gutter'],
       \ ['error', 'warning', 'x', 'y', 'z']]
 
-let g:airline#extensions#tabline#enabled = 1
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+
+let g:airline#extensions#tabline#enabled = 0
 "let g:airline#extensions#tabline#left_sep = '|'
 "let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#buffer_nr_show = 1
@@ -417,11 +487,17 @@ let g:airline#extensions#ycm#enabled = 1
 let g:airline#extensions#ycm#error_symbol = '𝐄'
 let g:airline#extensions#ycm#warning_symbol = 'W'
 
+let g:airline#extensions#tagbar#enabled = 0
+let g:airline#extensions#tagbar#flags = 'f'
+
+let g:airline#extensions#hunks#enabled = 0
+let g:airline#extensions#whitespace#enabled = 0
+
 let g:rtagsUseLocationList=0
 
 " enable :Man and <leader>K mappings
 runtime! ftplugin/man.vim
-nmap K ,K
+"nmap K ,K
 augroup vimrc
     autocmd FileType help nmap <buffer> K g<C-]>
 augroup END
