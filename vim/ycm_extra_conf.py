@@ -35,24 +35,35 @@ import ycm_core
 # compilation database set (by default, one is not set).
 # CHANGE THIS LIST OF FLAGS. YES, THIS IS THE DROID YOU HAVE BEEN LOOKING FOR.
 
+# These are used in the static flag list and injected at the end for files in the compilation db.
+coreflags = [
+    '-DMONGO_CONFIG_DEBUG_BUILD',
+    '-DUSE_GDBSERVER',
+    '-UNDEBUG',
+]
+
 flags = [
     '-D_FILE_OFFSET_BITS=64',
     #'-I.',
     '-Wall',
     '-Wextra',
+
     '-Wno-long-long',
     '-Wno-variadic-macros',
     '-Wno-unknown-pragmas',
-    '-Wno-unused-private-field',
     '-Wno-unused-parameter',
+    '-Wno-unused-local-typedefs',
     '-Wno-deprecated-declarations',
-    '-Wno-ignored-qualifiers',
+    '-Wno-missing-field-initializers',
+    '-Wno-invalid-pch',
+    '-Wno-potentially-evaluated-expression',
+    '-Wno-inconsistent-missing-override',
+    '-Wno-tautological-constant-out-of-range-compare',
+
     '-Wsign-compare',
     '-Wmismatched-tags',
-    '-Winvalid-pch',
     '-Wnon-virtual-dtor',
     '-Woverloaded-virtual',
-    '-pipe'
 ]
 
 cppflags = flags + [
@@ -65,15 +76,14 @@ cflags = flags + [
     '-x', 'c',
     ]
 
-#flags = open('.clang_complete').read().split()
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
 # compile_commands.json file to use that instead of 'flags'. See here for
 # more details: http://clang.llvm.org/docs/JSONCompilationDatabase.html
 #
 # Most projects will NOT need to set this to anything; you can just change the
-# 'flags' list of compilation flags. Notice that YCM itself uses that approach.
-compilation_database_folder = ''
+# 'flags' list of compilation flags.
+compilation_database_folder = '.'
 
 if os.path.exists( compilation_database_folder ):
   database = ycm_core.CompilationDatabase( compilation_database_folder )
@@ -139,29 +149,19 @@ def GetCompilationInfoForFile( filename ):
 
 
 def FlagsForFile( filename, **kwargs ):
-  if database:
-    # Bear in mind that compilation_info.compiler_flags_ does NOT return a
-    # python list, but a "list-like" StringVec object
-    compilation_info = GetCompilationInfoForFile( filename )
-    if not compilation_info:
-      return None
+  compilation_info = GetCompilationInfoForFile( filename ) if database else None
+  if compilation_info and len(compilation_info.compiler_flags_):
+      # Bear in mind that compilation_info.compiler_flags_ does NOT return a
+      # python list, but a "list-like" StringVec object
+      final_flags = MakeRelativePathsInFlagsAbsolute(
+              list(compilation_info.compiler_flags_) + coreflags,
+              compilation_info.compiler_working_dir_ )
 
-    final_flags = MakeRelativePathsInFlagsAbsolute(
-      compilation_info.compiler_flags_,
-      compilation_info.compiler_working_dir_ )
-
-    # NOTE: This is just for YouCompleteMe; it's highly likely that your project
-    # does NOT need to remove the stdlib flag. DO NOT USE THIS IN YOUR
-    # ycm_extra_conf IF YOU'RE NOT 100% SURE YOU NEED IT.
-    try:
-      final_flags.remove( '-stdlib=libc++' )
-    except ValueError:
-      pass
   else:
     relative_to = DirectoryOfThisScript()
 
     flags = cflags if filename.endswith('.c') else cppflags
-    final_flags = MakeRelativePathsInFlagsAbsolute( flags, relative_to )
+    final_flags = MakeRelativePathsInFlagsAbsolute( flags + coreflags, relative_to )
 
   return {
     'flags': final_flags,

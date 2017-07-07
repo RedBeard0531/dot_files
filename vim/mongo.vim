@@ -41,6 +41,8 @@ augroup MongoVimRC
     autocmd BufRead */src/third_party/wiredtiger/*.[chi] setlocal sts=8 ts=8 sw=8 noet tw=80
     autocmd BufWritePre */{jstests,src/mongo}/*.{cpp,h,js} %pyf /usr/share/clang/clang-format.py
 
+    autocmd BufNewFile,BufRead *.idl set filetype=yaml
+
     autocmd FileType cpp syn keyword MongoMinor uassertStatusOK
     autocmd FileType cpp hi MongoMinor guifg=#555555
 augroup END
