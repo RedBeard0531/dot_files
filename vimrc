@@ -133,8 +133,8 @@ set mouse=a "allow mouse usage in terms (scrolling, highlighting, pasting, etc.)
 set mousehide " Hide the mouse when typing text
 set scrolloff=5 "try to keep at least 5 lines above and bellow the cursor when scrolling
 set sidescrolloff=10 "ditto for side-scolling
-"set autoindent "enable the following line
-"set smartindent "do the Right Thing
+set autoindent "enable the following line
+set smartindent "do the Right Thing
 "set nocindent "use indent scripts
 set cinoptions=l1,g0,N-s,(0,u0,Ws,k2s,j1,J1,)1000,*1000 " setup cindent correctly. see :help cinoptions-values
 set expandtab "tab key -> spaces
@@ -148,7 +148,7 @@ set nobackup "dont make those filename~ files (they have bitten me many times)
 set noswapfile "more trouble than they're worth
 set wildmenu "show possible completions in command (:) mode (try hitting tab twice)
 set wildmode=list:longest,full "make the wildmenu behave more like bash
-set wildignore+=*.o,*.git,*.svn "ignore these files
+set wildignore+=*.o,*.git,*.svn,*.pyc "ignore these files
 set ignorecase "dont care about case in searches, etc.
 set smartcase "care about case if I enter any capital letters
 let g:mapleader = ',' "use , instead of \ as the 'leader' key (used in some plugins)
@@ -497,6 +497,7 @@ if filereadable(expand('~/.fonts/DejaVuSansMono-Powerline.ttf'))
     let g:airline_symbols.maxlinenr = ''
 endif
 
+let g:airline_highlighting_cache = 1
 let g:airline_detect_spell=0
 let g:airline_skip_empty_sections = 0
 "let g:airline#extensions#default#layout = [
@@ -588,5 +589,8 @@ let g:ale_linters = {}
 let g:ale_linters.cpp = []
 let g:ale_linters.c = []
 let g:ale_vim_vint_show_style_issues = 0
+
+
+let g:gtk_nocache=[0x00000000, 0xfc00ffff, 0xf8000001, 0x78000001]
 
 "see also: my ~/.gimrc and ~/.vim directory

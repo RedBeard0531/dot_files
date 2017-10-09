@@ -36,12 +36,20 @@ set cinoptions=l1,g0,N-s,(0,u0,Ws,k2s,j1,J1,)1000,*1000 " setup cindent correctl
 
 let g:filetype_i = 'c'
 
+function! s:EnableCheetahSyntax()
+        unlet b:current_syntax 
+        runtime syntax/cheetah.vim"
+endfunction
+
 augroup MongoVimRC
     autocmd!
     autocmd BufRead */src/third_party/wiredtiger/*.[chi] setlocal sts=8 ts=8 sw=8 noet tw=80
     autocmd BufWritePre */{jstests,src/mongo}/*.{cpp,h,js} %pyf /usr/share/clang/clang-format.py
 
     autocmd BufNewFile,BufRead *.idl set filetype=yaml
+    autocmd BufNewFile,BufRead error_codes.err let b:ale_enabled=0
+
+    autocmd BufNewFile,BufRead *.tpl.{h,cpp,js}  call s:EnableCheetahSyntax()
 
     autocmd FileType cpp syn keyword MongoMinor uassertStatusOK
     autocmd FileType cpp hi MongoMinor guifg=#555555
@@ -53,6 +61,7 @@ let g:syntastic_javascript_eslint_exec = './build/eslint'
 
 let g:ale_linters.javascript = ['eslint']
 let g:ale_javascript_eslint_executable = './build/eslint'
+let g:ale_python_pylint_options='--errors-only' " don't complain about python style
 
 let g:clang_format_path='./build/clang-format'
 

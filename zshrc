@@ -74,7 +74,7 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 export PATH="$HOME/bin:$HOME/bin/mongo_versions:/usr/local/bin:/usr/lib/colorgcc/bin/:$PATH"
 export EDITOR=vim
 
-export LESS='-iRM -P%t?f%f :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
+export LESS='-iRM -j5 -P%t?f%f :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
 
 _CORES=$(grep -c processor /proc/cpuinfo )
 _COMPILE_THREADS=$(($_CORES * 3 / 2))
@@ -117,7 +117,7 @@ alias ninja="nice ninja"
 alias cr='python2 ~/10gen/kernel-tools/codereview/upload.py -y '
 alias cru='cr -e mathias@10gen.com --jira_user redbeard0531 '
 
-if [ -d /usr/share/fzf ]; then
+if [ -d /usr/share/fzf -a -z "$VIM_SERVER" ]; then
     for file in /usr/share/fzf/*.zsh; do
         source $file
     done

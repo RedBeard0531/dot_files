@@ -71,6 +71,7 @@ if v:version >= 500
 
   set guioptions-=T
   set guifont=Monospace\ 9
+  "set guifont=Fira\ Code\ Medium\ 9
 
   if !has('nvim')
       "make the balloon feature work
