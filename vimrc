@@ -15,8 +15,9 @@ Plug 'https://github.com/easymotion/vim-easymotion' " Jump anywhere you can see 
 Plug 'https://github.com/tpope/vim-surround' " commands for adding or changing surroundings
 Plug 'https://github.com/wellle/targets.vim' " More text objects (daa to delete an argument)
 Plug 'https://github.com/sfiera/vim-emacsmodeline' " Teach vim to understand emacs modelines
+Plug 'https://github.com/AndrewRadev/dsf.vim' " dsf -> Delete Surrounding Function call
 Plug 'https://github.com/tweekmonster/braceless.vim' " text objects for indentation-based languages
-Plug 'https://github.com/junegunn/vim-peekaboo' " show contents of registers before use
+"Plug 'https://github.com/junegunn/vim-peekaboo' " show contents of registers before use
 Plug 'https://github.com/tpope/vim-endwise' " End block in languages that use words for blocks
 Plug 'https://github.com/tpope/vim-commentary' " comment things out
 Plug 'https://github.com/mbbill/undotree' " visualize the undo tree (:h undo-tree)
@@ -48,8 +49,13 @@ Plug 'https://github.com/majutsushi/tagbar' " shows tags on side (and can tell y
 Plug 'https://github.com/marijnh/tern_for_vim', {'do': 'npm install'} " JS autocomplete
 Plug 'https://github.com/pangloss/vim-javascript.git' " Better js indent and syntax
 
+" Python stuff
+Plug 'https://github.com/Vimjas/vim-python-pep8-indent' " better python indentation
+Plug 'https://github.com/raimon49/requirements.txt.vim' " highlighting for requirements.txt
+
 " Other filetype-specific stuff
 Plug 'https://github.com/suan/vim-instant-markdown' " show rendered output as you edit
+Plug 'https://github.com/rhysd/vim-gfm-syntax' " highlight github-flavored markdown
 Plug 'https://github.com/elzr/vim-json' " Better json syntax + concealing noise
 Plug 'https://github.com/sukima/xmledit' " XML and HTML helpers
 
@@ -515,8 +521,10 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_min_count = 2
 
 let g:airline#extensions#ycm#enabled = 1
-let g:airline#extensions#ycm#error_symbol = '𝐄'
-let g:airline#extensions#ycm#warning_symbol = 'W'
+"let g:airline#extensions#ycm#error_symbol = '𝐄'
+let g:airline#extensions#ycm#error_symbol = '🔥'
+"let g:airline#extensions#ycm#warning_symbol = 'W'
+let g:airline#extensions#ycm#warning_symbol = '🏴'
 
 let g:airline#extensions#tagbar#enabled = 0
 let g:airline#extensions#tagbar#flags = 'f'
@@ -590,6 +598,8 @@ let g:ale_linters.cpp = []
 let g:ale_linters.c = []
 let g:ale_vim_vint_show_style_issues = 0
 
+let g:markdown_fenced_languages = ['cpp', 'python', 'vim', 'bash']
+let g:gfm_syntax_emoji_conceal = 1
 
 let g:gtk_nocache=[0x00000000, 0xfc00ffff, 0xf8000001, 0x78000001]
 

@@ -37,8 +37,10 @@ set cinoptions=l1,g0,N-s,(0,u0,Ws,k2s,j1,J1,)1000,*1000 " setup cindent correctl
 let g:filetype_i = 'c'
 
 function! s:EnableCheetahSyntax()
+    if has_key(b:, 'current_syntax')
         unlet b:current_syntax 
-        runtime syntax/cheetah.vim"
+    endif
+    runtime syntax/cheetah.vim"
 endfunction
 
 augroup MongoVimRC
