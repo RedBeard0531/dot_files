@@ -10,7 +10,7 @@
 
 " quit when a syntax file was already loaded
 if exists("b:current_syntax")
-	finish
+	"finish
 endif
 
 syntax case match
@@ -28,11 +28,12 @@ syn match   cheetahPlaceHolder "$\(\*[0-9.]\+[wdhms]\?\*\|\*\)\?\h\w*\(\.\h\w*\)
             \ containedin=ALL
 syn match   cheetahPlaceHolder "$\(\*[0-9.]\+[wdhms]\?\*\|\*\)\?{\h\w*\(\.\h\w*\)*}" display
             \ containedin=ALL
-syn match   cheetahDirective "^\s*//#.*$"  contains=cheetahPlaceHolder,cheetahKeyword,cheetahComment display
+syn match   cheetahDirective "^\s*//#[^#].*$"  contains=cheetahPlaceHolder,cheetahKeyword,cheetahComment display
             \ containedin=ALL
 
 syn match   cheetahContinuation "\\$"
-syn match   cheetahComment "##.*$" display
+syn match   cheetahComment "//##.*$" display
+            \ containedin=ALL
 syn region  cheetahMultiLineComment start="#\*" end="\*#"
 
 " Define the default highlighting.

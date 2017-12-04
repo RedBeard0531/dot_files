@@ -58,6 +58,8 @@ Plug 'https://github.com/suan/vim-instant-markdown' " show rendered output as yo
 Plug 'https://github.com/rhysd/vim-gfm-syntax' " highlight github-flavored markdown
 Plug 'https://github.com/elzr/vim-json' " Better json syntax + concealing noise
 Plug 'https://github.com/sukima/xmledit' " XML and HTML helpers
+Plug 'https://github.com/zah/nim.vim' " Nim language support
+"Plug 'https://github.com/baabelfish/nvim-nim' " Nim language support
 
 " Git stuff
 Plug 'https://github.com/airblade/vim-gitgutter.git' " show changed lines in gutter
@@ -238,6 +240,14 @@ nnoremap <silent><C-j> <C-w>j
 nnoremap <silent><C-k> <C-w>k
 nnoremap <silent><C-l> <C-w>l
 nnoremap <silent><C-h> <C-w>h
+
+tnoremap <silent><C-j> <C-w>j
+tnoremap <silent><C-k> <C-w>k
+tnoremap <silent><C-l> <C-w>l
+tnoremap <silent><C-h> <C-w>h
+" shift-escape to exit terminal mode (at least on mintty/cygwin)
+tnoremap <silent> <C-\><C-n>
+au vimrc BufWinEnter * if &buftype == 'terminal' | setlocal nospell | endif
 
 "use shift-[hl] to move between buffers (tabs if you use MiniBufExplorer)
 nnoremap <silent><S-h> :bp<CR>
@@ -471,6 +481,8 @@ let g:ycm_open_loclist_on_ycm_diags = 1
 let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_conf.py'
 let g:ycm_collect_identifiers_from_tags_files = 0
 let g:ycm_complete_in_comments = 0
+let g:ycm_python_binary_path = '/usr/bin/python2' " for now at least
+let g:ycm_semantic_triggers = {'nim': ['.']}
 "let g:ycm_key_invoke_completion = '<tab>' " doesn't work :(
 
 let g:UltiSnipsExpandTrigger='<c-tab>'
@@ -546,7 +558,8 @@ runtime! macros/matchit.vim
 if !has('gui_running')
     if !has('nvim')
         "make <A-]> work in terminal vim
-        execute "set <A-]>=\e]"
+        " XXX Causes a weird issue now. need to debug...
+        "execute "set <A-]>=\e]"
 
         "make the mouse work correctly in cygwin
         set ttymouse=sgr
@@ -597,6 +610,7 @@ let g:ale_linters = {}
 let g:ale_linters.cpp = []
 let g:ale_linters.c = []
 let g:ale_vim_vint_show_style_issues = 0
+let g:ale_python_pylint_options='--errors-only' " don't complain about python style
 
 let g:markdown_fenced_languages = ['cpp', 'python', 'vim', 'bash']
 let g:gfm_syntax_emoji_conceal = 1

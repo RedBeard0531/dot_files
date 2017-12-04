@@ -71,7 +71,7 @@ ${PROMPT_COLOR}[%U%M%u]%~ %T$reset_color%b ${ROOT_SYMBOL}${VIRTENV_SYMBOL}${STAT
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-export PATH="$HOME/bin:$HOME/bin/mongo_versions:/usr/local/bin:/usr/lib/colorgcc/bin/:$PATH"
+export PATH="$HOME/bin:$HOME/bin/mongo_versions:$HOME/.nimble/bin:/usr/local/bin:/usr/lib/colorgcc/bin/:$PATH"
 export EDITOR=vim
 
 export LESS='-iRM -j5 -P%t?f%f :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
