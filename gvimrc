@@ -65,8 +65,8 @@ if v:version >= 500
   highlight MyCurword guibg=#111122 gui=bold guifg=white
   " cterm=bold ctermfg=white
   augroup gvimrc
-      autocmd InsertEnter *.{cpp,c,h} syntax clear MyCurword
-      autocmd CursorHold *.{cpp,c,h} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
+      autocmd InsertEnter *.{cpp,c,h,hpp} syntax clear MyCurword
+      autocmd CursorHold *.{cpp,c,h,hpp} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
   augroup END
 
   set guioptions-=T
@@ -101,9 +101,10 @@ if v:version >= 500
   nnoremap <X1Mouse> <C-o>
   nnoremap <X2Mouse> <C-i>
 
-  " Make double click be goto
+  " Make double click be goto and right-click be find refs
   augroup gvimc
           autocmd FileType c,cpp nmap <buffer> <2-leftmouse> ,rj
+          autocmd FileType c,cpp nmap <buffer> <rightmouse> <leftmouse>,rf
           autocmd FileType javascript nmap <buffer> <2-leftmouse> <a-]>
   augroup END
 

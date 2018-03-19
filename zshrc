@@ -8,6 +8,7 @@ bindkey -e
 # The following lines were added by compinstall
 zstyle :compinstall filename '/home/mstearn/.zshrc'
 
+fpath=(~/.zsh/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall

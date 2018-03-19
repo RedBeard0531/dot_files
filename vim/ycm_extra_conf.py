@@ -161,7 +161,10 @@ def FlagsForFile( filename, **kwargs ):
     relative_to = DirectoryOfThisScript()
 
     flags = cflags if filename.endswith('.c') else cppflags
+    if 'nimcache' in filename:
+        flags.append('-I/home/mstearn/nim/nim/lib')
     final_flags = MakeRelativePathsInFlagsAbsolute( flags + coreflags, relative_to )
+
 
   return {
     'flags': final_flags,

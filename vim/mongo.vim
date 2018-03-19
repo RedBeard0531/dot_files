@@ -17,6 +17,7 @@ endif
 set path^=src/
 set path^=src/mongo/
 set path^=src/third_party/**
+set path^=src/third_party/asio-*/asio/include/
 
 "This is the error format used in js stack traces.
 "Copy the trace and run :cexpr(@+) to populate the quickfix list with the paste buffer.

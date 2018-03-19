@@ -245,8 +245,9 @@ tnoremap <silent><C-j> <C-w>j
 tnoremap <silent><C-k> <C-w>k
 tnoremap <silent><C-l> <C-w>l
 tnoremap <silent><C-h> <C-w>h
-" shift-escape to exit terminal mode (at least on mintty/cygwin)
+" shift-escape to exit terminal mode (at least on mintty/cygwin and gvim)
 tnoremap <silent> <C-\><C-n>
+tnoremap <silent><S-Esc> <C-\><C-n>
 au vimrc BufWinEnter * if &buftype == 'terminal' | setlocal nospell | endif
 
 "use shift-[hl] to move between buffers (tabs if you use MiniBufExplorer)
