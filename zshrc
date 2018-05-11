@@ -98,6 +98,7 @@ alias grep="grep --color"
 alias sudo="sudo -E"
 alias pacman="sudo pacman"
 alias yaourt='PATH=${PATH#/home/*/bin:} yaourt'
+alias yay='PATH=${PATH#/home/*/bin:} yay'
 alias modprobe="sudo modprobe"
 alias ifconfig="sudo ifconfig"
 alias iwconfig="sudo iwconfig"
@@ -112,7 +113,7 @@ alias sr='ssh -l root'
 alias smoke="python2 buildscripts/smoke.py"
 alias resmoke="python2 buildscripts/resmoke.py"
 #alias scons="nice scons"
-alias ninja="nice ninja"
+#alias ninja="nice ninja"
 
 
 alias cr='python2 ~/10gen/kernel-tools/codereview/upload.py -y '

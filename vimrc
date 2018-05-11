@@ -37,8 +37,9 @@ Plug 'https://github.com/oplatek/Conque-Shell' " terminal in vim
 Plug 'https://github.com/metakirby5/codi.vim' " Live programing output
 
 " C++ stuff
+"Plug 'https://github.com/Valloric/YouCompleteMe',
 Plug 'https://github.com/oblitum/YouCompleteMe',
-            \ {'do': 'python3 ./install.py --clang-completer'}
+            \ {'do': 'python3 ./install.py --clang-completer --system-libclang'}
             \ " Awesome autocompletion with fuzzy search (oblitum's fork adds argument hits)
 Plug '~/.vim/bundle/vim-rtags' " Integration with the rtags indexer
                                " my fork of 'https://github.com/lyuts/vim-rtags'
@@ -54,7 +55,7 @@ Plug 'https://github.com/Vimjas/vim-python-pep8-indent' " better python indentat
 Plug 'https://github.com/raimon49/requirements.txt.vim' " highlighting for requirements.txt
 
 " Other filetype-specific stuff
-Plug 'https://github.com/suan/vim-instant-markdown' " show rendered output as you edit
+"Plug 'https://github.com/suan/vim-instant-markdown' " show rendered output as you edit
 Plug 'https://github.com/rhysd/vim-gfm-syntax' " highlight github-flavored markdown
 Plug 'https://github.com/elzr/vim-json' " Better json syntax + concealing noise
 Plug 'https://github.com/sukima/xmledit' " XML and HTML helpers
@@ -74,6 +75,7 @@ Plug 'https://github.com/gregsexton/gitv.git' " like git log in vim
 "Plug 'https://github.com/Lokaltog/vim-powerline.git', {'branch': 'develop'}
 Plug 'https://github.com/vim-airline/vim-airline' " Make the statusline look better
 Plug '~/.vim/bundle/vim-wombat' " my fork of https://github.com/cschlueter/vim-wombat
+Plug 'https://github.com/morhetz/gruvbox'
 
 " Unite -- meh
 "Plug 'https//github.com/osyo-manga/unite-quickfix'
@@ -183,6 +185,7 @@ set undofile "keep persistent undo across vim runs
 set undodir=~/.vim-undo/ "where to store undo files
 set splitright " Make :vsplit put new window to the right, where it belongs
 set viminfo='20,<50,s1,h,f0 "limit the viminfo size to speed startup.
+set nojoinspaces " only add one space after punctuation when joining lines.
 
 if !isdirectory(&undodir)
     if confirm("Undo dir '".&undodir."' doesn't exist. Create?", "&Yes\n&No") == 1
@@ -204,10 +207,25 @@ endif
 " When sshing I don't use gvim but I still want my pretty colors. On local machine, I want vim to
 " look like a normal terminal app. I know, I'm weird.
 " if $SSH_CONNECTION !=# '' && $TERM ==# 'xterm-256color'
-if $TERM ==# 'xterm-256color'
+if $TERM ==# 'xterm-256color' || $TERM ==# 'xterm-kitty'
     set termguicolors " use gui colors in terminal
     colorscheme wombat256
     set t_ut= "unbreak bg colors when scolling
+endif
+
+if $TERM ==# 'xterm-kitty' || $GNOME_TERMINAL_SCREEN !=# ''
+    " gnome-terminal 3.28 and kitty support undercurl!
+    set t_Ce=[4:0m[59m
+    set t_Cs=[4:3m[58;5;9m
+    highlight SpellBad cterm=undercurl guisp=Red
+else
+    " Subtle but noticeable highlighting for misspelled words
+    highlight SpellBad ctermbg=52 guibg=#330000 cterm=undercurl guisp=Red
+endif
+
+if $TERM ==# 'xterm-kitty' && !has('nvim')
+    "make <A-]> work in terminal vim
+    set <A-]>=]
 endif
 
 let $LC_ALL='C' " disable locale-aware sort
@@ -308,9 +326,6 @@ set path^=/usr/include/c++/*/x86_64*
 "I hate that hot pink default
 highlight PMenu guibg=brown guifg=lightgrey
 highlight PMenuSel guibg=lightgrey guifg=brown
-
-" Subtle but noticeable highlighting for misspelled words
-highlight SpellBad ctermbg=52 guibg=#330000 cterm=undercurl guisp=Red
 
 " FileType specific configs
 augroup vimrc
@@ -558,10 +573,6 @@ runtime! macros/matchit.vim
 
 if !has('gui_running')
     if !has('nvim')
-        "make <A-]> work in terminal vim
-        " XXX Causes a weird issue now. need to debug...
-        "execute "set <A-]>=\e]"
-
         "make the mouse work correctly in cygwin
         set ttymouse=sgr
     endif
@@ -617,5 +628,15 @@ let g:markdown_fenced_languages = ['cpp', 'python', 'vim', 'bash']
 let g:gfm_syntax_emoji_conceal = 1
 
 let g:gtk_nocache=[0x00000000, 0xfc00ffff, 0xf8000001, 0x78000001]
+
+let g:LanguageClient_serverCommands = {
+\ 'cpp': ['cquery', '--log-file=/tmp/cq.log']
+\ }
+let g:LanguageClient_loadSettings = 1
+
+let g:deoplete#enable_at_startup = 1
+let g:LanguageClient_selectionUI = 'location-list'
+
+"call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
 
 "see also: my ~/.gimrc and ~/.vim directory

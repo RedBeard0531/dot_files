@@ -74,7 +74,7 @@ nnoremap <silent><S-F7> *N:execute "silent Ggrep -w " . expand('<cword>') . " sr
 
 if executable('buildscripts/mongosymb.py')
     command! -nargs=+ -complete=file Addr2Line
-                \ cgetexpr system('buildscripts/mongosymb.py <args> \| sed -e "s/^ ??:0:0://"', @*)
+        \ cgetexpr system('python2 buildscripts/mongosymb.py <args> \| sed -e "s/^ ??:0:0://"', @*)
 endif
 
 command! -nargs=+ Rtags cexpr system('rc <args> ' . expand('%') . ':' . line('.') . ':' . col('.'))

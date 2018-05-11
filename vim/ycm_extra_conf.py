@@ -40,6 +40,7 @@ coreflags = [
     '-DMONGO_CONFIG_DEBUG_BUILD',
     '-DUSE_GDBSERVER',
     '-UNDEBUG',
+    '-fcoroutines-ts',
 ]
 
 flags = [
