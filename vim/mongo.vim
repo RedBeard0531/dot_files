@@ -7,8 +7,8 @@ if filereadable(expand('buildscripts/errorcodes.py'))
     python from buildscripts import errorcodes
     function! s:getNextErrorCode()
         python errorcodes.codes = []
-        python errorcodes.readErrorCodes()
-        return pyeval('errorcodes.getNextCode()')
+        python errorcodes.read_error_codes()
+        return pyeval('errorcodes.get_next_code()')
     endf
     inoremap <C-E> <C-R>=<SID>getNextErrorCode()<CR>
 endif
@@ -46,6 +46,8 @@ endfunction
 
 augroup MongoVimRC
     autocmd!
+    autocmd BufRead */src/third_party/libpg_query*/*.[ch] setlocal sts=4 ts=4 sw=4 noet tw=80
+
     autocmd BufRead */src/third_party/wiredtiger/*.[chi] setlocal sts=8 ts=8 sw=8 noet tw=80
     autocmd BufWritePre */{jstests,src/mongo}/*.{cpp,h,js} %pyf /usr/share/clang/clang-format.py
 
