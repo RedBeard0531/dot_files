@@ -40,12 +40,13 @@ coreflags = [
     '-DMONGO_CONFIG_DEBUG_BUILD',
     '-DUSE_GDBSERVER',
     '-UNDEBUG',
-    '-fcoroutines-ts',
+    '-I.',
+    '-Icppcoro/include',
+    #'-I/home/mstearn/opensource/cppcoro/include',
 ]
 
 flags = [
     '-D_FILE_OFFSET_BITS=64',
-    #'-I.',
     '-Wall',
     '-Wextra',
 
@@ -68,14 +69,20 @@ flags = [
 ]
 
 cppflags = flags + [
-    '-std=c++1z',
+    '-std=c++2a',
     '-x', 'c++',
+    '-fcoroutines-ts',
+    '-stdlib=libc++',
     ]
 
 cflags = flags + [
     '-std=c99',
     '-x', 'c',
     ]
+
+cudaflags = flags + [
+    '-x', 'cuda',
+]
 
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
@@ -149,7 +156,8 @@ def GetCompilationInfoForFile( filename ):
   return database.GetCompilationInfoForFile( filename )
 
 
-def FlagsForFile( filename, **kwargs ):
+def FlagsForFile( **kwargs ):
+  filename = kwargs['filename'] if 'filename' in kwargs else ''
   compilation_info = GetCompilationInfoForFile( filename ) if database else None
   if compilation_info and len(compilation_info.compiler_flags_):
       # Bear in mind that compilation_info.compiler_flags_ does NOT return a
@@ -159,9 +167,15 @@ def FlagsForFile( filename, **kwargs ):
               compilation_info.compiler_working_dir_ )
 
   else:
-    relative_to = DirectoryOfThisScript()
+    relative_to = os.getcwd() #DirectoryOfThisScript()
 
-    flags = cflags if filename.endswith('.c') else cppflags
+    if filename.endswith('.c'):
+        flags = cflags
+    elif filename.endswith('.cu'):
+        flags = cudaflags
+    else:
+        flags = cppflags
+
     if 'nimcache' in filename:
         flags.append('-I/home/mstearn/nim/nim/lib')
     final_flags = MakeRelativePathsInFlagsAbsolute( flags + coreflags, relative_to )
@@ -171,3 +185,5 @@ def FlagsForFile( filename, **kwargs ):
     'flags': final_flags,
     'do_cache': True
   }
+
+Settings = FlagsForFile

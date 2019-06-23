@@ -1,5 +1,7 @@
 scriptencoding utf-8
 
+let s:use_coc =  1
+
 " Using vim-plug. See https://github.com/junegunn/vim-plug#installation.
 " I use the full github urls to make it easier to see more details about each plugin (try typing gx
 " over a url). Within each section, plugins are roughly sorted by "value" so the plugins I use most
@@ -23,32 +25,30 @@ Plug 'https://github.com/tpope/vim-commentary' " comment things out
 Plug 'https://github.com/mbbill/undotree' " visualize the undo tree (:h undo-tree)
 Plug 'https://github.com/mjbrownie/swapit' " <c-a>/<c-x> to toggle more things (like true/false)
 Plug 'https://github.com/kshenoy/vim-signature' " put marks in the sign column ... meh
+Plug 'https://github.com/lfv89/vim-interestingwords' " highlight interesting words with <leader>k
+Plug 'https://github.com/mhinz/vim-startify'
+Plug 'https://github.com/chrisbra/unicode.vim'
 
 " Misc stuff
 Plug 'https://github.com/wincent/command-t',
             \ {'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'}
             \ " <leader>t to jump to files with fuzzy search
 Plug 'https://github.com/mileszs/ack.vim' " :Ack command (better grep using ag)
-Plug 'https://github.com/w0rp/ale' " Async lint engine (background check of eslint and such)
 Plug 'https://github.com/RedBeard0531/bufkill.vim' " :BW is like :bw without closing the window
 Plug 'https://github.com/Valloric/ListToggle' " <leader>q and l to toggle quickfix and location lists
 Plug 'https://github.com/skywind3000/asyncrun.vim' " Run builds in the background into quickfix
-Plug 'https://github.com/oplatek/Conque-Shell' " terminal in vim
+"Plug 'https://github.com/oplatek/Conque-Shell' " terminal in vim
 Plug 'https://github.com/metakirby5/codi.vim' " Live programing output
 
 " C++ stuff
-"Plug 'https://github.com/Valloric/YouCompleteMe',
-Plug 'https://github.com/oblitum/YouCompleteMe',
-            \ {'do': 'python3 ./install.py --clang-completer --system-libclang'}
-            \ " Awesome autocompletion with fuzzy search (oblitum's fork adds argument hits)
-Plug '~/.vim/bundle/vim-rtags' " Integration with the rtags indexer
-                               " my fork of 'https://github.com/lyuts/vim-rtags'
+Plug 'https://github.com/Shougo/echodoc.vim' " Show signature at bottom of window
 Plug 'https://github.com/vim-scripts/a.vim' " :A to switch between .cpp and .h
 Plug 'https://github.com/majutsushi/tagbar' " shows tags on side (and can tell you current function)
 
 " JS stuff
 Plug 'https://github.com/marijnh/tern_for_vim', {'do': 'npm install'} " JS autocomplete
 Plug 'https://github.com/pangloss/vim-javascript.git' " Better js indent and syntax
+Plug 'https://github.com/leafgarland/typescript-vim'
 
 " Python stuff
 Plug 'https://github.com/Vimjas/vim-python-pep8-indent' " better python indentation
@@ -64,12 +64,14 @@ Plug 'https://github.com/zah/nim.vim' " Nim language support
 
 " Git stuff
 Plug 'https://github.com/airblade/vim-gitgutter.git' " show changed lines in gutter
+Plug 'https://github.com/wincent/terminus' " make terminal vim more like gvim
 Plug 'https://github.com/tpope/vim-fugitive.git' " Git integration
 Plug 'https://github.com/tpope/vim-rhubarb' " Github support for fugitive
 Plug 'https://github.com/tommcdo/vim-fugitive-blame-ext' " Show commit summary for line in :Gblame
 Plug 'https://github.com/jreybert/vimagit' " :Magit to see overview of current changes
 Plug 'https://github.com/rhysd/conflict-marker.vim' " Add [x and ]x to hop between conflicts
 Plug 'https://github.com/gregsexton/gitv.git' " like git log in vim
+Plug 'https://github.com/rhysd/git-messenger.vim'
 
 " Eye candy
 "Plug 'https://github.com/Lokaltog/vim-powerline.git', {'branch': 'develop'}
@@ -77,15 +79,22 @@ Plug 'https://github.com/vim-airline/vim-airline' " Make the statusline look bet
 Plug '~/.vim/bundle/vim-wombat' " my fork of https://github.com/cschlueter/vim-wombat
 Plug 'https://github.com/morhetz/gruvbox'
 
-" Unite -- meh
-"Plug 'https//github.com/osyo-manga/unite-quickfix'
-"Plug 'https//github.com/Shougo/unite.vim'
-
+if s:use_coc
+    Plug 'https://github.com/neoclide/coc.nvim', {'do': {-> coc#util#install()}}
+    Plug 'https://github.com/m-pilia/vim-ccls'
+    Plug 'https://github.com/tjdevries/coc-zsh'
+    Plug 'https://github.com/Shougo/neco-vim'
+    Plug 'https://github.com/neoclide/coc-neco'
+else
+    Plug 'https://github.com/Valloric/YouCompleteMe',
+                \ {'do': 'python3 ./install.py --clang-completer --clangd-completer --js-completer'}
+                \ " Awesome autocompletion with fuzzy search
+    Plug '~/.vim/bundle/vim-rtags' " Integration with the rtags indexer
+                                   " my fork of 'https://github.com/lyuts/vim-rtags'
+    Plug 'https://github.com/w0rp/ale' " Async lint engine (background check of eslint and such)
+endif
 call plug#end()
 
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
-"set nocompatible
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -94,13 +103,12 @@ map Q gq
 vnoremap p "_dp
 
 " This block contains stuff that causes problems when re-sourcing vimrc.
-if !exists('g:syntax_on')
-    " runtime defaults.vim
-
+if !exists('s:first_load')
+    let s:first_load = 1
     " Switch syntax highlighting on
-    syntax on
+    "syntax on
     set background=dark "make things look !ugly with a dark background
-    set completeopt=longest,menuone,preview "make auto-complete less stupid
+    "set completeopt=longest,menuone,preview "make auto-complete less stupid
 endif
 
 " Enable file type detection.
@@ -145,7 +153,6 @@ set scrolloff=5 "try to keep at least 5 lines above and bellow the cursor when s
 set sidescrolloff=10 "ditto for side-scolling
 set autoindent "enable the following line
 set smartindent "do the Right Thing
-"set nocindent "use indent scripts
 set cinoptions=l1,g0,N-s,(0,u0,Ws,k2s,j1,J1,)1000,*1000 " setup cindent correctly. see :help cinoptions-values
 set expandtab "tab key -> spaces
 set shiftwidth=4 "indent by 4 spaces
@@ -158,17 +165,15 @@ set nobackup "dont make those filename~ files (they have bitten me many times)
 set noswapfile "more trouble than they're worth
 set wildmenu "show possible completions in command (:) mode (try hitting tab twice)
 set wildmode=list:longest,full "make the wildmenu behave more like bash
-set wildignore+=*.o,*.git,*.svn,*.pyc "ignore these files
+set wildignore+=tags,*.o,*.git,*.svn,*.pyc "ignore these files
 set ignorecase "dont care about case in searches, etc.
 set smartcase "care about case if I enter any capital letters
 let g:mapleader = ',' "use , instead of \ as the 'leader' key (used in some plugins)
 set nostartofline "don't go to the start of line after certain commands
-"set textwidth=80 "wrap at 80 chars
 set formatoptions-=o "don't insert comment chars when I hit o or O
 set formatoptions+=j " remove comment mark when joining lines
 "set formatoptions+=a "automatically reflow comment blocks (:h fo-table)
 set autoread "automatically reread files that have been updated. useful with git
-"set gdefault " the /g flag on :s substitutions by default
 set virtualedit=block " allow block selections to go past the end of lines
 set notimeout ttimeout " wait for me to finish mapping, but don't wait for terminal escape codes.
 set ttimeoutlen=100 " don't wait more then X ms for terminal escape codes
@@ -178,14 +183,16 @@ set lazyredraw " don't waste time updating screen while executing macros
 set number "show line numbers
 set exrc "run .vimrc files in pwd
 set secure "don't let .vimrc files owned by other users do stupid things
-set spell "enable spell checking use ":set nospell" to turn it off for a single buffer
+"set spell "enable spell checking use ":set nospell" to turn it off for a single buffer
 set spelllang=en_us "use US dictionary for spelling
 set belloff=all "I hate that bell...
 set undofile "keep persistent undo across vim runs
 set undodir=~/.vim-undo/ "where to store undo files
 set splitright " Make :vsplit put new window to the right, where it belongs
-set viminfo='20,<50,s1,h,f0 "limit the viminfo size to speed startup.
+set viminfo='100,<50,s1,h,f0 "limit the viminfo size to speed startup.
 set nojoinspaces " only add one space after punctuation when joining lines.
+set previewheight=20 " bigger preview window
+set helplang=en
 
 if !isdirectory(&undodir)
     if confirm("Undo dir '".&undodir."' doesn't exist. Create?", "&Yes\n&No") == 1
@@ -204,28 +211,47 @@ if !empty($DISPLAY) && empty($SSH_CONNECTION) && executable('xdg-open')
     let g:netrw_browsex_viewer = 'xdg-open'
 endif
 
-" When sshing I don't use gvim but I still want my pretty colors. On local machine, I want vim to
-" look like a normal terminal app. I know, I'm weird.
-" if $SSH_CONNECTION !=# '' && $TERM ==# 'xterm-256color'
 if $TERM ==# 'xterm-256color' || $TERM ==# 'xterm-kitty'
-    set termguicolors " use gui colors in terminal
-    colorscheme wombat256
-    set t_ut= "unbreak bg colors when scolling
-endif
+    if $TERM ==# 'xterm-kitty' || $GNOME_TERMINAL_SCREEN !=# ''
+        set termguicolors " use gui colors in terminal
+        set t_ut= "unbreak bg colors when scrolling
+    endif
+    if 1
+        colorscheme wombat256
+        highlight GitGutterAdd    guifg=#009900 guibg=#121212 ctermfg=2
+        highlight GitGutterChange guifg=#bbbb00 guibg=#121212 ctermfg=3
+        highlight GitGutterDelete guifg=#ff2222 guibg=#121212 ctermfg=1
+    else
+        let g:gruvbox_italic=1
+        let g:gruvbox_improved_strings=0
+        let g:gruvbox_improved_warnings=1
+        let g:gruvbox_contrast_dark='hard'
+        let g:gruvbox_italicize_comments=0
+        colorscheme gruvbox
+    endif
+else
+    colorscheme wombat
+endi
 
-if $TERM ==# 'xterm-kitty' || $GNOME_TERMINAL_SCREEN !=# ''
+if 1 || $TERM ==# 'xterm-kitty' || $GNOME_TERMINAL_SCREEN !=# ''
     " gnome-terminal 3.28 and kitty support undercurl!
-    set t_Ce=[4:0m[59m
-    set t_Cs=[4:3m[58;5;9m
-    highlight SpellBad cterm=undercurl guisp=Red
+    if !has('nvim') && 0
+        "exec "set t_Ce=\e[4:0m\e[59m"
+        exec "set t_Cs=\e[4:3m\e[58;5;9m"
+    endif
+    highlight SpellBad cterm=undercurl guisp=red guibg=Black
+    highlight SpellCap cterm=undercurl guisp=cyan guibg=Black
+    highlight SpellRare cterm=undercurl guisp=green guibg=Black
+    highlight SpellLocal cterm=undercurl guisp=orange guibg=Black
+    "highlight SpellLocal guibg=Black
 else
     " Subtle but noticeable highlighting for misspelled words
     highlight SpellBad ctermbg=52 guibg=#330000 cterm=undercurl guisp=Red
 endif
 
-if $TERM ==# 'xterm-kitty' && !has('nvim')
+if !has('nvim') 
     "make <A-]> work in terminal vim
-    set <A-]>=]
+    exec "set <A-]>=\e]"
 endif
 
 let $LC_ALL='C' " disable locale-aware sort
@@ -244,8 +270,6 @@ let g:Tlist_Show_Menu = 1
 let g:Tlist_Display_Prototype = 0
 nnoremap <silent><F7> :w<CR>:TlistUpdate<CR>
 nnoremap <silent><F8> :Tlist<CR>
-
-nnoremap <silent><F9> :w<CR>:!pylint -e %<CR>
 
 "make <C-]> use :tagjump
 nnoremap <C-]> g<C-]>
@@ -268,13 +292,13 @@ tnoremap <silent> <C-\><C-n>
 tnoremap <silent><S-Esc> <C-\><C-n>
 au vimrc BufWinEnter * if &buftype == 'terminal' | setlocal nospell | endif
 
-"use shift-[hl] to move between buffers (tabs if you use MiniBufExplorer)
-nnoremap <silent><S-h> :bp<CR>
-nnoremap <silent><S-l> :bn<CR>
-
 "use readline maps in command mode
 cnoremap <C-a> <HOME>
 cnoremap <C-e> <END>
+
+nmap <2-LeftMouse> gd
+nnoremap <M-Left> <C-o>
+nnoremap <M-Right> <C-i>
 
 "dont require a shift to enter command mode
 nnoremap ; :
@@ -291,53 +315,16 @@ nnoremap Y y$
 "kill the search highlight. (Note: this is different from :set nohlsearch)
 nnoremap <silent> <leader><leader> :nohlsearch<CR>
 
-"auto close {
-function! s:CloseBracket()
-    let line = getline('.')
-    if line =~# '^\s*\(struct\|class\|enum\) '
-        return "{\<Enter>};\<Esc>O"
-    elseif searchpair('(', '', ')', 'bmn', '', line('.'))
-        " Probably inside a function call. Close it off.
-        return "{\<Enter>});\<Esc>O"
-    else
-        return "{\<Enter>}\<Esc>O"
-    endif
-endfunction
-inoremap <expr> {<Enter> <SID>CloseBracket()
-
-"show current function in "tabline" using tagbar function
-try
-    call tagbar#currenttag('%s','','fs') " make sure this works
-    set tabline=%{tagbar#currenttag('%s','','fs')}
-    set showtabline=2 " show tabline even if only one tab
-    autocmd vimrc CursorHold * let &ro = &ro "no-op that causes tabline to update
-    if exists('&guioptions')
-        " Don't use the gui tabline
-        set guioptions-=e
-    endif
-catch
-    "ignore failure
-endtry
-
 "add c++ stdlib headers to path
 set path^=/usr/include/c++/*
 set path^=/usr/include/c++/*/x86_64*
 
-"I hate that hot pink default
-highlight PMenu guibg=brown guifg=lightgrey
-highlight PMenuSel guibg=lightgrey guifg=brown
-
 " FileType specific configs
 augroup vimrc
+    autocmd FileType cpp,c,cuda,python,gitcommit,vim,markdown,javascript setlocal spell
+    autocmd FileType haskell,strace,json setlocal nospell
+
     autocmd FileType cpp setlocal matchpairs+=<:> " make % bounce between < and >
-    autocmd FileType c,cpp nnoremap <buffer>T :YcmCompleter GetType<CR>
-    autocmd FileType c,cpp nnoremap <buffer><C-t> :YcmCompleter FixIt<CR>
-    autocmd FileType c,cpp,python nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
-    autocmd FileType c,cpp nnoremap <silent><buffer><D-]> :YcmComplete GoToDeclaration<CR>
-    "autocmd FileType javascript nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
-    "autocmd FileType javascript nnoremap <buffer>T :YcmCompleter GetType<CR>
-    autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
-    autocmd FileType javascript nnoremap <buffer>T :TernType<CR>
     autocmd FileType gitcommit setlocal textwidth=78 colorcolumn=+1
     autocmd FileType go setlocal sts=4 ts=4 noexpandtab
     autocmd FileType tex setlocal grepprg=grep\ -nH\ $*
@@ -348,9 +335,6 @@ augroup vimrc
     autocmd FileType qf,man setlocal nospell colorcolumn=0
     autocmd FileType qf nnoremap <buffer><C-CR> <CR>:cclose<CR>
     "autocmd FileType qf setlocal scrolloff=0 " grrr global
-    autocmd FileType conque_term setlocal nospell timeout
-    autocmd FileType haskell setlocal nospell
-    autocmd FileType strace setlocal nospell
     autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
     autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading=1
     "autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
@@ -358,17 +342,18 @@ augroup vimrc
     "autocmd FileType python BracelessEnable +indent +highlight
 augroup END
 
-"clicking on the 'tabs' in the MiniBufExplorer will switch to that buffer
-"(even in console)
-let g:miniBufExplUseSingleClick=1
-let g:miniBufExplMapCTabSwitchBufs=1
-let g:miniBufExplorerAutoUpdate = 1
-let g:miniBufExplTabWrap = 1
-let g:miniBufExplForceSyntaxEnable = 0
-
-let g:SuperTabDefaultCompletionType = 'context'
-let g:SuperTabContextDefaultCompletionType = '<c-x><c-o>'
-"let g:SuperTabMappingForward = "<tab>"
+if !s:use_coc
+augroup vimrc
+    autocmd FileType c,cpp nnoremap <buffer>T :YcmCompleter GetType<CR>
+    autocmd FileType c,cpp nnoremap <buffer><C-t> :YcmCompleter FixIt<CR>
+    autocmd FileType c,cpp,python nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
+    autocmd FileType c,cpp nnoremap <silent><buffer><D-]> :YcmComplete GoToDeclaration<CR>
+    "autocmd FileType javascript nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
+    "autocmd FileType javascript nnoremap <buffer>T :YcmCompleter GetType<CR>
+    autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
+    autocmd FileType javascript nnoremap <buffer>T :TernType<CR>
+augroup END
+endif
 
 let g:undotree_DiffCommand = 'diff -u'
 let g:undotree_SplitWidth = 30
@@ -378,12 +363,16 @@ let g:undotree_WindowLayout = 2 " wide diff view
 let g:ackprg='rg --vimgrep'
 
 "change inside of a (single-ling) string, see :help objects
-nnoremap c' ci'
-nnoremap c" ci"
-nnoremap cw ciw
-nnoremap d' da'
-nnoremap d" da"
-nnoremap dw daw
+nnoremap c'  ci'
+nnoremap c"  ci"
+nnoremap cw  ciw
+nnoremap cW  ciW
+nnoremap d'  da'
+nnoremap d"  da"
+nnoremap dw  daw
+nnoremap dW  daW
+nnoremap ysw ysiw
+nnoremap ysW ysiW
 
 function! GrepForWord(word)
     let @/ = '\<'.a:word.'\>'
@@ -396,7 +385,7 @@ nnoremap <silent><F7> :silent call GrepForWord(expand('<cword>'))<CR>
 
 " open the quickfix windown whenever something adds to it
 augroup vimrc
-    autocmd QuickFixCmdPost * nested botright cwindow 10
+    autocmd QuickFixCmdPost * nested botright copen 10
 augroup END
 
 "use F11/F12 to move to older/newer quickfix lists
@@ -405,9 +394,6 @@ nnoremap <silent><F12> :cnewer<CR>
 
 "use shift-w to save the file as root (I forget to use "sudo vim" a lot)
 command! -bar -nargs=0 W  :silent exe "write !sudo tee % >/dev/null"|silent edit!
-
-"autosave on make
-"cabbr make wa\|make
 
 "better navigation of quickfix list
 nnoremap <C-n> :cn<cr>
@@ -432,6 +418,7 @@ augroup END
 let g:haddock_browser = 'chromium'
 
 " allow use of tab and s-tab in command-t window
+let g:CommandTCancelMap = ['<C-c>', '<S-Esc>', "\x9b"]
 let g:CommandTSelectNextMap=['<C-n>', '<C-j>', '<Down>', '<Tab>']
 let g:CommandTSelectPrevMap=['<C-p>', '<C-k>', '<Up>', '<S-Tab>']
 let g:CommandTTraverseSCM='pwd'
@@ -448,50 +435,15 @@ augroup vimrc
     autocmd InsertLeave * if getcmdwintype() == '' && pumvisible() == 0|pclose|endif
 
     " Reload vimrc on save
-    autocmd BufWritePost .vimrc nested silent source %
+    autocmd BufWritePost {.,}vimrc nested silent source %
 
     " Hack to make file paths relative. (Might be too slow)
     " autocmd BufNew * cd .
 augroup END
 
-let g:clang_use_library = 1
-let g:clang_ibrary_path = '/usr/lib/llvm/libclang.so'
-let g:clang_complete_macros=1
-let g:clang_periodic_quickfix=0
-let g:clang_complete_copen = 1
-let g:clang_jumpto_declaration_key = '<A-]>'
-let g:clang_jumpto_back_key = '<A-T>'
-"let g:clang_snippets = 1
-"let g:clang_snippets_engine = 'ultisnips'
-"let g:clang_debug = 1
-
-"let g:UltiSnipsExpandTrigger="<s-tab>"
-let g:UltiSnipsJumpForwardTrigger='<s-tab>'
-"let g:UltiSnipsJumpBackwardTrigger="<c-tab>"
-
-"let g:syntastic_enable_signs=1
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list=1
-let g:syntastic_c_checker = 'clang'
-let g:syntastic_c_no_include_search = 1
-let g:syntastic_cpp_compiler = 'clang++'
-let g:syntastic_cpp_no_include_search = 1
-let g:syntastic_cpp_errorformat =
-            \ '%-G%f:%s:,'.
-            \ '%f:%l:%c: %trror: %m,'.
-            \ '%f:%l:%c: %tarning: %m,'.
-            \ '%I%f:%l:%c: note: %m,'.
-            \ '%f:%l:%c: %m,'.
-            \ '%f:%l: %trror: %m,'.
-            \ '%f:%l: %tarning: %m,'.
-            \ '%I%f:%l: note: %m,'.
-            \ '%f:%l: %m,'.
-            \ '%I%m'
-"SyntasticEnable cpp
-
 "let g:ycm_enable_diagnostic_signs = 0 " interferes with git-gutter which is more valuable
 let g:ycm_extra_conf_globlist = ['~/10gen/*']
-let g:ycm_always_populate_location_list = 0
+let g:ycm_always_populate_location_list = 1
 let g:ycm_filepath_completion_use_working_dir = 1
 let g:ycm_open_loclist_on_ycm_diags = 1
 let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_conf.py'
@@ -500,16 +452,19 @@ let g:ycm_complete_in_comments = 0
 let g:ycm_python_binary_path = '/usr/bin/python2' " for now at least
 let g:ycm_semantic_triggers = {'nim': ['.']}
 "let g:ycm_key_invoke_completion = '<tab>' " doesn't work :(
-
-let g:UltiSnipsExpandTrigger='<c-tab>'
-"let g:UltiSnipsListSnippets="<leader>s"
-let g:UltiSnipsJumpForwardTrigger='<c-tab>'
-let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
-
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_expand_space = 1
-let g:delimitMate_jump_expansion = 1
-let g:delimitMate_balance_matchpairs = 1
+let g:ycm_filepath_blacklist = {
+      \ 'os': 1,
+      \ 'o': 1,
+      \ 'd': 1,
+      \}
+let g:ycm_semantic_triggers =  {
+  \   'cpp,cuda,objcpp': ['->', '.', '::', 're!\b[_a-zA-z][_a-zA-Z0-9]'],
+  \ }
+"let g:ycm_min_num_of_chars_for_completion = 99
+let g:ycm_use_clangd = 1
+let g:ycm_clangd_uses_ycmd_caching = 0
+let g:ycm_clangd_args = ['-background-index', '-all-scopes-completion', '-completion-style=bundled']
+let g:ycm_clangd_binary_path = '/bin/clangd'
 
 let g:SignatureMarkTextHLDynamic=1 " make signature colors match gitgutter's
 
@@ -564,25 +519,8 @@ let g:rtagsUseLocationList=0
 
 " enable :Man and <leader>K mappings
 runtime! ftplugin/man.vim
-"nmap K ,K
-augroup vimrc
-    autocmd FileType help nmap <buffer> K g<C-]>
-augroup END
 
 runtime! macros/matchit.vim
-
-if !has('gui_running')
-    if !has('nvim')
-        "make the mouse work correctly in cygwin
-        set ttymouse=sgr
-    endif
-
-    "change cursor icon based on mode
-    let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-    let &t_SI = "\<Esc>[6 q" "insert - pipe
-    let &t_SR = "\<Esc>[4 q" "replace - underbar
-    let &t_EI = "\<Esc>[2 q" "normal - block
-endif
 
 "This is needed for alias vimdiff="vimdiff --noplugin"
 function! s:DefGitBranch()
@@ -610,11 +548,6 @@ map <plug>(easymotion-prefix)L <Plug>(easymotion-overwin-line)
 nmap <plug>(easymotion-prefix)s <Plug>(easymotion-s)
 nmap S <plug>(easymotion-s)
 
-let g:ConqueTerm_CloseOnEnd = 1
-let g:ConqueTerm_StartMessages = 0
-let g:ConqueTerm_CWInsert = 1
-let g:ConqueTerm_InsertOnEnter = 1
-
 " make plugins that use :Make use AsyncRun
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 
@@ -627,16 +560,56 @@ let g:ale_python_pylint_options='--errors-only' " don't complain about python st
 let g:markdown_fenced_languages = ['cpp', 'python', 'vim', 'bash']
 let g:gfm_syntax_emoji_conceal = 1
 
-let g:gtk_nocache=[0x00000000, 0xfc00ffff, 0xf8000001, 0x78000001]
-
+let g:LanguageClient_loadSettings = 1
+let g:LanguageClient_selectionUI = 'location-list'
 let g:LanguageClient_serverCommands = {
 \ 'cpp': ['cquery', '--log-file=/tmp/cq.log']
 \ }
-let g:LanguageClient_loadSettings = 1
 
-let g:deoplete#enable_at_startup = 1
-let g:LanguageClient_selectionUI = 'location-list'
+set noshowmode
+let g:echodoc#enable_at_startup = 1
 
-"call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
+let g:vim_json_warnings = 0
+
+let g:startify_change_to_dir = 0
+let g:startify_enable_unsafe = 1
+let g:startify_bookmarks = [
+    \ {'v': '~/.vimrc'},
+    \ {'c': '~/.vim/coc.vim'},
+    \ {'z': '~/.zshrc'},
+    \ ]
+
+"show current function in "tabline" using tagbar function
+try
+    call tagbar#currenttag('%s','','fs') " make sure this works
+    set tabline=%{tagbar#currenttag('%s','','fs')}
+    set showtabline=2 " show tabline even if only one tab
+    "autocmd vimrc CursorHold * let &ro = &ro "no-op that causes tabline to update
+    if exists('&guioptions')
+        " Don't use the gui tabline
+        set guioptions-=e
+    endif
+catch
+    "ignore failure
+endtry
+
+"auto close {
+function! s:CloseBracket()
+    let line = getline('.')
+    if line =~# '^\s*\(struct\|class\|enum\) '
+        return "{\<Enter>};\<Esc>O"
+    elseif searchpair('(', '', ')', 'bmn', '', line('.'))
+        " Probably inside a function call. Close it off.
+        return "{\<Enter>});\<Esc>O"
+    else
+        return "{\<Enter>}\<Esc>O"
+    endif
+endfunctio
+inoremap <expr> {<Enter> <SID>CloseBracket()
+
+if s:use_coc
+    runtime coc.vim
+else
+endif
 
 "see also: my ~/.gimrc and ~/.vim directory

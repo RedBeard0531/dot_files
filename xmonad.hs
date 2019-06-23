@@ -36,7 +36,7 @@ import XMonad.Prompt.Shell
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 import qualified Data.Set        as S
-import qualified Data.List as L (deleteBy,find,splitAt,filter,nub)
+import qualified Data.List as L (deleteBy,find,splitAt,filter,nub,isPrefixOf)
 import Control.Monad (when, unless)
 import Data.Ratio ((%))
  
@@ -298,6 +298,13 @@ myLayout = avoidStruts
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
  
+
+{- IntelliJ popup fix from http://youtrack.jetbrains.com/issue/IDEA-74679#comment=27-417315 -}
+{- and http://youtrack.jetbrains.com/issue/IDEA-101072#comment=27-456320 -}
+(~=?) :: Eq a => Query [a] -> [a] -> Query Bool
+q ~=? x = fmap (L.isPrefixOf x) q
+
+manageIdeaCompletionWindow = (className ~=? "jetbrains-") <&&> (title ~=? "win") --> doIgnore
 ------------------------------------------------------------------------
 -- Window rules:
  
@@ -323,6 +330,7 @@ myManageHook = manageDocks <+> composeAll
     , resource  =? "kicker"         --> doIgnore 
     , resource  =? "stalonetray"    --> doIgnore 
     , title     =? "panel"          --> doIgnore 
+    , manageIdeaCompletionWindow
     ]
 
 

@@ -1,0 +1,145 @@
+{
+    //"coc.source.omni.filetypes": ["javascript"],
+    //"coc.source.omni.triggerCharacters": ["."],
+    "coc.preferences.currentFunctionSymbolAutoUpdate": true,
+    //"coc.preferences.formatOnType": true,
+    "coc.preferences.useQuickfixForLocations": true,
+    //
+    "diagnostic.displayByAle": false,
+    "diagnostic.errorSign": "⛔",
+    "diagnostic.warningSign": "🚸",
+    "diagnostic.infoSign": "➖",
+    "diagnostic.hintSign": "➕",
+    "diagnostic.signOffset": 999999,
+    "diagnostic.checkCurrentLine": true,
+    "diagnostic.refreshOnInsertMode": true,
+    "diagnostic.virtualText": true,
+    "diagnostic.virtualTextPrefix": "   ◄ ",
+    "diagnostic.messageTarget": "echo",
+    //
+    //"codeLens.enable": true,
+    //
+    //"suggest.noselect": true,
+    "suggest.acceptSuggestionOnCommitCharacter": true,
+    "suggest.snippetIndicator": " ► ",
+    "suggest.maxCompleteItemCount": 200,
+    //
+    "list.maxHeight": 30,
+    //"list.source.grep.command": "ag",
+    "list.insertMappings": {
+        "<C-c>": "do:exit"
+    },
+    "list.normalMappings": {
+        "<C-c>": "do:exit",
+        "q": "do:exit"
+    },
+    //"list.source.mru.maxLength": 30,
+    //
+    "yank.highlight.duration": 200,
+    //
+    "highlight.disableLanguages": ["cpp", "c"],
+    "highlight.colors.enable": false,
+    //
+    "tsserver.implicitProjectConfig.checkJs": true,
+    "tsserver.enableJavascript": false,
+    //
+    //"python.linting.enabled": false,
+    "python.linting.flake8Enabled": false,
+    //
+    "git.enableGutters": false,
+    //
+    "languageserver": {
+        "tern": {
+            "command": "/tmp/test/node_modules/js-langserver/index.js",
+            "args": ["--stdio"],
+            "filetypes": ["javascript"],
+            "rootPatterns": [".tern-project"],
+        },
+        "clangd": {
+            "command": "nice",
+            "args": [
+                "-n19",
+                "clangd",
+                "-background-index",
+                "-all-scopes-completion",
+                "-completion-style=bundled"
+            ],
+            "rootPatterns": [
+                "compile_flags.txt",
+                "compile_commands.json",
+                ".vim/",
+                ".git/",
+                ".hg/"
+            ],
+            "filetypes": [
+                //"c", "cpp", "objc", "objcpp"
+            ]
+        },
+        "ccls": {
+            "command": "nice_ccls",
+            "filetypes": [
+                "c", "cpp", "objc", "objcpp", "cuda"
+            ],
+            "rootPatterns": [
+                ".ccls",
+                "compile_commands.json",
+                ".vim/",
+                ".git/",
+                ".hg/",
+            ],
+            "initializationOptions": {
+                "cache": {
+                    "directory": "/home/mstearn/.cache/ccls/"
+                },
+                "codeLens": {
+                    "localVariables": false,
+                },
+                "completion": {
+                    "filterAndSort": true,
+                    "maxNum": 100,
+                },
+                "index": {
+                    "threads": 10,
+                    "onChange": true,
+                },
+                "diagnostics": {
+                    "onOpen": 0,
+                    "onChange": 1,
+                    "onSave": 0
+                },
+                "capabilities": {
+                    "documentOnTypeFormattingProvider": {
+                        "moreTriggerCharacter": [
+                            //";"
+                        ]
+                    }
+                },
+                "client": {
+                    "diagnosticsRelatedInformation": true,
+                },
+                "request": {
+                    "timeout": 1750
+                },
+                "clang": {
+                    "extraArgs": [
+                        "-UNDEBUG",
+                        "-Wall",
+                        "-Wextra",
+                        "-Wno-long-long",
+                        "-Wno-variadic-macros",
+                        "-Wno-unknown-pragmas",
+                        "-Wno-unused-parameter",
+                        "-Wno-unused-local-typedefs",
+                        "-Wno-deprecated-declarations",
+                        "-Wno-missing-field-initializers",
+                        "-Wno-invalid-pch",
+                        "-Wno-potentially-evaluated-expression",
+                        "-Wno-inconsistent-missing-override",
+                        "-Wno-tautological-constant-out-of-range-compare"
+                    ]
+                }
+            }
+        }
+    }
+}
+

@@ -61,14 +61,6 @@ if v:version >= 500
 
   set background=dark
 
-  "highlight MyCurword guibg=#134
-  highlight MyCurword guibg=#111122 gui=bold guifg=white
-  " cterm=bold ctermfg=white
-  augroup gvimrc
-      autocmd InsertEnter *.{cpp,c,h,hpp} syntax clear MyCurword
-      autocmd CursorHold *.{cpp,c,h,hpp} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
-  augroup END
-
   set guioptions-=T
   set guifont=Monospace\ 9
   "set guifont=Fira\ Code\ Medium\ 9
@@ -88,14 +80,22 @@ if v:version >= 500
       augroup gvimc
           autocmd FileType c,cpp setlocal balloonexpr=MyRtagsBalloon()
       augroup END
+
+  "highlight MyCurword guibg=#134
+  highlight MyCurword guibg=#111122 gui=bold guifg=white
+  " cterm=bold ctermfg=white
+  augroup gvimrc
+      autocmd InsertEnter *.{cpp,c,h,hpp} syntax clear MyCurword
+      autocmd CursorHold *.{cpp,c,h,hpp} syntax clear MyCurword | if len(expand('<cword>')) && match(expand('<cword>'), '\W') == -1 | exe "syntax keyword MyCurword " . expand("<cword>") |endif 
+  augroup END
   endif
 
   " Use images for ycm errors
   let g:ycm_error_symbol='EE icon=/usr/share/icons/gnome/16x16/status/dialog-error.png'
   let g:ycm_warning_symbol='WW icon=/usr/share/icons/gnome/16x16/status/dialog-warning.png'
 
-  let g:ale_sign_error='EE icon=/usr/share/icons/gnome/16x16/status/dialog-error.png'
-  let g:ale_sign_warning='WW icon=/usr/share/icons/gnome/16x16/status/dialog-warning.png'
+  "let g:ale_sign_error='EE icon=/usr/share/icons/gnome/16x16/status/dialog-error.png'
+  "let g:ale_sign_warning='WW icon=/usr/share/icons/gnome/16x16/status/dialog-warning.png'
 
   " Make back and forward buttons work.
   nnoremap <X1Mouse> <C-o>
@@ -110,3 +110,12 @@ if v:version >= 500
 
 endif
 
+
+highlight GitGutterAdd    guifg=#009900 guibg=black ctermfg=2
+highlight GitGutterChange guifg=#bbbb00 guibg=black ctermfg=3
+highlight GitGutterDelete guifg=#ff2222 guibg=black ctermfg=1
+
+if exists('g:GtkGuiLoaded')
+    call rpcnotify(1, 'Gui', 'Font', 'Fira Code Medium 9')
+    call rpcnotify(1, 'Gui', 'Option', 'Tabline', 0)
+endif

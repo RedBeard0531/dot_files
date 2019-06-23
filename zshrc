@@ -16,6 +16,8 @@ compinit
 #fix delete key
 #bindkey    "^[[3~"          delete-char
 #bindkey    "^[3;5~"         delete-char
+bindkey '^[[1;9C' forward-word
+bindkey '^[[1;9D' backward-word
 
 # bind special keys according to readline configuration
 eval "$(sed -n 's/^\( *[^#][^:]*\):/bindkey \1/p' /etc/inputrc)"
@@ -73,7 +75,7 @@ ${PROMPT_COLOR}[%U%M%u]%~ %T$reset_color%b ${ROOT_SYMBOL}${VIRTENV_SYMBOL}${STAT
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 export PATH="$HOME/bin:$HOME/bin/mongo_versions:$HOME/.nimble/bin:/usr/local/bin:/usr/lib/colorgcc/bin/:$PATH"
-export EDITOR=vim
+export EDITOR=nvim
 
 export LESS='-iRM -j5 -P%t?f%f :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
 
@@ -106,15 +108,13 @@ alias batstat="cat /proc/acpi/battery/BAT[01]/state"
 #alias hg="history |grep "
 alias gentags="ctags --extras=+qf --fields=+iasnfSKtm --c++-kinds=+p --sort=foldcase"
 alias grep="grep -n --color"
-alias vimdiff="vimdiff --noplugin"
+#alias vimdiff="vimdiff --noplugin"
 alias vamplayer="mplayer -vo vaapi -va vaapi "
 
 alias sr='ssh -l root'
-alias smoke="python2 buildscripts/smoke.py"
-alias resmoke="python2 buildscripts/resmoke.py"
+alias resmoke="python3 buildscripts/resmoke.py"
 #alias scons="nice scons"
-#alias ninja="nice ninja"
-
+alias ninja="nice -n 1 ninja"
 
 alias cr='python2 ~/10gen/kernel-tools/codereview/upload.py -y '
 alias cru='cr -e mathias@10gen.com --jira_user redbeard0531 '
@@ -125,3 +125,7 @@ if [ -d /usr/share/fzf -a -z "$VIM_SERVER" ]; then
     done
 fi
 
+# opam configuration
+test -r /home/mstearn/.opam/opam-init/init.zsh && . /home/mstearn/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

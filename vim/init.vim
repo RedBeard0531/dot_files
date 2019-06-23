@@ -1,13 +1,20 @@
 " for neovim, just use gvim config
+"let $TERM='xterm-kitty'
 source ~/.vimrc
-source ~/.gvimrc
+"source ~/.gvimrc
+
 
 tnoremap <Esc> <C-\><C-n>
 tmap <C-j> <ESC><C-j>
 tmap <C-h> <ESC><C-h>
 tmap <C-l> <ESC><C-l>
 tmap <C-k> <ESC><C-k>
-autocmd BufEnter term://* startinsert
+augroup init_vim
+    au!
+    au BufEnter term://* startinsert
+augroup END
 
-let $TERM='xterm-256-color'
-
+if exists('g:GtkGuiLoaded')
+    call rpcnotify(1, 'Gui', 'Font', 'Fira Code Medium 9')
+    call rpcnotify(1, 'Gui', 'Option', 'Tabline', 0)
+endif
