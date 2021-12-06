@@ -4,35 +4,38 @@
     "coc.preferences.currentFunctionSymbolAutoUpdate": true,
     //"coc.preferences.formatOnType": true,
     "coc.preferences.useQuickfixForLocations": true,
+    "coc.preferences.enableMarkdown": true,
+    "coc.preferences.semanticTokensHighlights": false,
     //
     "diagnostic.displayByAle": false,
-    "diagnostic.errorSign": "⛔",
-    "diagnostic.warningSign": "🚸",
-    "diagnostic.infoSign": "➖",
-    "diagnostic.hintSign": "➕",
+    //"diagnostic.errorSign": "⛔",
+    //"diagnostic.warningSign": "🚸",
+    //"diagnostic.infoSign": "➖",
+    //"diagnostic.hintSign": "➕",
     "diagnostic.signOffset": 999999,
     "diagnostic.checkCurrentLine": true,
     "diagnostic.refreshOnInsertMode": true,
     "diagnostic.virtualText": true,
+    "diagnostic.virtualTextCurrentLineOnly": false,
     "diagnostic.virtualTextPrefix": "   ◄ ",
     "diagnostic.messageTarget": "echo",
+    "diagnostic.separateRelatedInformationAsDiagnostics": true,
     //
-    //"codeLens.enable": true,
+    "codeLens.enable": false,
     //
     //"suggest.noselect": true,
     "suggest.acceptSuggestionOnCommitCharacter": true,
     "suggest.snippetIndicator": " ► ",
-    "suggest.maxCompleteItemCount": 200,
     //
     "list.maxHeight": 30,
     //"list.source.grep.command": "ag",
-    "list.insertMappings": {
-        "<C-c>": "do:exit"
-    },
-    "list.normalMappings": {
-        "<C-c>": "do:exit",
-        "q": "do:exit"
-    },
+    //"list.insertMappings": {
+        //"<C-c>": "do:exit"
+    //},
+    //"list.normalMappings": {
+        //"<C-c>": "do:exit",
+        //"q": "do:exit"
+    //},
     //"list.source.mru.maxLength": 30,
     //
     "yank.highlight.duration": 200,
@@ -41,55 +44,88 @@
     "highlight.colors.enable": false,
     //
     "tsserver.implicitProjectConfig.checkJs": true,
-    "tsserver.enableJavascript": false,
+    "tsserver.enableJavascript": true,
+    "tsserver.npm": "/bin/npm",
+    "tsserver.log": "normal",
+    "typescript.suggestionActions.enabled": false,
+    //"tsserver.trace.server": "messages",
     //
     //"python.linting.enabled": false,
     "python.linting.flake8Enabled": false,
+    "python.jediEnabled": false,
+    //
+    "jedi.markupKindPreferred": "markdown",
+    //
+    "java.trace.server": "verbose",
     //
     "git.enableGutters": false,
     //
+    "clangd.arguments": [
+        "--index",
+        "--background-index",
+        "--clang-tidy",
+        "--all-scopes-completion",
+        "--suggest-missing-includes",
+    ],
+    "clangd.semanticHighlighting": true,
+    //
     "languageserver": {
+        "nimlsp": {
+            "command": "nimlsp",
+            "args": [
+                //"/home/mstearn/.choosenim/toolchains/nim-1.2.0"
+            ],
+            "filetypes": ["nim"],
+        },
         "tern": {
             "command": "/tmp/test/node_modules/js-langserver/index.js",
             "args": ["--stdio"],
-            "filetypes": ["javascript"],
+            "filetypes": [
+                //"javascript"
+            ],
             "rootPatterns": [".tern-project"],
         },
-        "clangd": {
+        "XXclxxangdxx": {
             "command": "nice",
             "args": [
                 "-n19",
-                "clangd",
+                "XXclxxangd",
                 "-background-index",
                 "-all-scopes-completion",
-                "-completion-style=bundled"
+                // "-completion-style=bundled"
             ],
             "rootPatterns": [
                 "compile_flags.txt",
                 "compile_commands.json",
-                ".vim/",
-                ".git/",
-                ".hg/"
+                //".vim/",
+                //".git/",
+                //".hg/"
             ],
             "filetypes": [
                 //"c", "cpp", "objc", "objcpp"
             ]
         },
         "ccls": {
-            "command": "nice_ccls",
+            "command": "nice",
+            "args": [
+                "-n19",
+                "ccls",
+                "-log-file=/tmp/ccls.log", "-v=1"
+            ],
             "filetypes": [
-                "c", "cpp", "objc", "objcpp", "cuda"
+                // "c", "cpp", "objc", "objcpp", "cuda"
             ],
             "rootPatterns": [
                 ".ccls",
                 "compile_commands.json",
                 ".vim/",
-                ".git/",
-                ".hg/",
+                //".git/",
+                //".hg/",
             ],
             "initializationOptions": {
                 "cache": {
-                    "directory": "/home/mstearn/.cache/ccls/"
+                    "directory": "/home/mstearn/.cache/ccls/",
+                    "retainInMemory": 0,
                 },
                 "codeLens": {
                     "localVariables": false,
@@ -99,8 +135,10 @@
                     "maxNum": 100,
                 },
                 "index": {
-                    "threads": 10,
+                    // "threads": 14,
                     "onChange": true,
+                    "initialBlacklist": [ "src/third_party"],
+                    "initialwhitelist": [ "src/third_party/wiredtiger"],
                 },
                 "diagnostics": {
                     "onOpen": 0,
@@ -120,11 +158,15 @@
                 "request": {
                     "timeout": 1750
                 },
+                "highlight": {
+                    "lsRanges": true
+                },
                 "clang": {
                     "extraArgs": [
                         "-UNDEBUG",
                         "-Wall",
                         "-Wextra",
+                        /*
                         "-Wno-long-long",
                         "-Wno-variadic-macros",
                         "-Wno-unknown-pragmas",
@@ -135,11 +177,29 @@
                         "-Wno-invalid-pch",
                         "-Wno-potentially-evaluated-expression",
                         "-Wno-inconsistent-missing-override",
+                        "-fno-modules",
                         "-Wno-tautological-constant-out-of-range-compare"
+                        */
                     ]
                 }
             }
         }
-    }
+    },
+    "cSpell.userWords": [
+      "BSON",
+      "NOINST",
+      "PRINTFL",
+      "WTOK",
+      "coro",
+      "cvref",
+      "fassert",
+      "futex",
+      "mongodb",
+      "mpark",
+      "stdx",
+      "uassert",
+      "unconsume",
+      "unpositioned"
+    ]
 }
 

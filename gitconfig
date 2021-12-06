@@ -1,6 +1,12 @@
 [color]
 	ui = auto
+[core]
+    pager = delta
+    #--plus-color="#012800" --minus-color="#340001"
 
+[interactive]
+    diffFilter = delta --color-only
+    
 [user]
 	name = Mathias Stearn
 	email = redbeard0531@gmail.com
@@ -9,19 +15,24 @@
 
 [web]
     browser = firefox
-[core]
-        #pager = less -FX
-	pager = lesswrapper
 [push]
 	default = simple
 
 [alias]
     br = for-each-ref --sort=committerdate refs/heads/ --format='%(color:yellow)%(committerdate:short) %(color:cyan)%(refname:short):%(color:reset) %(subject)'
-    rb = !git rebase -i $(git merge-base HEAD origin)
+    rb = !git rebase -i $(git merge-base HEAD mongo-proto)
+    rbd = !git rebase -i $(git merge-base HEAD develop)
     rbm = !git rebase -i $(git merge-base HEAD master)
     st = status -u no
 [merge]
 	conflictstyle = diff3
 
 [diff]
-    #colorMoved = default
+    colorMoved = true
+[pull]
+	ff = only
+
+[delta]
+    minus-style = "syntax #500001"
+    plus-style = "syntax #003900"
+    features = side-by-side

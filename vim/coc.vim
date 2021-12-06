@@ -14,12 +14,14 @@ let g:airline#extensions#coc#enabled = 1
 let g:airline#extensions#coc#error_symbol = '🔥'
 "let g:airline#extensions#coc#warning_symbol = 'W'
 let g:airline#extensions#coc#warning_symbol = '🏴'
-let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
+"let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
+"let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
 
 let g:coc_filetype_map = {
             \ "json": "jsonc",
             \ }
+
+let g:coc_quickfix_open_command = 'botright copen'
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -33,7 +35,8 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
-imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>\<c-r>=coc#on_enter()\<CR>"
+"imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>\<c-r>=coc#on_enter()\<CR>"
+imap <expr> <cr> pumvisible() ? coc#_select_confirm() : "\<CR>\<c-r>=coc#on_enter()\<CR>"
 "imap <expr> ( pumvisiblle() && coc#expandable() >= 0 ? "\<C-y>" : "("
 
 " Use `[c` and `]c` to navigate diagnostics
@@ -50,9 +53,32 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+if has("menu")
+    set mousemodel=popup_setpos
+
+    unmenu PopUp
+    nmenu <silent> PopUp.Go\ To\ Definition  <Plug>(coc-definition)
+    nmenu <silent> PopUp.Go\ To\ Type <Plug>(coc-type-definition)
+    nmenu <silent> PopUp.Go\ To\ Implementation(s) <Plug>(coc-implementation)
+    nmenu <silent> PopUp.Go\ To\ References <Plug>(coc-references)
+    nmenu <silent> PopUp.-sep1- :
+    nmenu <silent> PopUp.Show\ Docs <SID>show_documentation()<CR>
+    nmenu <silent> PopUp.Show\ Members :CclsMemberHierarchy<cr>
+    nmenu <silent> PopUp.Show\ Callers :CclsCallHierarchy<cr>
+    nmenu <silent> PopUp.-sep2- :
+    nmenu <silent> PopUp.Rename <Plug>(coc-rename)
+endif
+
+
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+nmap <silent> ,v <Plug>(coc-range-select)
+xmap <silent> ,v <Plug>(coc-range-select)
+nmap <silent> <a-v> <Plug>(coc-range-select)
+xmap <silent> <a-v> <Plug>(coc-range-select)
 
 " Highlight symbol under cursor on CursorHold
 
@@ -61,8 +87,18 @@ nmap <leader>rn <Plug>(coc-rename)
 
 " Remap for format selected region
 xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  V<Plug>(coc-format-selected)
 
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
 
 augroup vimrc_coc
     " Setup formatexpr specified filetype(s).
@@ -78,14 +114,17 @@ augroup vimrc_coc
 
     "autocmd FileType,BufWinEnter,WinNew * if !&modifiable || expand('%') == '' | setlocal nospell | endif
     "au BufNew * echom '|'.expand("%").'|'.&modifiable
+    
+    autocmd User EasyMotionPromptBegin silent! CocDisable
+    autocmd User EasyMotionPromptEnd silent! CocEnable
 augroup end
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
 
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
+" Remap for do codeAction of current line (maybe should use -line?)
+"nmap <leader>a  <Plug>(coc-codeaction-line) 
+nmap <leader>a  :call CocActionAsync('codeAction', 'cursor')<cr>
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
@@ -101,6 +140,7 @@ nnoremap <silent> <Plug>(coc-prefix)a  :<C-u>CocList diagnostics<cr>
 nnoremap <silent> <Plug>(coc-prefix)e  :<C-u>CocList extensions<cr>
 nnoremap <silent> <Plug>(coc-prefix)c  :<C-u>CocList commands<cr>
 nnoremap <silent> <Plug>(coc-prefix)o  :<C-u>CocList outline<cr>
+nnoremap <silent> <Plug>(coc-prefix)f  :<C-u>CocList files<cr>
 nnoremap <silent> <Plug>(coc-prefix)s  :<C-u>CocList -I symbols<cr>
 nnoremap <silent> <Plug>(coc-prefix)j  :<C-u>CocNext<CR>
 nnoremap <silent> <Plug>(coc-prefix)k  :<C-u>CocPrev<CR>
@@ -153,9 +193,17 @@ hi CocErrorFloat guifg=#ff0000
 hi CocWarningFloat guifg=#ff922b
 "hi CocInfoFloat   guifg=blue
 
-hi CocHighlightText gui=bold
+hi CocHighlightText gui=bold guibg=black
 hi CocHighlightRead gui=bold guibg=#003300
 hi CocHighlightWrite gui=bold guibg=#440000
+
+hi LspCxxHlGroupMemberVariable guifg=#ffffff gui=bold
+hi LspCxxHlSymParameter guifg=#e5cccc
+hi LspCxxHlSymVariableStatic guifg=#aacccc
+hi LspCxxHlSymFieldStatic guifg=#ff55ff
+hi LspCxxHlSymUnknownStaticField guifg=#ff55ff
+hi LspCxxHlSymFileVariable guifg=#ff5555
+hi link LspCxxHlSymNamespaceVariable LspCxxHlSymFileVariable
 
 "}}}
 
@@ -166,7 +214,7 @@ function! s:check_back_space() abort
 endfunction
 
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
+  if (index(['vim','help', 'man'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
   else
     call CocAction('doHover')

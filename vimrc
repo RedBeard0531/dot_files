@@ -7,20 +7,19 @@ let s:use_coc =  1
 " over a url). Within each section, plugins are roughly sorted by "value" so the plugins I use most
 " often are at the top.
 call plug#begin('~/.vim/plugged')
-
 " Vimscript enhancements
 Plug 'https://github.com/tpope/vim-repeat.git' " makes . and u work better with plugins
 Plug 'https://github.com/tpope/vim-scriptease' " helpers when writing vimscript
 
 " Vim editing enhancements
-Plug 'https://github.com/easymotion/vim-easymotion' " Jump anywhere you can see super fast
+"Plug 'https://github.com/easymotion/vim-easymotion' " Jump anywhere you can see super fast
 Plug 'https://github.com/tpope/vim-surround' " commands for adding or changing surroundings
 Plug 'https://github.com/wellle/targets.vim' " More text objects (daa to delete an argument)
 Plug 'https://github.com/sfiera/vim-emacsmodeline' " Teach vim to understand emacs modelines
 Plug 'https://github.com/AndrewRadev/dsf.vim' " dsf -> Delete Surrounding Function call
 Plug 'https://github.com/tweekmonster/braceless.vim' " text objects for indentation-based languages
 "Plug 'https://github.com/junegunn/vim-peekaboo' " show contents of registers before use
-Plug 'https://github.com/tpope/vim-endwise' " End block in languages that use words for blocks
+"Plug 'https://github.com/tpope/vim-endwise' " End block in languages that use words for blocks
 Plug 'https://github.com/tpope/vim-commentary' " comment things out
 Plug 'https://github.com/mbbill/undotree' " visualize the undo tree (:h undo-tree)
 Plug 'https://github.com/mjbrownie/swapit' " <c-a>/<c-x> to toggle more things (like true/false)
@@ -28,10 +27,19 @@ Plug 'https://github.com/kshenoy/vim-signature' " put marks in the sign column .
 Plug 'https://github.com/lfv89/vim-interestingwords' " highlight interesting words with <leader>k
 Plug 'https://github.com/mhinz/vim-startify'
 Plug 'https://github.com/chrisbra/unicode.vim'
+"Plug 'https://github.com/justinmk/vim-sneak'
+"Plug 'https://github.com/wellle/context.vim'
+"Plug 'https://github.com/zsugabubus/vim-paperplane'
+Plug 'https://github.com/godlygeek/tabular'
+
+"Plug 'https://github.com/liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
+Plug 'https://github.com/nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
+"Plug 'https://github.com/nvim-lua/popup.nvim'
+Plug 'https://github.com/nvim-lua/plenary.nvim'
+Plug 'https://github.com/nvim-telescope/telescope.nvim'
 
 " Misc stuff
-Plug 'https://github.com/wincent/command-t',
-            \ {'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'}
+Plug 'https://github.com/wincent/command-t',  {'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'}
             \ " <leader>t to jump to files with fuzzy search
 Plug 'https://github.com/mileszs/ack.vim' " :Ack command (better grep using ag)
 Plug 'https://github.com/RedBeard0531/bufkill.vim' " :BW is like :bw without closing the window
@@ -39,6 +47,7 @@ Plug 'https://github.com/Valloric/ListToggle' " <leader>q and l to toggle quickf
 Plug 'https://github.com/skywind3000/asyncrun.vim' " Run builds in the background into quickfix
 "Plug 'https://github.com/oplatek/Conque-Shell' " terminal in vim
 Plug 'https://github.com/metakirby5/codi.vim' " Live programing output
+"Plug 'https://github.com/vimwiki/vimwiki'
 
 " C++ stuff
 Plug 'https://github.com/Shougo/echodoc.vim' " Show signature at bottom of window
@@ -46,7 +55,7 @@ Plug 'https://github.com/vim-scripts/a.vim' " :A to switch between .cpp and .h
 Plug 'https://github.com/majutsushi/tagbar' " shows tags on side (and can tell you current function)
 
 " JS stuff
-Plug 'https://github.com/marijnh/tern_for_vim', {'do': 'npm install'} " JS autocomplete
+"Plug 'https://github.com/marijnh/tern_for_vim', {'do': 'npm install'} " JS autocomplete
 Plug 'https://github.com/pangloss/vim-javascript.git' " Better js indent and syntax
 Plug 'https://github.com/leafgarland/typescript-vim'
 
@@ -56,11 +65,16 @@ Plug 'https://github.com/raimon49/requirements.txt.vim' " highlighting for requi
 
 " Other filetype-specific stuff
 "Plug 'https://github.com/suan/vim-instant-markdown' " show rendered output as you edit
-Plug 'https://github.com/rhysd/vim-gfm-syntax' " highlight github-flavored markdown
+Plug 'https://github.com/gabrielelana/vim-markdown'
+"Plug 'https://github.com/plasticboy/vim-markdown', {'as': 'plasic-markdown'}
+"Plug 'https://github.com/SidOfc/mkdx'
+"Plug 'https://github.com/rhysd/vim-gfm-syntax' " highlight github-flavored markdown
 Plug 'https://github.com/elzr/vim-json' " Better json syntax + concealing noise
 Plug 'https://github.com/sukima/xmledit' " XML and HTML helpers
 Plug 'https://github.com/zah/nim.vim' " Nim language support
+Plug 'https://github.com/JuliaEditorSupport/julia-vim'
 "Plug 'https://github.com/baabelfish/nvim-nim' " Nim language support
+Plug 'https://github.com/vim-pandoc/vim-pandoc-syntax'
 
 " Git stuff
 Plug 'https://github.com/airblade/vim-gitgutter.git' " show changed lines in gutter
@@ -71,30 +85,38 @@ Plug 'https://github.com/tommcdo/vim-fugitive-blame-ext' " Show commit summary f
 Plug 'https://github.com/jreybert/vimagit' " :Magit to see overview of current changes
 Plug 'https://github.com/rhysd/conflict-marker.vim' " Add [x and ]x to hop between conflicts
 Plug 'https://github.com/gregsexton/gitv.git' " like git log in vim
-Plug 'https://github.com/rhysd/git-messenger.vim'
+Plug 'https://github.com/rhysd/git-messenger.vim' " <leader>gm to show last git message on line
 
 " Eye candy
 "Plug 'https://github.com/Lokaltog/vim-powerline.git', {'branch': 'develop'}
 Plug 'https://github.com/vim-airline/vim-airline' " Make the statusline look better
 Plug '~/.vim/bundle/vim-wombat' " my fork of https://github.com/cschlueter/vim-wombat
 Plug 'https://github.com/morhetz/gruvbox'
+if has('nvim')
+    "Plug 'https://github.com/dstein64/nvim-scrollview' " scollbars!
+    "Plug 'https://github.com/lukas-reineke/indent-blankline.nvim', {'branch': 'lua'}
+endif
 
 if s:use_coc
     Plug 'https://github.com/neoclide/coc.nvim', {'do': {-> coc#util#install()}}
-    Plug 'https://github.com/m-pilia/vim-ccls'
+    Plug 'https://github.com/m-pilia/vim-ccls' " Extra ccls commands like :CclsCalleeHierarchy
     Plug 'https://github.com/tjdevries/coc-zsh'
-    Plug 'https://github.com/Shougo/neco-vim'
-    Plug 'https://github.com/neoclide/coc-neco'
+    Plug 'https://github.com/Shougo/neco-vim' " vimscript language server integration
+    Plug 'https://github.com/neoclide/coc-neco' " vimscript language server integration
+    Plug 'https://github.com/jackguo380/vim-lsp-cxx-highlight' " semantic highlighting for C++
 else
     Plug 'https://github.com/Valloric/YouCompleteMe',
-                \ {'do': 'python3 ./install.py --clang-completer --clangd-completer --js-completer'}
+                \ {'do': 'python3 ./install.py --all'}
+                \ " {'do': 'python3 ./install.py --clang-completer --clangd-completer --js-completer'}
                 \ " Awesome autocompletion with fuzzy search
     Plug '~/.vim/bundle/vim-rtags' " Integration with the rtags indexer
                                    " my fork of 'https://github.com/lyuts/vim-rtags'
     Plug 'https://github.com/w0rp/ale' " Async lint engine (background check of eslint and such)
 endif
-call plug#end()
 
+
+"Plug 'ryanoasis/vim-devicons'
+call plug#end()
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -165,7 +187,7 @@ set nobackup "dont make those filename~ files (they have bitten me many times)
 set noswapfile "more trouble than they're worth
 set wildmenu "show possible completions in command (:) mode (try hitting tab twice)
 set wildmode=list:longest,full "make the wildmenu behave more like bash
-set wildignore+=tags,*.o,*.git,*.svn,*.pyc "ignore these files
+set wildignore+=tags,*.o,*.a,*.so,*.git,*.svn,*.pyc,node_modules  " */build/* "ignore these files
 set ignorecase "dont care about case in searches, etc.
 set smartcase "care about case if I enter any capital letters
 let g:mapleader = ',' "use , instead of \ as the 'leader' key (used in some plugins)
@@ -193,6 +215,11 @@ set viminfo='100,<50,s1,h,f0 "limit the viminfo size to speed startup.
 set nojoinspaces " only add one space after punctuation when joining lines.
 set previewheight=20 " bigger preview window
 set helplang=en
+set pyxversion=3
+
+if has('nvim')
+    set jumpoptions=stack
+endif
 
 if !isdirectory(&undodir)
     if confirm("Undo dir '".&undodir."' doesn't exist. Create?", "&Yes\n&No") == 1
@@ -212,7 +239,7 @@ if !empty($DISPLAY) && empty($SSH_CONNECTION) && executable('xdg-open')
 endif
 
 if $TERM ==# 'xterm-256color' || $TERM ==# 'xterm-kitty'
-    if $TERM ==# 'xterm-kitty' || $GNOME_TERMINAL_SCREEN !=# ''
+    if 1 || $TERM ==# 'xterm-kitty' || $GNOME_TERMINAL_SCREEN !=# ''
         set termguicolors " use gui colors in terminal
         set t_ut= "unbreak bg colors when scrolling
     endif
@@ -233,9 +260,10 @@ else
     colorscheme wombat
 endi
 
-if 1 || $TERM ==# 'xterm-kitty' || $GNOME_TERMINAL_SCREEN !=# ''
+if $TERM ==# 'xterm-kitty' || 1 " $GNOME_TERMINAL_SCREEN !=# ''
     " gnome-terminal 3.28 and kitty support undercurl!
-    if !has('nvim') && 0
+    if !has('nvim') && 1
+        set termguicolors
         "exec "set t_Ce=\e[4:0m\e[59m"
         exec "set t_Cs=\e[4:3m\e[58;5;9m"
     endif
@@ -321,11 +349,13 @@ set path^=/usr/include/c++/*/x86_64*
 
 " FileType specific configs
 augroup vimrc
-    autocmd FileType cpp,c,cuda,python,gitcommit,vim,markdown,javascript setlocal spell
+    autocmd FileType cpp,c,cuda,python,gitcommit,vim,markdown,typescript,javascript,nim setlocal spell
     autocmd FileType haskell,strace,json setlocal nospell
 
+    autocmd FileType cpp syntax keyword Keyword co_return co_yield co_await
+
     autocmd FileType cpp setlocal matchpairs+=<:> " make % bounce between < and >
-    autocmd FileType gitcommit setlocal textwidth=78 colorcolumn=+1
+    autocmd FileType gitcommit setlocal textwidth=78 | call s:ColorColumnWall()
     autocmd FileType go setlocal sts=4 ts=4 noexpandtab
     autocmd FileType tex setlocal grepprg=grep\ -nH\ $*
     autocmd FileType yaml setlocal sts=2 sw=2
@@ -334,6 +364,7 @@ augroup vimrc
     autocmd FileType gitrebase setlocal cursorline
     autocmd FileType qf,man setlocal nospell colorcolumn=0
     autocmd FileType qf nnoremap <buffer><C-CR> <CR>:cclose<CR>
+    autocmd FileType qf nnoremap <buffer><2-LeftMouse> <CR>
     "autocmd FileType qf setlocal scrolloff=0 " grrr global
     autocmd FileType ruby,eruby setlocal omnifunc=rubycomplete#Complete
     autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading=1
@@ -350,8 +381,8 @@ augroup vimrc
     autocmd FileType c,cpp nnoremap <silent><buffer><D-]> :YcmComplete GoToDeclaration<CR>
     "autocmd FileType javascript nnoremap <silent><buffer><A-]> :YcmComplete GoTo<CR>
     "autocmd FileType javascript nnoremap <buffer>T :YcmCompleter GetType<CR>
-    autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
-    autocmd FileType javascript nnoremap <buffer>T :TernType<CR>
+    "autocmd FileType javascript nnoremap <silent><buffer><A-]> :TernDef<CR>
+    "autocmd FileType javascript nnoremap <buffer>T :TernType<CR>
 augroup END
 endif
 
@@ -393,6 +424,9 @@ nnoremap <silent><F11> :colder<CR>
 nnoremap <silent><F12> :cnewer<CR>
 
 "use shift-w to save the file as root (I forget to use "sudo vim" a lot)
+if has('nvim')
+    let $SUDO_ASKPASS="/usr/lib/ssh/ssh-askpass"
+endif
 command! -bar -nargs=0 W  :silent exe "write !sudo tee % >/dev/null"|silent edit!
 
 "better navigation of quickfix list
@@ -414,6 +448,9 @@ augroup vimrc
     autocmd BufNewFile,BufRead SCons* nested setlocal filetype=scons
 augroup END
 
+" re-add :Gblame command that was removed by fugitive
+command! Gblame Git blame
+
 " configure browser for haskell_doc.vim
 let g:haddock_browser = 'chromium'
 
@@ -427,6 +464,7 @@ let g:CommandTMaxHeight=0
 let g:CommandTAcceptSelectionCommand='edit'
 let g:CommandTAcceptSelectionSplitCommand='sp'
 let g:CommandTAcceptSelectionVSplitCommand='vs'
+let g:CommandTMaxFiles=50000
 "let g:CommandTMatchWindowReverse=0
 
 augroup vimrc
@@ -470,21 +508,7 @@ let g:SignatureMarkTextHLDynamic=1 " make signature colors match gitgutter's
 
 let g:space_no_character_movements = 1
 
-if filereadable(expand('~/.fonts/DejaVuSansMono-Powerline.ttf'))
-    let g:Powerline_symbols = 'fancy'
-    if !exists('g:airline_symbols')
-        let g:airline_symbols = {}
-        "let g:airline_symbols.space = "\ua0"
-    endif
-    let g:airline_left_sep = '⮀'
-    let g:airline_left_alt_sep = '⮁'
-    let g:airline_right_sep = '⮂'
-    let g:airline_right_alt_sep = '⮃'
-    let g:airline_symbols.branch = '⭠'
-    let g:airline_symbols.readonly = '⭤'
-    let g:airline_symbols.linenr = '⭡'
-    let g:airline_symbols.maxlinenr = ''
-endif
+let g:airline_powerline_fonts = 1
 
 let g:airline_highlighting_cache = 1
 let g:airline_detect_spell=0
@@ -532,21 +556,34 @@ augroup vimrc
     autocmd FuncUndefined GitBranch call s:DefGitBranch()
 augroup END
 
-let g:EasyMotion_smartcase = 1
-let g:EasyMotion_verbose = 0
-let g:EasyMotion_startofline = 0
+if 1
+    let g:EasyMotion_smartcase = 1
+    let g:EasyMotion_verbose = 0
+    let g:EasyMotion_startofline = 0
 
-map <space> <Plug>(easymotion-prefix)
-"map <plug>(easymotion-prefix)<space> <Plug>(easymotion-jumptoanywhere)
-map <plug>(easymotion-prefix)<space> <Plug>(easymotion-bd-w)
-map <plug>(easymotion-prefix)w <Plug>(easymotion-bd-w)
-map <plug>(easymotion-prefix)e <Plug>(easymotion-bd-e)
-map <plug>(easymotion-prefix)/ <Plug>(easymotion-sn)
-map <plug>(easymotion-prefix)l <Plug>(easymotion-bd-jk)
-map <plug>(easymotion-prefix)L <Plug>(easymotion-overwin-line)
-"nmap <plug>(easymotion-prefix)s <Plug>(easymotion-overwin-f2)
-nmap <plug>(easymotion-prefix)s <Plug>(easymotion-s)
-nmap S <plug>(easymotion-s)
+    map <space> <Plug>(easymotion-prefix)
+    "map <plug>(easymotion-prefix)<space> <Plug>(easymotion-jumptoanywhere)
+    map <plug>(easymotion-prefix)<space> <Plug>(easymotion-bd-w)
+    map <plug>(easymotion-prefix)w <Plug>(easymotion-bd-w)
+    map <plug>(easymotion-prefix)e <Plug>(easymotion-bd-e)
+    map <plug>(easymotion-prefix)/ <Plug>(easymotion-sn)
+    map <plug>(easymotion-prefix)l <Plug>(easymotion-bd-jk)
+    map <plug>(easymotion-prefix)L <Plug>(easymotion-overwin-line)
+    "nmap <plug>(easymotion-prefix)s <Plug>(easymotion-overwin-f2)
+    nmap <plug>(easymotion-prefix)s <Plug>(easymotion-s)
+    nmap S <plug>(easymotion-s)
+
+else
+    let g:sneak#s_next = 1
+    let g:sneak#label = 1
+    let g:sneak#use_ic_scs = 1
+
+    "map f <plug>Sneak_f
+    "map F <plug>Sneak_F
+    "map t <plug>Sneak_t
+    "map T <plug>Sneak_T
+    "map <space> <plug>SneakLabel_s
+endif
 
 " make plugins that use :Make use AsyncRun
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
@@ -559,6 +596,7 @@ let g:ale_python_pylint_options='--errors-only' " don't complain about python st
 
 let g:markdown_fenced_languages = ['cpp', 'python', 'vim', 'bash']
 let g:gfm_syntax_emoji_conceal = 1
+let g:markdown_enable_insert_mode_mappings = 0
 
 let g:LanguageClient_loadSettings = 1
 let g:LanguageClient_selectionUI = 'location-list'
@@ -578,6 +616,15 @@ let g:startify_bookmarks = [
     \ {'c': '~/.vim/coc.vim'},
     \ {'z': '~/.zshrc'},
     \ ]
+
+let g:conflict_marker_enable_highlight = 0
+
+let g:latex_to_unicode_auto = 1
+
+let g:endwise_abbreviations = 0
+
+"let g:context_nvim_no_redraw = 0
+let g:context_presenter = 'preview'
 
 "show current function in "tabline" using tagbar function
 try
@@ -604,12 +651,75 @@ function! s:CloseBracket()
     else
         return "{\<Enter>}\<Esc>O"
     endif
-endfunctio
+endfunction
 inoremap <expr> {<Enter> <SID>CloseBracket()
 
 if s:use_coc
     runtime coc.vim
 else
+    nmap <silent> gd :YcmCompleter GoTo<CR>
+    nmap <silent> K :YcmCompleter GetDoc<CR>
 endif
 
+"draw a wall where code should end
+function! s:ColorColumnWall()
+    execute 'setlocal colorcolumn=+' . join(range(1,100), ',+')
+endfunction
+
+function! g:RealmSetup()
+    setlocal expandtab "tab key -> spaces
+    setlocal shiftwidth=4 "indent by 4 spaces
+    setlocal softtabstop=4 "treat 4 spaces like a tab
+    setlocal textwidth=118 "code should stop at 100 chars 
+    setlocal cinoptions=l1,g0,N-s,(0,u0,Ws,ks,j1,J1,)1000,*1000 " setup cindent correctly
+    call s:ColorColumnWall()
+    augroup RealmSetup
+        au! * <buffer>
+        "autocmd BufWritePre <buffer> %pyxf /usr/share/clang/clang-format.py
+    augroup END
+endfunction
+
+function! g:MongoSetup()
+    setlocal expandtab "tab key -> spaces
+    setlocal shiftwidth=4 "indent by 4 spaces
+    setlocal softtabstop=4 "treat 4 spaces like a tab
+    setlocal textwidth=100 "code should stop at 100 chars 
+    setlocal cinoptions=l1,g0,N-s,(0,u0,Ws,ks,j1,J1,)1000,*1000 " setup cindent correctly
+    call s:ColorColumnWall()
+    augroup RealmSetup
+        au! * <buffer>
+        autocmd BufWritePre <buffer> %pyxf /usr/share/clang/clang-format.py
+    augroup END
+endfunction
+
+augroup vimrc
+    autocmd BufNewFile,BufRead ~/realm-*/*.{cpp,hpp} call g:RealmSetup()
+
+    autocmd VimEnter * if getcwd() == expand('~/mongo') | runtime mongo.vim | endif
+    "let g:clang_format_path='/home/mstearn/bin/clang-format-3.8'
+    "autocmd BufNewFile,BufRead /home/mstearn/mongo/{src/mongo,jstests}/*.{js,cpp,h{,pp}} call g:MongoSetup()
+augroup END
+
+if exists('g:GtkGuiLoaded') && &guifont == ''
+  set guifont=Victor\ Mono\ Semibold\ 9
+endif
+
+if exists('g:GuiLoaded') && &guifont == ''
+  set guifont=Victor\ Mono\ Semibold:h11
+endif
+
+finish
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+highlight = {
+  enable = true,              -- false will disable the whole extension
+  -- disable = { "c", "rust" },  -- list of language that will be disabled
+  highlight = { enable = true },
+  -- incremental_selection = { enable = true },
+  -- textobjects = { enable = true },
+},
+}
+EOF
 "see also: my ~/.gimrc and ~/.vim directory

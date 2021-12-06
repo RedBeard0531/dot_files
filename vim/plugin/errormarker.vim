@@ -20,7 +20,7 @@
 " Exit quickly when the script has already been loaded or when 'compatible'
 " is set.
 if exists("g:loaded_errormarker") || &cp
-  finish
+  "finish
 endif
 
 " Version number.
@@ -32,8 +32,8 @@ augroup errormarker
 augroup END
 
 function! s:SetErrorMarkers()
-    let &balloonexpr = "<SNR>" . s:SID() . "_ErrorMessageBalloons()"
-    set ballooneval
+    "let &balloonexpr = "<SNR>" . s:SID() . "_ErrorMessageBalloons()"
+    "set ballooneval
 
     if has('win32')
         sign define errorsign text=EE linehl=Todo

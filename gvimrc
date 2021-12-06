@@ -62,8 +62,10 @@ if v:version >= 500
   set background=dark
 
   set guioptions-=T
-  set guifont=Monospace\ 9
+  "set guifont=Monospace\ 9
   "set guifont=Fira\ Code\ Medium\ 9
+  "set guifont=Victor\ Mono\ Semibold\ 9
+  set guifont=VictorMono\ Nerd\ Font\ Semibold\ 9
 
   if !has('nvim')
       "make the balloon feature work
@@ -116,6 +118,22 @@ highlight GitGutterChange guifg=#bbbb00 guibg=black ctermfg=3
 highlight GitGutterDelete guifg=#ff2222 guibg=black ctermfg=1
 
 if exists('g:GtkGuiLoaded')
-    call rpcnotify(1, 'Gui', 'Font', 'Fira Code Medium 9')
+    "call rpcnotify(1, 'Gui', 'Font', 'Fira Code Retina 6')
     call rpcnotify(1, 'Gui', 'Option', 'Tabline', 0)
+    call rpcnotify(1, 'Gui', 'Option', 'Popupmenu', 0)
+    if filereadable("/usr/share/nvim-gtk/runtime/nvim_gui_shim.vim")
+        unlet g:GuiLoaded
+        source /usr/share/nvim-gtk/runtime/nvim_gui_shim.vim
+    endif
+    "GuiFont Fira Code Retina 9
+endif
+
+if exists('g:fvim_loaded')
+    set guifont=Fira\ Code\ Retina:h12
+    FVimCursorSmoothMove v:false
+    FVimFontSubpixel v:true
+    FVimFontLcdRender v:true
+    FVimFontAntialias v:true
+    FVimFontAutohint v:false
+    FVimFontAutoSnap v:false
 endif

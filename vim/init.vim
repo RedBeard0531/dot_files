@@ -15,6 +15,9 @@ augroup init_vim
 augroup END
 
 if exists('g:GtkGuiLoaded')
+    let $NVIM_GTK_PREFER_DARK_THEME=1
+    let $NVIM_GTK_NO_WINDOW_DECORATION=1
     call rpcnotify(1, 'Gui', 'Font', 'Fira Code Medium 9')
     call rpcnotify(1, 'Gui', 'Option', 'Tabline', 0)
+    call rpcnotify(1, 'Gui', 'Option', 'Popupmenu', 0)
 endif

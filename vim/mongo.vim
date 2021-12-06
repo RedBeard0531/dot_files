@@ -3,12 +3,12 @@
 " TODO move some of this into the mongo repo.
 
 if filereadable(expand('buildscripts/errorcodes.py'))
-    python sys.path.append('.')
-    python from buildscripts import errorcodes
+    pythonx sys.path.append('.')
+    pythonx from buildscripts import errorcodes
     function! s:getNextErrorCode()
-        python errorcodes.codes = []
-        python errorcodes.read_error_codes()
-        return pyeval('errorcodes.get_next_code()')
+        pythonx errorcodes.codes = []
+        pythonx errorcodes.read_error_codes()
+        return pyxeval('errorcodes.get_next_code()')
     endf
     inoremap <C-E> <C-R>=<SID>getNextErrorCode()<CR>
 endif
@@ -48,10 +48,11 @@ augroup MongoVimRC
     autocmd!
     autocmd BufRead */src/third_party/libpg_query*/*.[ch] setlocal sts=4 ts=4 sw=4 noet tw=80
 
-    autocmd BufRead */src/third_party/wiredtiger/*.[chi] setlocal sts=8 ts=8 sw=8 noet tw=80
-    autocmd BufWritePre */{jstests,src/mongo}/*.{cpp,h,js} %pyf /usr/share/clang/clang-format.py
+    autocmd BufRead */src/third_party/wiredtiger/*.[chi] setlocal sts=4 ts=4 sw=4 noet tw=80
+    autocmd BufWritePre */{jstests,src/mongo}/*.{cpp,h{,pp},js} %pyxf /usr/share/clang/clang-format.py
+    autocmd BufWritePre src/third_party/wiredtiger/*.{c,h,inc} %pyxf /usr/share/clang/clang-format.py
 
-    autocmd BufNewFile,BufRead *.idl set filetype=yaml
+    autocmd BufNewFile,BufRead *.idl set filetype=yaml sts=4 sw=4
     autocmd BufNewFile,BufRead error_codes.err let b:ale_enabled=0
 
     autocmd BufNewFile,BufRead *.tpl.{h,cpp,js}  call s:EnableCheetahSyntax()
@@ -68,15 +69,22 @@ let g:ale_linters.javascript = ['eslint']
 let g:ale_javascript_eslint_executable = './build/eslint'
 let g:ale_python_pylint_options='--errors-only' " don't complain about python style
 
-let g:clang_format_path='./build/clang-format'
+"let g:clang_format_path='./build/clang-format'
 
 let g:javascript_plugin_jsdoc = 1
 
 nnoremap <silent><S-F7> *N:execute "silent Ggrep -w " . expand('<cword>') . " src/mongo"  <CR><CR>
 
 if executable('buildscripts/mongosymb.py')
-    command! -nargs=+ -complete=file Addr2Line
-        \ cgetexpr system('python2 buildscripts/mongosymb.py <args> \| sed -e "s/^ ??:0:0://"', @*)
+    "command! -nargs=+ -complete=file Addr2Line
+        "\ cgetexpr system('python3 buildscripts/mongosymb.py <args> \| sed -e "s/^ ??:0:0://"', @*)
+    command! -nargs=* -complete=file Addr2Line
+        \ cgetexpr system(
+        \   'ssh ws "cd mongo; buildscripts/mongosymb.py --symbolizer-path=llvm-symbolizer-10 '
+        \      . (expand("<args>") == "" ? 'build/install/mongod' : '<args>') . '"'
+        \ . ' | sed -e "s/^ ??:0:0://" '
+        \ . ' | sed -e "s/\/home\/ubuntu\//\/home\/mstearn\//g" '
+        \ , @*)
 endif
 
 command! -nargs=+ Rtags cexpr system('rc <args> ' . expand('%') . ':' . line('.') . ':' . col('.'))
@@ -91,5 +99,7 @@ function! s:NinjaComplete(arg_lead, cmd, pos)
 endf
 command! -nargs=* -bang -complete=custom,s:NinjaComplete Ninja AsyncRun<bang> -save=1 ninja <args>
 
-command! -nargs=0 -bang WCC w | cexpr system('ninja '.pyeval('os.path.relpath("'.expand('%:r').'.cpp^")'))
+pyx import os
+
+command! -nargs=0 -bang WCC w | cexpr system('ninja '.pyxeval('os.path.relpath("'.expand('%:r').'.cpp^")'))
 nmap <F5> :WCC<CR>
