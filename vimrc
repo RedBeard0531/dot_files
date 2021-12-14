@@ -13,6 +13,7 @@ Plug 'https://github.com/tpope/vim-scriptease' " helpers when writing vimscript
 
 " Vim editing enhancements
 "Plug 'https://github.com/easymotion/vim-easymotion' " Jump anywhere you can see super fast
+Plug 'https://github.com/phaazon/hop.nvim' " A better easymotion
 Plug 'https://github.com/tpope/vim-surround' " commands for adding or changing surroundings
 Plug 'https://github.com/wellle/targets.vim' " More text objects (daa to delete an argument)
 Plug 'https://github.com/sfiera/vim-emacsmodeline' " Teach vim to understand emacs modelines
@@ -27,7 +28,6 @@ Plug 'https://github.com/kshenoy/vim-signature' " put marks in the sign column .
 Plug 'https://github.com/lfv89/vim-interestingwords' " highlight interesting words with <leader>k
 Plug 'https://github.com/mhinz/vim-startify'
 Plug 'https://github.com/chrisbra/unicode.vim'
-"Plug 'https://github.com/justinmk/vim-sneak'
 "Plug 'https://github.com/wellle/context.vim'
 "Plug 'https://github.com/zsugabubus/vim-paperplane'
 Plug 'https://github.com/godlygeek/tabular'
@@ -48,6 +48,7 @@ Plug 'https://github.com/skywind3000/asyncrun.vim' " Run builds in the backgroun
 "Plug 'https://github.com/oplatek/Conque-Shell' " terminal in vim
 Plug 'https://github.com/metakirby5/codi.vim' " Live programing output
 "Plug 'https://github.com/vimwiki/vimwiki'
+Plug 'https://github.com/akinsho/toggleterm.nvim'
 
 " C++ stuff
 Plug 'https://github.com/Shougo/echodoc.vim' " Show signature at bottom of window
@@ -86,6 +87,7 @@ Plug 'https://github.com/jreybert/vimagit' " :Magit to see overview of current c
 Plug 'https://github.com/rhysd/conflict-marker.vim' " Add [x and ]x to hop between conflicts
 Plug 'https://github.com/gregsexton/gitv.git' " like git log in vim
 Plug 'https://github.com/rhysd/git-messenger.vim' " <leader>gm to show last git message on line
+Plug 'https://github.com/sindrets/diffview.nvim' " full vim diff in a single tab page
 
 " Eye candy
 "Plug 'https://github.com/Lokaltog/vim-powerline.git', {'branch': 'develop'}
@@ -115,7 +117,8 @@ else
 endif
 
 
-"Plug 'ryanoasis/vim-devicons'
+Plug 'ryanoasis/vim-devicons'
+Plug 'https://github.com/kyazdani42/nvim-web-devicons'
 call plug#end()
 
 " Don't use Ex mode, use Q for formatting
@@ -556,7 +559,7 @@ augroup vimrc
     autocmd FuncUndefined GitBranch call s:DefGitBranch()
 augroup END
 
-if 1
+if 0
     let g:EasyMotion_smartcase = 1
     let g:EasyMotion_verbose = 0
     let g:EasyMotion_startofline = 0
@@ -574,15 +577,19 @@ if 1
     nmap S <plug>(easymotion-s)
 
 else
-    let g:sneak#s_next = 1
-    let g:sneak#label = 1
-    let g:sneak#use_ic_scs = 1
+    lua require("hop").setup({ quit_key = '<space>', })
 
-    "map f <plug>Sneak_f
-    "map F <plug>Sneak_F
-    "map t <plug>Sneak_t
-    "map T <plug>Sneak_T
-    "map <space> <plug>SneakLabel_s
+    map <space> <Plug>(easymotion-prefix)
+    "map <plug>(easymotion-prefix)<space> <Plug>(easymotion-jumptoanywhere)
+    map <plug>(easymotion-prefix)<space> <cmd>HopWord<cr>
+    "map <plug>(easymotion-prefix)w <Plug>(easymotion-bd-w)
+    "map <plug>(easymotion-prefix)e <Plug>(easymotion-bd-e)
+    map <plug>(easymotion-prefix)/ <cmd>HopPattern<cr>
+    map <plug>(easymotion-prefix)l <cmd>HopLineStart<cr>
+    "map <plug>(easymotion-prefix)L <Plug>(easymotion-overwin-line)
+    "nmap <plug>(easymotion-prefix)s <Plug>(easymotion-overwin-f2)
+    nmap <plug>(easymotion-prefix)s <cmd>HopChar1<cr>
+    nmap S <cmd>HopChar1<cr>
 endif
 
 " make plugins that use :Make use AsyncRun
@@ -707,6 +714,16 @@ endif
 if exists('g:GuiLoaded') && &guifont == ''
   set guifont=Victor\ Mono\ Semibold:h11
 endif
+
+lua <<EOF
+require('toggleterm').setup{
+    open_mapping = '<C-t>',
+    direction = 'float',
+    float_opts = {
+        border = 'double',
+    }
+}
+EOF
 
 finish
 

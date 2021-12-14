@@ -8,6 +8,7 @@ let g:endwise_abbreviations = 1
 let g:endwise_no_mappings = 1
 
 let g:ccls_close_on_jump = 1
+let g:coc_default_semantic_highlight_groups = 1
 
 let g:airline#extensions#coc#enabled = 1
 "let g:airline#extensions#coc#error_symbol = '𝐄'

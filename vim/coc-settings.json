@@ -40,7 +40,7 @@
     //
     "yank.highlight.duration": 200,
     //
-    "highlight.disableLanguages": ["cpp", "c"],
+    //"highlight.disableLanguages": ["cpp", "c"],
     "highlight.colors.enable": false,
     //
     "tsserver.implicitProjectConfig.checkJs": true,
@@ -113,7 +113,7 @@
                 "-log-file=/tmp/ccls.log", "-v=1"
             ],
             "filetypes": [
-                // "c", "cpp", "objc", "objcpp", "cuda"
+                "c", "cpp", "objc", "objcpp", "cuda"
             ],
             "rootPatterns": [
                 ".ccls",
