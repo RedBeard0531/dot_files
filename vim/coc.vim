@@ -27,18 +27,22 @@ let g:coc_quickfix_open_command = 'botright copen'
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#pum#visible() ? coc#pum#next(1):
+      \ <SID>CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
 "imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>\<c-r>=coc#on_enter()\<CR>"
-imap <expr> <cr> pumvisible() ? coc#_select_confirm() : "\<CR>\<c-r>=coc#on_enter()\<CR>"
 "imap <expr> ( pumvisiblle() && coc#expandable() >= 0 ? "\<C-y>" : "("
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<CR>\<c-r>=coc#on_enter()\<CR>"
+"nnoremap <silent><nowait><expr> <C-j> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-j>"
+"nnoremap <silent><nowait><expr> <C-k> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-k>"
 
 " Use `[c` and `]c` to navigate diagnostics
 nmap <silent> [d <Plug>(coc-diagnostic-prev)
@@ -107,7 +111,7 @@ augroup vimrc_coc
     " Update signature help on jump placeholder
     au User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
-    au CursorHoldI * call CocActionAsync('showSignatureHelp') | echo getcurpos()
+    au CursorHoldI * if has_key(b:, 'coc_diagnostic_info') | silent! call CocActionAsync('showSignatureHelp') | endif
     au CursorHold * silent! call CocActionAsync('highlight')
 
     au FileType c,cpp call s:setup_ccls_mappings()
@@ -125,7 +129,9 @@ xmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Remap for do codeAction of current line (maybe should use -line?)
 "nmap <leader>a  <Plug>(coc-codeaction-line) 
-nmap <leader>a  :call CocActionAsync('codeAction', 'cursor')<cr>
+"nmap <leader>a  <Plug>(coc-codeaction-cursor) 
+nmap <leader>a  :call CocActionAsync('codeAction', 'line')<cr>
+"nmap <leader>a  <Plug>(coc-codeaction-cursor) 
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
@@ -134,6 +140,8 @@ command! -nargs=0 Format :call CocAction('format')
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 cabbrev cl CocList
+
+let &winbar='%{%get(b:, "coc_symbol_line", "")%}'
 
 " Using CocList
 map \ <Plug>(coc-prefix)
@@ -184,6 +192,7 @@ hi link CocErrorHighlight   SpellBad
 hi link CocWarningHighlight   SpellLocal
 hi link CocInfoHighlight   SpellCap
 hi link CocHintHighlight   SpellRare
+hi CocUnusedHighlight cterm=undercurl gui=undercurl guisp=Gray guibg=Black
 
 hi CocErrorSign guifg=#882222
 hi CocWarningSign guifg=#7f4915
@@ -206,10 +215,36 @@ hi LspCxxHlSymUnknownStaticField guifg=#ff55ff
 hi LspCxxHlSymFileVariable guifg=#ff5555
 hi link LspCxxHlSymNamespaceVariable LspCxxHlSymFileVariable
 
+hi link CocSemParameter LspCxxHlSymParameter
+hi link CocSemProperty LspCxxHlGroupMemberVariable
+hi link CocSemStaticProperty LspCxxHlSymFieldStatic
+hi link CocSemStaticVariable LspCxxHlSymVariableStatic
+
+hi link CocSemGlobalScopeVariable LspCxxHlSymFileVariable
+hi link CocSemFileScopeVariable CocSemGlobalScopeVariable
+
+hi link CocSemFileScopeReadonlyVariable CocSemGlobalScopeVariable
+hi link CocSemReadonlyFileScopeVariable CocSemGlobalScopeVariable
+
+hi link CocSemMethod LspCxxHlSymMethod
+hi link CocSemNamespace LspCxxHlSymNamespace
+hi link CocSemEnum LspCxxHlSymEnum
+hi link CocSemEnumMember LspCxxHlSymEnumMember
+hi link CocSemTypeParameter LspCxxHlSymTemplateParameter
+
+hi link CocSemVariable Normal
+" hi link CocSemMethod Function
+
+hi link CocSemDefaultLibraryVariable jsGlobalObjects
+hi link CocSemDefaultLibraryNamespace Namespace
+hi link CocSemDefaultLibrary Type
+
+hi link commentTSWarning Todo
+
 "}}}
 
 " Helper funcs {{{
-function! s:check_back_space() abort
+function! s:CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction

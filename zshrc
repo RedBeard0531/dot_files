@@ -84,7 +84,7 @@ export LESS='-iRM -j5 -P%t?f%f :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
 _CORES=$(grep -c processor /proc/cpuinfo )
 _COMPILE_THREADS=$(($_CORES * 3 / 2))
 
-export SCONSFLAGS="-j$_COMPILE_THREADS"
+#export SCONSFLAGS="-j$_COMPILE_THREADS"
 export NINJA_STATUS='[%f/%t (%p) %es] '
 
 export HISTCONTROL=ignoreboth

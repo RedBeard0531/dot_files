@@ -69,7 +69,7 @@ let g:ale_linters.javascript = ['eslint']
 let g:ale_javascript_eslint_executable = './build/eslint'
 let g:ale_python_pylint_options='--errors-only' " don't complain about python style
 
-"let g:clang_format_path='./build/clang-format'
+let g:clang_format_path='./build/clang-format-7.0.1'
 
 let g:javascript_plugin_jsdoc = 1
 

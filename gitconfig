@@ -25,7 +25,7 @@
     rbm = !git rebase -i $(git merge-base HEAD master)
     st = status -u no
 [merge]
-	conflictstyle = diff3
+	conflictstyle = zdiff3
 
 [diff]
     colorMoved = true

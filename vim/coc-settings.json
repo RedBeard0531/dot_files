@@ -5,7 +5,47 @@
     //"coc.preferences.formatOnType": true,
     "coc.preferences.useQuickfixForLocations": true,
     "coc.preferences.enableMarkdown": true,
-    "coc.preferences.semanticTokensHighlights": false,
+    "coc.preferences.semanticTokensHighlights": true,
+    "semanticTokens.combinedModifiers": [
+        "deprecated",
+        "static",
+        "readonly",
+        "defaultLibrary",
+    ],
+    "semanticTokens.filetypes": [
+        "c",
+        "cpp",
+        "javascript",
+        "typescript",
+    ],
+    "suggest.completionItemKindLabels": {
+        "keyword": "\uf1de",
+        "variable": "\ue79b",
+        "value": "\uf89f",
+        "operator": "\u03a8",
+        "constructor": "\uf0ad",
+        "function": "\u0192",
+        "reference": "\ufa46",
+        "constant": "\uf8fe",
+        "method": "\uf09a",
+        "struct": "\ufb44",
+        "class": "\uf0e8",
+        "interface": "\uf417",
+        "text": "\ue612",
+        "enum": "\uf435",
+        "enumMember": "\uf02b",
+        "module": "\uf40d",
+        "color": "\ue22b",
+        "property": "\ue624",
+        "field": "\uf9be",
+        "unit": "\uf475",
+        "event": "\ufacd",
+        "file": "\uf723",
+        "folder": "\uf114",
+        "snippet": "\ue60b",
+        "typeParameter": "\uf728",
+        "default": "\uf29c",
+    },
     //
     "diagnostic.displayByAle": false,
     //"diagnostic.errorSign": "⛔",
@@ -22,6 +62,9 @@
     "diagnostic.separateRelatedInformationAsDiagnostics": true,
     //
     "codeLens.enable": false,
+    //
+    "json.schemaDownload.enable": true,
+    "json.enableDefaultSchemas": true,
     //
     //"suggest.noselect": true,
     "suggest.acceptSuggestionOnCommitCharacter": true,
@@ -43,8 +86,11 @@
     //"highlight.disableLanguages": ["cpp", "c"],
     "highlight.colors.enable": false,
     //
+    "symbol-line.icons": true,
+    //
     "tsserver.implicitProjectConfig.checkJs": true,
     "tsserver.enableJavascript": true,
+    "tsserver.ignoreLocalTsserver":true,
     "tsserver.npm": "/bin/npm",
     "tsserver.log": "normal",
     "typescript.suggestionActions.enabled": false,
@@ -60,6 +106,7 @@
     //
     "git.enableGutters": false,
     //
+    "clangd.path": "clangd-wrapper",
     "clangd.arguments": [
         "--index",
         "--background-index",
@@ -68,14 +115,40 @@
         "--suggest-missing-includes",
     ],
     "clangd.semanticHighlighting": true,
+    "clangd.fallbackFlags": [
+        "-std=c++17",
+        "-Wall",
+    ],
     //
     "languageserver": {
         "nimlsp": {
             "command": "nimlsp",
             "args": [
-                //"/home/mstearn/.choosenim/toolchains/nim-1.2.0"
+                // "/home/mstearn/.choosenim/toolchains/nim-1.2.0"
             ],
-            "filetypes": ["nim"],
+            "filetypes": [
+                "nim"
+            ],
+        },
+        "nimlangserver": {
+            "command": "nimlangserver",
+            "args": [
+            ],
+            "filetypes": [
+                //"nim"
+            ],
+            "initializationOptions": {
+                "projectMapping": [
+                    {
+                        "fileRegex": ".*\\.nim",
+                        "projectPath": "main.nim"
+                    },
+                    {
+                        "fileRegex": "test.nim",
+                        "projectPath": "test.nim"
+                    },
+                ]
+            }
         },
         "tern": {
             "command": "/tmp/test/node_modules/js-langserver/index.js",
@@ -113,7 +186,7 @@
                 "-log-file=/tmp/ccls.log", "-v=1"
             ],
             "filetypes": [
-                "c", "cpp", "objc", "objcpp", "cuda"
+                // "c", "cpp", "objc", "objcpp", "cuda"
             ],
             "rootPatterns": [
                 ".ccls",
@@ -187,18 +260,24 @@
     },
     "cSpell.userWords": [
       "BSON",
+      "Deref",
+      "NOINLINE",
       "NOINST",
       "PRINTFL",
+      "Struct",
       "WTOK",
+      "constexpr",
       "coro",
       "cvref",
       "fassert",
       "futex",
       "mongodb",
       "mpark",
+      "noreturn",
       "stdx",
       "uassert",
       "unconsume",
+      "unindexing",
       "unpositioned"
     ]
 }

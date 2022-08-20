@@ -26,14 +26,18 @@ Plug 'https://github.com/mbbill/undotree' " visualize the undo tree (:h undo-tre
 Plug 'https://github.com/mjbrownie/swapit' " <c-a>/<c-x> to toggle more things (like true/false)
 Plug 'https://github.com/kshenoy/vim-signature' " put marks in the sign column ... meh
 Plug 'https://github.com/lfv89/vim-interestingwords' " highlight interesting words with <leader>k
-Plug 'https://github.com/mhinz/vim-startify'
+"Plug 'https://github.com/mhinz/vim-startify'
 Plug 'https://github.com/chrisbra/unicode.vim'
 "Plug 'https://github.com/wellle/context.vim'
 "Plug 'https://github.com/zsugabubus/vim-paperplane'
 Plug 'https://github.com/godlygeek/tabular'
 
 "Plug 'https://github.com/liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
+Plug 'https://github.com/miversen33/import.nvim'
 Plug 'https://github.com/nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
+Plug 'https://github.com/nvim-treesitter/playground'
+Plug 'https://github.com/lewis6991/spellsitter.nvim'
+Plug 'https://github.com/mizlan/iswap.nvim'
 "Plug 'https://github.com/nvim-lua/popup.nvim'
 Plug 'https://github.com/nvim-lua/plenary.nvim'
 Plug 'https://github.com/nvim-telescope/telescope.nvim'
@@ -76,6 +80,7 @@ Plug 'https://github.com/zah/nim.vim' " Nim language support
 Plug 'https://github.com/JuliaEditorSupport/julia-vim'
 "Plug 'https://github.com/baabelfish/nvim-nim' " Nim language support
 Plug 'https://github.com/vim-pandoc/vim-pandoc-syntax'
+Plug 'https://github.com/fladson/vim-kitty', {'for': ['kitty']}
 
 " Git stuff
 Plug 'https://github.com/airblade/vim-gitgutter.git' " show changed lines in gutter
@@ -165,6 +170,7 @@ set backspace=indent,eol,start " allow backspacing over everything in insert mod
 set history=10000 " keep a lot of command line history
 set ruler " show the cursor position all the time
 set showcmd " display incomplete commands
+set cmdheight=1 " 1 line for the command area
 set hlsearch " highlight bits that match current search (do /asdf<ENTER> or :nohl to remove)
 set incsearch " do incremental searching
 set confirm "ask to save instead of failing with an error
@@ -362,6 +368,7 @@ augroup vimrc
     autocmd FileType go setlocal sts=4 ts=4 noexpandtab
     autocmd FileType tex setlocal grepprg=grep\ -nH\ $*
     autocmd FileType yaml setlocal sts=2 sw=2
+    autocmd FileType typescript setlocal sts=2 sw=2
     autocmd FileType text setlocal textwidth=78
     autocmd FileType git,fugitiveblame setlocal nospell colorcolumn=0
     autocmd FileType gitrebase setlocal cursorline
@@ -716,6 +723,8 @@ if exists('g:GuiLoaded') && &guifont == ''
 endif
 
 lua <<EOF
+require('import')
+
 require('toggleterm').setup{
     open_mapping = '<C-t>',
     direction = 'float',
@@ -725,18 +734,49 @@ require('toggleterm').setup{
 }
 EOF
 
-finish
-
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-highlight = {
-  enable = true,              -- false will disable the whole extension
-  -- disable = { "c", "rust" },  -- list of language that will be disabled
-  highlight = { enable = true },
-  -- incremental_selection = { enable = true },
-  -- textobjects = { enable = true },
-},
+-- ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+    highlight = {
+      enable = false,              -- false will disable the whole extension
+      disable = { "c", "rust", "cmake" },  -- list of language that will be disabled
+    },
+    incremental_selection = { enable = false },
+    textobjects = { enable = false },
+    indent = {
+        enable = false,
+    },
+    playground = {
+        enable = false,
+        disable = {},
+        updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+        persist_queries = false, -- Whether the query persists across vim sessions
+        keybindings = {
+            toggle_query_editor = 'o',
+            toggle_hl_groups = 'i',
+            toggle_injected_languages = 't',
+            toggle_anonymous_nodes = 'a',
+            toggle_language_display = 'I',
+            focus_language = 'f',
+            unfocus_language = 'F',
+            update = 'R',
+            goto_node = '<cr>',
+            show_help = '?',
+        },
+    }
 }
+
+if false then
+    require"nvim-treesitter.highlight".set_custom_captures {
+        -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
+        ["text.warning"] = "Todo",
+    }
+    require('spellsitter').setup()
+end
+
+require('iswap').setup{
+    autoswap = true,
+}
+
 EOF
 "see also: my ~/.gimrc and ~/.vim directory
