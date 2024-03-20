@@ -2,57 +2,67 @@
     //"coc.source.omni.filetypes": ["javascript"],
     //"coc.source.omni.triggerCharacters": ["."],
     "coc.preferences.currentFunctionSymbolAutoUpdate": true,
-    //"coc.preferences.formatOnType": true,
+    "coc.preferences.formatOnType": false,
     "coc.preferences.useQuickfixForLocations": true,
     "coc.preferences.enableMarkdown": true,
-    "coc.preferences.semanticTokensHighlights": true,
+    "coc.preferences.formatOnSaveFiletypes": [
+        "rust"
+        //"typescript",
+        // "cpp",
+    ],
+    "coc.preferences.enableLinkedEditing": true,
+    "coc.preferences.enableMessageDialog": true,
+    "floatFactory.floatConfig": {
+        "border": true,
+        "rounded": true
+    },
+    //"tree.closedIcon": "▸",
+    //"tree.openedIcon": "▾",
+    //
+    "inlayHint.enable": false,
+    //
     "semanticTokens.combinedModifiers": [
         "deprecated",
         "static",
         "readonly",
-        "defaultLibrary",
+        //"defaultLibrary",
     ],
-    "semanticTokens.filetypes": [
-        "c",
-        "cpp",
-        "javascript",
-        "typescript",
-    ],
+    "semanticTokens.enable": true,
     "suggest.completionItemKindLabels": {
-        "keyword": "\uf1de",
-        "variable": "\ue79b",
-        "value": "\uf89f",
-        "operator": "\u03a8",
-        "constructor": "\uf0ad",
-        "function": "\u0192",
-        "reference": "\ufa46",
-        "constant": "\uf8fe",
-        "method": "\uf09a",
-        "struct": "\ufb44",
-        "class": "\uf0e8",
-        "interface": "\uf417",
-        "text": "\ue612",
-        "enum": "\uf435",
-        "enumMember": "\uf02b",
-        "module": "\uf40d",
-        "color": "\ue22b",
-        "property": "\ue624",
-        "field": "\uf9be",
-        "unit": "\uf475",
-        "event": "\ufacd",
-        "file": "\uf723",
-        "folder": "\uf114",
-        "snippet": "\ue60b",
-        "typeParameter": "\uf728",
-        "default": "\uf29c",
+        "keyword": "\uf1de", // 
+        "variable": "\ue79b", // 
+        "value": "\uf89f", // 
+        "operator": "\u03a8", // Ψ
+        "constructor": "\uf0ad", // 
+        "function": "\u0192", // ƒ
+        "reference": "\ufa47", // 漢
+        "constant": "\uf8fe", // 
+        "method": "\uf09a", // 
+        "struct": "\ufb44", // פּ
+        "class": "\uf0e8", // 
+        "interface": "\uf417", // 
+        "text": "\ue612", // 
+        "enum": "\uf435", // 
+        "enumMember": "\uf02b", // 
+        "module": "\uf40d", // 
+        "color": "\ue22b", // 
+        "property": "\ue624", // 
+        "field": "\uf9be", // 靈
+        "unit": "\uf475", // 
+        "event": "\ufacd", // 鬒
+        "file": "\uf723", // 
+        "folder": "\uf114", // 
+        "snippet": "\ue60b", // 
+        "typeParameter": "\uf728", // 
+        //"default": "\uf29c", // 
+        "default": "\u25e6" // ◦
     },
     //
     "diagnostic.displayByAle": false,
-    //"diagnostic.errorSign": "⛔",
-    //"diagnostic.warningSign": "🚸",
-    //"diagnostic.infoSign": "➖",
-    //"diagnostic.hintSign": "➕",
-    "diagnostic.signOffset": 999999,
+    "diagnostic.errorSign": "⛔",
+    "diagnostic.warningSign": "🚸",
+    "diagnostic.infoSign": "➖",
+    "diagnostic.hintSign": "➕",
     "diagnostic.checkCurrentLine": true,
     "diagnostic.refreshOnInsertMode": true,
     "diagnostic.virtualText": true,
@@ -61,14 +71,29 @@
     "diagnostic.messageTarget": "echo",
     "diagnostic.separateRelatedInformationAsDiagnostics": true,
     //
-    "codeLens.enable": false,
+    "codeLens.enable": true,
+    //"codeLens.position": "right_align",
     //
     "json.schemaDownload.enable": true,
     "json.enableDefaultSchemas": true,
+    "json.schemas": [
+        // {
+        //     "fileMatch": [ "tsconfig.json" ],
+        //     "url": "https://json.schemastore.org/tsconfig.json"
+        // }
+    ],
+    "yaml.schemaStore.enable": true,
+    "yaml.schemas": {
+        "https://json.schemastore.org/clang-format.json": ".clang-format"
+    },
+    "yaml.format.enable": true,
     //
     //"suggest.noselect": true,
-    "suggest.acceptSuggestionOnCommitCharacter": true,
+    "suggest.acceptSuggestionOnCommitCharacter": false,
     "suggest.snippetIndicator": " ► ",
+    "suggest.virtualText": true,
+    "suggest.noselect": false,
+    "suggest.fixInsertedWord": false,
     //
     "list.maxHeight": 30,
     //"list.source.grep.command": "ag",
@@ -88,12 +113,22 @@
     //
     "symbol-line.icons": true,
     //
+    "tsserver.useLocalTsdk": false,
     "tsserver.implicitProjectConfig.checkJs": true,
-    "tsserver.enableJavascript": true,
-    "tsserver.ignoreLocalTsserver":true,
     "tsserver.npm": "/bin/npm",
     "tsserver.log": "normal",
+    "typescript.referencesCodeLens.enabled": false,
+    "typescript.referencesCodeLens.showOnAllFunctions": true,
     "typescript.suggestionActions.enabled": false,
+    "eslint.autoFixOnSave": true,
+    "eslint.format.enable": true,
+    "eslint.useESLintClass": true,
+    "eslint.rules.customizations": [
+        { "severity": "downgrade", "rule": "*" },
+        { "severity": "off", "rule": "prettier/*" }
+    ],
+    //"eslint.nodePath": ".;../..",
+    //"eslint.debug": true,
     //"tsserver.trace.server": "messages",
     //
     //"python.linting.enabled": false,
@@ -106,19 +141,33 @@
     //
     "git.enableGutters": false,
     //
-    "clangd.path": "clangd-wrapper",
+    "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/15.0.3/clangd_15.0.3/bin/clangd",
     "clangd.arguments": [
         "--index",
         "--background-index",
         "--clang-tidy",
         "--all-scopes-completion",
         "--suggest-missing-includes",
+        "--query-driver=/bin/cc,/bin/c++,/usr/lib/emscripten/em*"
     ],
-    "clangd.semanticHighlighting": true,
     "clangd.fallbackFlags": [
         "-std=c++17",
-        "-Wall",
+        "-Wall"
     ],
+    //
+    "sourcekit.commandPath": "/usr/bin/sourcekit-lsp",
+    //
+    "rust-analyzer.server.path": "/bin/rust-analyzer",
+    "rust-analyzer.diagnostics.experimental.enable": true,
+    "rust-analyzer.terminal.startinsert": true,
+    "rust-analyzer.restartServerOnConfigChange": true,
+    "rust-analyzer.procMacro.ignored": {
+        "aoc_runner_derive": ["aoc", "aoc_generator"]
+    },
+    "rust-analyzer.diagnostics.disabled": ["unresolved-import"],
+    "[rust]": {
+        "inlayHint.enabled": true
+    },
     //
     "languageserver": {
         "nimlsp": {
@@ -128,7 +177,7 @@
             ],
             "filetypes": [
                 "nim"
-            ],
+            ]
         },
         "nimlangserver": {
             "command": "nimlangserver",
@@ -146,8 +195,25 @@
                     {
                         "fileRegex": "test.nim",
                         "projectPath": "test.nim"
-                    },
+                    }
                 ]
+            }
+        },
+        "csharp-ls": {
+          "command": "csharp-ls",
+          "filetypes": ["cs"],
+          "rootPatterns": ["*.csproj", ".vim/", ".git/", ".hg/"]
+        },
+        "cmake": {
+            "command": "cmake-language-server",
+            "filetypes": [
+                //"cmake"
+            ],
+            "rootPatterns": [
+                "build/"
+            ],
+            "initializationOptions": {
+                "buildDirectory": "build"
             }
         },
         "tern": {
@@ -156,7 +222,7 @@
             "filetypes": [
                 //"javascript"
             ],
-            "rootPatterns": [".tern-project"],
+            "rootPatterns": [".tern-project"]
         },
         "XXclxxangdxx": {
             "command": "nice",
@@ -164,12 +230,12 @@
                 "-n19",
                 "XXclxxangd",
                 "-background-index",
-                "-all-scopes-completion",
+                "-all-scopes-completion"
                 // "-completion-style=bundled"
             ],
             "rootPatterns": [
                 "compile_flags.txt",
-                "compile_commands.json",
+                "compile_commands.json"
                 //".vim/",
                 //".git/",
                 //".hg/"
@@ -191,27 +257,27 @@
             "rootPatterns": [
                 ".ccls",
                 "compile_commands.json",
-                ".vim/",
+                ".vim/"
                 //".git/",
                 //".hg/",
             ],
             "initializationOptions": {
                 "cache": {
                     "directory": "/home/mstearn/.cache/ccls/",
-                    "retainInMemory": 0,
+                    "retainInMemory": 0
                 },
                 "codeLens": {
-                    "localVariables": false,
+                    "localVariables": false
                 },
                 "completion": {
                     "filterAndSort": true,
-                    "maxNum": 100,
+                    "maxNum": 100
                 },
                 "index": {
                     // "threads": 14,
                     "onChange": true,
                     "initialBlacklist": [ "src/third_party"],
-                    "initialwhitelist": [ "src/third_party/wiredtiger"],
+                    "initialwhitelist": [ "src/third_party/wiredtiger"]
                 },
                 "diagnostics": {
                     "onOpen": 0,
@@ -226,7 +292,7 @@
                     }
                 },
                 "client": {
-                    "diagnosticsRelatedInformation": true,
+                    "diagnosticsRelatedInformation": true
                 },
                 "request": {
                     "timeout": 1750
@@ -238,7 +304,7 @@
                     "extraArgs": [
                         "-UNDEBUG",
                         "-Wall",
-                        "-Wextra",
+                        "-Wextra"
                         /*
                         "-Wno-long-long",
                         "-Wno-variadic-macros",
@@ -266,11 +332,15 @@
       "PRINTFL",
       "Struct",
       "WTOK",
+      "clangd",
       "constexpr",
       "coro",
       "cvref",
+      "deque",
+      "emscripten",
       "fassert",
       "futex",
+      "injectables",
       "mongodb",
       "mpark",
       "noreturn",
@@ -281,4 +351,4 @@
       "unpositioned"
     ]
 }
-
+// vim: set ft=jsonc:

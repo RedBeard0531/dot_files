@@ -74,7 +74,7 @@ ${PROMPT_COLOR}[%U%M%u]%~ %T$reset_color%b ${ROOT_SYMBOL}${VIRTENV_SYMBOL}${STAT
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-export PATH="$HOME/bin:$HOME/bin/mongo_versions:$HOME/.nimble/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/bin:$HOME/bin/mongo_versions:$HOME/.cargo/bin:$HOME/.nimble/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 export EDITOR=nvim
 export BROWSER=wslview
 export BAT_PAGER="less -iRM -j5"
@@ -86,6 +86,8 @@ _COMPILE_THREADS=$(($_CORES * 3 / 2))
 
 #export SCONSFLAGS="-j$_COMPILE_THREADS"
 export NINJA_STATUS='[%f/%t (%p) %es] '
+
+export REALM_DISABLE_ANALYTICS=1
 
 export HISTCONTROL=ignoreboth
 

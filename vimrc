@@ -13,7 +13,6 @@ Plug 'https://github.com/tpope/vim-scriptease' " helpers when writing vimscript
 
 " Vim editing enhancements
 "Plug 'https://github.com/easymotion/vim-easymotion' " Jump anywhere you can see super fast
-Plug 'https://github.com/phaazon/hop.nvim' " A better easymotion
 Plug 'https://github.com/tpope/vim-surround' " commands for adding or changing surroundings
 Plug 'https://github.com/wellle/targets.vim' " More text objects (daa to delete an argument)
 Plug 'https://github.com/sfiera/vim-emacsmodeline' " Teach vim to understand emacs modelines
@@ -32,19 +31,24 @@ Plug 'https://github.com/chrisbra/unicode.vim'
 "Plug 'https://github.com/zsugabubus/vim-paperplane'
 Plug 'https://github.com/godlygeek/tabular'
 
-"Plug 'https://github.com/liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
-Plug 'https://github.com/miversen33/import.nvim'
-Plug 'https://github.com/nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
-Plug 'https://github.com/nvim-treesitter/playground'
-Plug 'https://github.com/lewis6991/spellsitter.nvim'
-Plug 'https://github.com/mizlan/iswap.nvim'
-"Plug 'https://github.com/nvim-lua/popup.nvim'
-Plug 'https://github.com/nvim-lua/plenary.nvim'
-Plug 'https://github.com/nvim-telescope/telescope.nvim'
+if has("nvim")
+    Plug 'https://github.com/phaazon/hop.nvim' " A better easymotion
+    "Plug 'https://github.com/liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
+    Plug 'https://github.com/nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
+    Plug 'https://github.com/nvim-treesitter/playground'
+    "Plug 'https://github.com/p00f/nvim-ts-rainbow'
+    Plug 'https://github.com/mizlan/iswap.nvim'
+    "Plug 'https://github.com/nvim-lua/popup.nvim'
+    Plug 'https://github.com/nvim-lua/plenary.nvim'
+    Plug 'https://github.com/nvim-telescope/telescope.nvim'
+    Plug 'https://github.com/fannheyward/telescope-coc.nvim'
+    Plug 'https://github.com/akinsho/toggleterm.nvim'
+else
+    Plug 'https://github.com/wincent/command-t',  {'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'}
+             \ " <leader>t to jump to files with fuzzy search
+endif
 
 " Misc stuff
-Plug 'https://github.com/wincent/command-t',  {'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'}
-            \ " <leader>t to jump to files with fuzzy search
 Plug 'https://github.com/mileszs/ack.vim' " :Ack command (better grep using ag)
 Plug 'https://github.com/RedBeard0531/bufkill.vim' " :BW is like :bw without closing the window
 Plug 'https://github.com/Valloric/ListToggle' " <leader>q and l to toggle quickfix and location lists
@@ -52,12 +56,11 @@ Plug 'https://github.com/skywind3000/asyncrun.vim' " Run builds in the backgroun
 "Plug 'https://github.com/oplatek/Conque-Shell' " terminal in vim
 Plug 'https://github.com/metakirby5/codi.vim' " Live programing output
 "Plug 'https://github.com/vimwiki/vimwiki'
-Plug 'https://github.com/akinsho/toggleterm.nvim'
 
 " C++ stuff
 Plug 'https://github.com/Shougo/echodoc.vim' " Show signature at bottom of window
 Plug 'https://github.com/vim-scripts/a.vim' " :A to switch between .cpp and .h
-Plug 'https://github.com/majutsushi/tagbar' " shows tags on side (and can tell you current function)
+" Plug 'https://github.com/majutsushi/tagbar' " shows tags on side (and can tell you current function)
 
 " JS stuff
 "Plug 'https://github.com/marijnh/tern_for_vim', {'do': 'npm install'} " JS autocomplete
@@ -81,6 +84,7 @@ Plug 'https://github.com/JuliaEditorSupport/julia-vim'
 "Plug 'https://github.com/baabelfish/nvim-nim' " Nim language support
 Plug 'https://github.com/vim-pandoc/vim-pandoc-syntax'
 Plug 'https://github.com/fladson/vim-kitty', {'for': ['kitty']}
+Plug 'https://github.com/perillo/qbe.vim'
 
 " Git stuff
 Plug 'https://github.com/airblade/vim-gitgutter.git' " show changed lines in gutter
@@ -228,6 +232,10 @@ set pyxversion=3
 
 if has('nvim')
     set jumpoptions=stack
+    set undodir=~/.nvim-undo/ "where to store undo files
+else
+    set guiligatures=!"#$%&()*+-./:<=>?@[]^_{|~
+    set undodir=~/.vim-undo/ "where to store undo files
 endif
 
 if !isdirectory(&undodir)
@@ -250,7 +258,7 @@ endif
 if $TERM ==# 'xterm-256color' || $TERM ==# 'xterm-kitty'
     if 1 || $TERM ==# 'xterm-kitty' || $GNOME_TERMINAL_SCREEN !=# ''
         set termguicolors " use gui colors in terminal
-        set t_ut= "unbreak bg colors when scrolling
+        "set t_ut= "unbreak bg colors when scrolling
     endif
     if 1
         colorscheme wombat256
@@ -274,7 +282,7 @@ if $TERM ==# 'xterm-kitty' || 1 " $GNOME_TERMINAL_SCREEN !=# ''
     if !has('nvim') && 1
         set termguicolors
         "exec "set t_Ce=\e[4:0m\e[59m"
-        exec "set t_Cs=\e[4:3m\e[58;5;9m"
+        "exec "set t_Cs=\e[4:3m\e[58;5;9m"
     endif
     highlight SpellBad cterm=undercurl guisp=red guibg=Black
     highlight SpellCap cterm=undercurl guisp=cyan guibg=Black
@@ -288,7 +296,7 @@ endif
 
 if !has('nvim') 
     "make <A-]> work in terminal vim
-    exec "set <A-]>=\e]"
+    "exec "set <A-]>=\e]"
 endif
 
 let $LC_ALL='C' " disable locale-aware sort
@@ -352,6 +360,13 @@ nnoremap Y y$
 "kill the search highlight. (Note: this is different from :set nohlsearch)
 nnoremap <silent> <leader><leader> :nohlsearch<CR>
 
+if has("nvim")
+    nnoremap <silent> <leader>t :Telescope find_files<CR>
+    nnoremap <silent> <leader>b :Telescope buffers<CR>
+else
+    let g:CommandTPreferredImplementation='ruby'
+endif
+
 "add c++ stdlib headers to path
 set path^=/usr/include/c++/*
 set path^=/usr/include/c++/*/x86_64*
@@ -380,7 +395,10 @@ augroup vimrc
     autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading=1
     "autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
     autocmd BufEnter *.log setlocal nospell nowrap tw=0
+    autocmd BufEnter *.mts setf typescript
     "autocmd FileType python BracelessEnable +indent +highlight
+
+    autocmd BufRead,BufNewFile .clang-format nested setf yaml
 augroup END
 
 if !s:use_coc
@@ -583,7 +601,7 @@ if 0
     nmap <plug>(easymotion-prefix)s <Plug>(easymotion-s)
     nmap S <plug>(easymotion-s)
 
-else
+elseif has("nvim")
     lua require("hop").setup({ quit_key = '<space>', })
 
     map <space> <Plug>(easymotion-prefix)
@@ -714,17 +732,16 @@ augroup vimrc
     "autocmd BufNewFile,BufRead /home/mstearn/mongo/{src/mongo,jstests}/*.{js,cpp,h{,pp}} call g:MongoSetup()
 augroup END
 
-if exists('g:GtkGuiLoaded') && &guifont == ''
-  set guifont=Victor\ Mono\ Semibold\ 9
-endif
+function! g:NoTests() abort
+    let qf = getqflist()
+    call setqflist(filter(qf, {i, e -> bufname(e["bufnr"]) !~ '\<test\>'}), 'r')
+endfunction
 
-if exists('g:GuiLoaded') && &guifont == ''
-  set guifont=Victor\ Mono\ Semibold:h11
+if !has("nvim")
+    finish
 endif
 
 lua <<EOF
-require('import')
-
 require('toggleterm').setup{
     open_mapping = '<C-t>',
     direction = 'float',
@@ -732,13 +749,16 @@ require('toggleterm').setup{
         border = 'double',
     }
 }
+
+require('telescope').load_extension('coc')
 EOF
 
+if 1
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
 -- ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
     highlight = {
-      enable = false,              -- false will disable the whole extension
+      enable = true,              -- false will disable the whole extension
       disable = { "c", "rust", "cmake" },  -- list of language that will be disabled
     },
     incremental_selection = { enable = false },
@@ -746,6 +766,10 @@ require'nvim-treesitter.configs'.setup {
     indent = {
         enable = false,
     },
+    -- rainbow = {
+        -- enable = true,
+        -- extended_mode = true,
+    -- },
     playground = {
         enable = false,
         disable = {},
@@ -766,17 +790,10 @@ require'nvim-treesitter.configs'.setup {
     }
 }
 
-if false then
-    require"nvim-treesitter.highlight".set_custom_captures {
-        -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
-        ["text.warning"] = "Todo",
-    }
-    require('spellsitter').setup()
-end
-
 require('iswap').setup{
     autoswap = true,
 }
 
 EOF
+endif
 "see also: my ~/.gimrc and ~/.vim directory

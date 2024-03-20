@@ -20,7 +20,7 @@
 
 [alias]
     br = for-each-ref --sort=committerdate refs/heads/ --format='%(color:yellow)%(committerdate:short) %(color:cyan)%(refname:short):%(color:reset) %(subject)'
-    rb = !git rebase -i $(git merge-base HEAD mongo-proto)
+    rb = !git rebase -i $(git merge-base HEAD origin/main)
     rbd = !git rebase -i $(git merge-base HEAD develop)
     rbm = !git rebase -i $(git merge-base HEAD master)
     st = status -u no

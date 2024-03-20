@@ -41,12 +41,18 @@ inoremap <silent><expr> <c-space> coc#refresh()
 "imap <expr> ( pumvisiblle() && coc#expandable() >= 0 ? "\<C-y>" : "("
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
                               \: "\<CR>\<c-r>=coc#on_enter()\<CR>"
-"nnoremap <silent><nowait><expr> <C-j> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-j>"
-"nnoremap <silent><nowait><expr> <C-k> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-k>"
+nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 
 " Use `[c` and `]c` to navigate diagnostics
 nmap <silent> [d <Plug>(coc-diagnostic-prev)
 nmap <silent> ]d <Plug>(coc-diagnostic-next)
+nmap <silent> [D <Plug>(coc-diagnostic-prev-error)
+nmap <silent> ]D <Plug>(coc-diagnostic-next-error)
 nmap <silent> ,d <Plug>(coc-diagnostic-info)
 " Fix autofix problem of current line
 nmap <silent> F  <Plug>(coc-fix-current)
@@ -54,9 +60,12 @@ nmap <silent> F  <Plug>(coc-fix-current)
 " Remap keys for gotos
 nmap <silent> <A-]> <Plug>(coc-definition)
 nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gD <Plug>(coc-declaration)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gr <Plug>(coc-references-used)
+nmap <silent> gR <Plug>(coc-references)
+nmap <silent> gl <Plug>(coc-openlink)
 
 if has("menu")
     set mousemodel=popup_setpos
@@ -77,6 +86,9 @@ endif
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+nnoremap <silent><nowait> <leader>o  :call <SID>ToggleOutline()<CR>
+nnoremap <silent><nowait> <m-o> :call <SID>GoToOutline()<CR>
 
 " Use CTRL-S for selections ranges.
 " Requires 'textDocument/selectionRange' support of language server.
@@ -114,6 +126,8 @@ augroup vimrc_coc
     au CursorHoldI * if has_key(b:, 'coc_diagnostic_info') | silent! call CocActionAsync('showSignatureHelp') | endif
     au CursorHold * silent! call CocActionAsync('highlight')
 
+    au FileType help nmap <buffer> gd <c-]>
+
     au FileType c,cpp call s:setup_ccls_mappings()
     au FileType yggdrasil nmap <silent> <buffer> K :let g:ccls_close_on_jump = !g:ccls_close_on_jump<cr>
 
@@ -130,7 +144,9 @@ xmap <leader>a  <Plug>(coc-codeaction-selected)
 " Remap for do codeAction of current line (maybe should use -line?)
 "nmap <leader>a  <Plug>(coc-codeaction-line) 
 "nmap <leader>a  <Plug>(coc-codeaction-cursor) 
-nmap <leader>a  :call CocActionAsync('codeAction', 'line')<cr>
+nmap <leader>a  :call CocActionAsync('codeAction', 'cursor')<cr>
+nmap <leader>A  :call CocActionAsync('codeAction', 'currline')<cr>
+nmap <leader><c-a>  :call CocActionAsync('codeAction', '')<cr>
 "nmap <leader>a  <Plug>(coc-codeaction-cursor) 
 
 " Use `:Format` to format current buffer
@@ -141,20 +157,32 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 cabbrev cl CocList
 
-let &winbar='%{%get(b:, "coc_symbol_line", "")%}'
+function! PrintArgs(n, clicks, button, mods)
+    "PP a:
+    PP getmousepos()
+endfunction
+
+if has("nvim")
+    let &winbar='%{%get(b:, "coc_symbol_line", "")%}%=%1234@PrintArgs@%f%X'
+else
+    let &tabline='%{%get(b:, "coc_symbol_line", "")%}'
+endif
 
 " Using CocList
 map \ <Plug>(coc-prefix)
-nnoremap <silent> <Plug>(coc-prefix)a  :<C-u>CocList diagnostics<cr>
+"nnoremap <silent> <Plug>(coc-prefix)a  :<C-u>CocList diagnostics<cr>
 nnoremap <silent> <Plug>(coc-prefix)e  :<C-u>CocList extensions<cr>
 nnoremap <silent> <Plug>(coc-prefix)c  :<C-u>CocList commands<cr>
 nnoremap <silent> <Plug>(coc-prefix)o  :<C-u>CocList outline<cr>
 nnoremap <silent> <Plug>(coc-prefix)f  :<C-u>CocList files<cr>
-nnoremap <silent> <Plug>(coc-prefix)s  :<C-u>CocList -I symbols<cr>
+"nnoremap <silent> <Plug>(coc-prefix)s  :<C-u>CocList -I symbols<cr>
 nnoremap <silent> <Plug>(coc-prefix)j  :<C-u>CocNext<CR>
 nnoremap <silent> <Plug>(coc-prefix)k  :<C-u>CocPrev<CR>
 nnoremap <silent> <Plug>(coc-prefix)p  :<C-u>CocListResume<CR>
 nmap <silent> \l  <Plug>(coc-codelens-action)
+
+nnoremap <silent> <Plug>(coc-prefix)a  :Telescope coc diagnostics<cr>
+nnoremap <silent> <Plug>(coc-prefix)s  :Telescope coc workspace_symbols<cr>
 
 function! s:setup_ccls_mappings()
     " bases and derived classes
@@ -235,25 +263,49 @@ hi link CocSemTypeParameter LspCxxHlSymTemplateParameter
 hi link CocSemVariable Normal
 " hi link CocSemMethod Function
 
-hi link CocSemDefaultLibraryVariable jsGlobalObjects
-hi link CocSemDefaultLibraryNamespace Namespace
-hi link CocSemDefaultLibrary Type
+"hi link CocSemDefaultLibraryVariable jsGlobalObjects
+"hi link CocSemDefaultLibraryNamespace Namespace
+"hi link CocSemDefaultLibrary Type
 
 hi link commentTSWarning Todo
+
+hi CocPumVirtualText guifg=#706965
+hi CocMenuSel guibg=#164606 gui=bold
+
+hi link @property.special Special
+hi link Delimiter Normal
 
 "}}}
 
 " Helper funcs {{{
 function! s:CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 function! s:show_documentation()
-  if (index(['vim','help', 'man'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
+    if (index(['vim','help', 'man'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    else
+        call CocAction('doHover')
+    endif
+endfunction
+
+function! s:ToggleOutline() abort
+  let winid = coc#window#find('cocViewId', 'OUTLINE')
+  if winid == -1
+      call CocActionAsync('showOutline', 1)
   else
-    call CocAction('doHover')
+      call coc#window#close(winid)
+  endif
+endfunction
+
+function! s:GoToOutline() abort
+  let winid = coc#window#find('cocViewId', 'OUTLINE')
+  if winid == -1
+      CocOutline
+  else
+      call win_gotoid(winid)
   endif
 endfunction
 " }}}
