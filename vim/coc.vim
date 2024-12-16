@@ -272,7 +272,9 @@ hi link commentTSWarning Todo
 hi CocPumVirtualText guifg=#706965
 hi CocMenuSel guibg=#164606 gui=bold
 
-hi link @property.special Special
+if has("nvim")
+  hi link @property.special Special
+endif
 hi link Delimiter Normal
 
 "}}}

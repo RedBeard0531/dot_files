@@ -294,6 +294,10 @@ else
     highlight SpellBad ctermbg=52 guibg=#330000 cterm=undercurl guisp=Red
 endif
 
+if $TERM ==# 'xterm-kitty'
+    autocmd vimrc BufWritePost ~/.config/kitty/kitty.conf silent !pkill -SIGUSR1 -a kitty
+endif
+
 if !has('nvim') 
     "make <A-]> work in terminal vim
     "exec "set <A-]>=\e]"
@@ -335,7 +339,7 @@ tnoremap <silent><C-h> <C-w>h
 " shift-escape to exit terminal mode (at least on mintty/cygwin and gvim)
 tnoremap <silent> <C-\><C-n>
 tnoremap <silent><S-Esc> <C-\><C-n>
-au vimrc BufWinEnter * if &buftype == 'terminal' | setlocal nospell | endif
+au vimrc BufWinEnter * if &buftype == 'terminal' | setlocal nospell nonumber | endif
 
 "use readline maps in command mode
 cnoremap <C-a> <HOME>

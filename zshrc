@@ -125,11 +125,17 @@ alias cru='cr -e mathias@10gen.com --jira_user redbeard0531 '
 
 alias vim=nvim
 
-if [ -d /usr/share/fzf -a -z "$VIM_SERVER" ]; then
-    for file in /usr/share/fzf/*.zsh; do
-        source $file
-    done
+if which fzf > /dev/null; then
+    source <(fzf --zsh)
 fi
+
+# _FZF_PATH=/opt/homebrew/opt/fzf/shell
+# /usr/share/fzf
+# if [ -d $_FZF_PATH -a -z "$VIM_SERVER" ]; then
+#     for file in $_FZF_PATH/*.zsh; do
+#         source $file
+#     done
+# fi
 
 # opam configuration
 test -r /home/mstearn/.opam/opam-init/init.zsh && . /home/mstearn/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
@@ -140,4 +146,5 @@ export NVIM_GTK_NO_HEADERBAR=1
 
 if [ "$TERM" = "xterm-kitty" ]; then
     kitty + complete setup zsh | source /dev/stdin
+    alias ssh="kitten ssh"
 fi

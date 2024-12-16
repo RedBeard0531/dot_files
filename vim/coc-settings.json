@@ -166,6 +166,7 @@
     },
     "rust-analyzer.diagnostics.disabled": ["unresolved-import"],
     "[rust]": {
+        "coc.preferences.formatOnSave": true,
         "inlayHint.enabled": true
     },
     //

@@ -24,6 +24,7 @@
     rbd = !git rebase -i $(git merge-base HEAD develop)
     rbm = !git rebase -i $(git merge-base HEAD master)
     st = status -u no
+    difft = -c diff.external=difft diff
 [merge]
 	conflictstyle = zdiff3
 
