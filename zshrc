@@ -74,7 +74,7 @@ ${PROMPT_COLOR}[%U%M%u]%~ %T$reset_color%b ${ROOT_SYMBOL}${VIRTENV_SYMBOL}${STAT
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-export PATH="$HOME/bin:$HOME/bin/mongo_versions:$HOME/.cargo/bin:$HOME/.nimble/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/bin:$HOME/bin/mongo_versions:$HOME/.cargo/bin:$HOME/.nimble/bin:$HOME/.local/bin:/snap/node/current/bin:/usr/local/bin:$PATH"
 export EDITOR=nvim
 export BROWSER=wslview
 export BAT_PAGER="less -iRM -j5"
@@ -148,3 +148,5 @@ if [ "$TERM" = "xterm-kitty" ]; then
     kitty + complete setup zsh | source /dev/stdin
     alias ssh="kitten ssh"
 fi
+
+alias activate="source python3-venv/bin/activate"
