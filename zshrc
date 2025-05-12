@@ -8,7 +8,21 @@ bindkey -e
 # The following lines were added by compinstall
 zstyle :compinstall filename '/home/mstearn/.zshrc'
 
-fpath=(~/.zsh/completions $fpath)
+fpath=(~/.zsh/completions ~/.nix-profile/share/zsh/site-functions/ $fpath)
+() {
+  setopt LOCAL_OPTIONS CASE_GLOB EXTENDED_GLOB
+
+  local system_fpaths=(
+      # Package default
+      /usr/share/zsh/site-functions(/-N)
+
+      # Debian
+      /usr/share/zsh/functions/**/*(/-N)
+      /usr/share/zsh/vendor-completions/(/-N)
+      /usr/share/zsh/vendor-functions/(/-N)
+  )
+  fpath=(${fpath} ${system_fpaths})
+}
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
@@ -18,6 +32,8 @@ compinit
 #bindkey    "^[3;5~"         delete-char
 bindkey '^[[1;9C' forward-word
 bindkey '^[[1;9D' backward-word
+bindkey '^[[1;3C' forward-word
+bindkey '^[[1;3D' backward-word
 
 # bind special keys according to readline configuration
 eval "$(sed -n 's/^\( *[^#][^:]*\):/bindkey \1/p' /etc/inputrc)"
@@ -32,7 +48,8 @@ setopt hist_lex_words
 setopt hist_verify
 setopt inc_append_history
 #setopt share_history # unsure on this
-setopt correct_all
+#setopt correct_all # annoying too often
+setopt correct
 setopt no_flow_control
 setopt interactive_comments
 setopt auto_continue
@@ -43,12 +60,25 @@ setopt auto_continue
 
 # highlight selected completion
 zstyle ':completion:*' menu select
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
 
 # http://blog.viridian-project.de/2008/07/03/zsh-tip-handling-urls-with-url-quote-magic/
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 
+
+if [[ -e ~/.nix-profile/share/zsh/zsh-autopair/autopair.zsh ]]; then
+    source ~/.nix-profile/share/zsh/zsh-autopair/autopair.zsh
+fi
+
+for file in {~/.nix-profile/share/,/usr/share/{zsh/plugins/,}}zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; do
+    if [[ -e $file ]] ; then
+        source $file
+        break
+    fi
+done
+
 ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=yellow'
 ZSH_HIGHLIGHT_STYLES[alias]='fg=green,bold'
@@ -74,6 +104,10 @@ ${PROMPT_COLOR}[%U%M%u]%~ %T$reset_color%b ${ROOT_SYMBOL}${VIRTENV_SYMBOL}${STAT
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
+# eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+if [ -e /home/ubuntu/.nix-profile/etc/profile.d/nix.sh ]; then . /home/ubuntu/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+if [ -e /home/ubuntu/.nix-profile/etc/profile.d/command-not-found.sh ]; then . /home/ubuntu/.nix-profile/etc/profile.d/command-not-found.sh; fi
 export PATH="$HOME/bin:$HOME/bin/mongo_versions:$HOME/.cargo/bin:$HOME/.nimble/bin:$HOME/.local/bin:/snap/node/current/bin:/usr/local/bin:$PATH"
 export EDITOR=nvim
 export BROWSER=wslview
@@ -96,7 +130,12 @@ export HISTCONTROL=ignoreboth
 
 eval `dircolors -b`
 
-alias ls="ls -F --color"
+if which lsd > /dev/null; then
+    alias ls="lsd -F --color=always"
+else
+    alias ls="ls -F --color"
+fi
+
 alias ll="ls -lh"
 alias d="cd -"
 alias svn="colorsvn"
@@ -115,6 +154,15 @@ alias grep="grep -n --color"
 #alias vimdiff="vimdiff --noplugin"
 alias vamplayer="mplayer -vo vaapi -va vaapi "
 
+alias nix="noglob nix"
+alias ni="noglob nix profile install"
+alias ns="noglob nix search nixpkgs "
+
+function nu {
+    nix profile upgrade '.*' --log-format multiline-with-logs
+    nvd history --profile ~/.nix-profile -m $(readlink ~/.local/state/nix/profiles/profile | tr '-' ' ' | awk '//{print $2 - 1}')
+}
+
 alias sr='ssh -l root'
 alias resmoke="python3 buildscripts/resmoke.py"
 #alias scons="nice scons"
@@ -125,28 +173,29 @@ alias cru='cr -e mathias@10gen.com --jira_user redbeard0531 '
 
 alias vim=nvim
 
+if which batman > /dev/null; then
+    alias man=batman
+    compdef batman=man
+fi
+
 if which fzf > /dev/null; then
     source <(fzf --zsh)
 fi
-
-# _FZF_PATH=/opt/homebrew/opt/fzf/shell
-# /usr/share/fzf
-# if [ -d $_FZF_PATH -a -z "$VIM_SERVER" ]; then
-#     for file in $_FZF_PATH/*.zsh; do
-#         source $file
-#     done
-# fi
-
-# opam configuration
-test -r /home/mstearn/.opam/opam-init/init.zsh && . /home/mstearn/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export NVIM_GTK_PREFER_DARK_THEME=1
 export NVIM_GTK_NO_HEADERBAR=1
 
-if [ "$TERM" = "xterm-kitty" ]; then
+if [[ "$TERM" = "xterm-kitty" && -z "$SSH_CONNECTION" ]]; then
     kitty + complete setup zsh | source /dev/stdin
     alias ssh="kitten ssh"
 fi
 
 alias activate="source python3-venv/bin/activate"
+#if [ -e ~/.nix-profile/share/zsh-autocomplete ]; then . ~/.nix-profile/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh; fi
+# Lima BEGIN
+# Make sure iptables and mount.fuse3 are available
+PATH="$PATH:/usr/sbin:/sbin"
+export PATH
+# Lima END
+# cspell: off
